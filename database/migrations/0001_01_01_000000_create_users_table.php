@@ -35,6 +35,12 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        // create a table named 'user_roles'
+        Schema::create('user_roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+        });
     }
 
     /**
@@ -45,5 +51,6 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('user_roles');
     }
 };
