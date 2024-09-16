@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Admin;
 use App\Models\User;
+use App\Models\UserRole;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -22,15 +23,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        // for user_roles
         DB::table('user_roles')->insert([
-            'name' => 'Admin',
-        ]);
-        DB::table('user_roles')->insert([
-            'name' => 'Student',
-        ]);
-        DB::table('user_roles')->insert([
-            'name' => 'Teacher',
+            ['name' => 'Admin'],
+            ['name' => 'Teacher'],
+            ['name' => 'Student'],
         ]);
 
         // for test admin

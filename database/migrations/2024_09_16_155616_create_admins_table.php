@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\UserRole;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();
             $table->foreignId('role_id')->constrained('user_roles');
-            // $table->foreign('role_id')->references('id')->on('user_roles');
+            // $table->foreignIdFor(UserRole::class, 'role_id')->constrained('user_role', 'id')->cascadeOnDelete();
             $table->timestamps();
         });
     }
