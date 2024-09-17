@@ -45,11 +45,13 @@
                                         <div class="form-outline mb-4">
                                             <label class="form-label" for="form3Example97">Email</label>
                                             <input type="text" name="email" id="form3Example97" class="form-control form-control" />
+                                            <x-form-error name="email" />
                                         </div>
 
                                         <div class="form-outline mb-4">
                                             <label class="form-label" for="form3Example98">Password</label>
                                             <input type="password" name="password" id="form3Example98" class="form-control form-control" />
+                                            <x-form-error name="password" />
                                         </div>
 
                                         <div class="d-flex justify-content-end pt-3">

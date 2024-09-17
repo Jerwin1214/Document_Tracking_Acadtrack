@@ -44,14 +44,16 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
-                                                <label class="form-label" for="form3Example1m">First name</label>
-                                                <input type="text" name="first_name" id="form3Example1m" class="form-control form-control" />
+                                                <label class="form-label" for="first_name">First name</label>
+                                                <input type="text" name="first_name" id="first_name" class="form-control form-control" />
+                                                <x-form-error name="first_name" />
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
-                                                <label class="form-label" for="form3Example1n">Last name</label>
-                                                <input type="text" name="last_name" id="form3Example1n" class="form-control form-control" />
+                                                <label class="form-label" for="last_name">Last name</label>
+                                                <input type="text" name="last_name" id="last_name" class="form-control form-control" />
+                                                <x-form-error name="last_name" />
                                             </div>
                                         </div>
                                     </div>
@@ -59,26 +61,30 @@
                                     <div class="mb-4">
                                         <!-- to set gender -->
                                         <label for="gender" class="form-label">Gender</label>
-                                        <select class="form-control" name="gender">
+                                        <select class="form-control" name="gender" id="gender">
                                             <option value="">-- Choose One --</option>
                                             <option value="male">Male</option>
                                             <option value="female">Female</option>
                                         </select>
+                                        <x-form-error name="gender" />
                                     </div>
 
                                     <div class="form-outline mb-4">
-                                        <label class="form-label" for="form3Example97">Email</label>
-                                        <input type="text" name="email" id="form3Example97" class="form-control form-control" />
+                                        <label class="form-label" for="email">Email</label>
+                                        <input type="text" name="email" id="email" class="form-control form-control" />
+                                        <x-form-error name="email" />
                                     </div>
 
                                     <div class="form-outline mb-4">
-                                        <label class="form-label" for="form3Example98">Password</label>
-                                        <input type="password" name="password" id="form3Example97" class="form-control form-control" />
+                                        <label class="form-label" for="password">Password</label>
+                                        <input type="password" name="password" id="password" class="form-control form-control" />
+                                        <x-form-error name="password" />
                                     </div>
 
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="password_confirmation">Confirm Password</label>
                                         <input type="password" name="password_confirmation" id="password_confirmation" class="form-control form-control" />
+                                        <x-form-error name="password_confirmation" />
                                     </div>
 
                                     <div class="d-flex justify-content-end pt-3">
