@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Stundet;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -23,22 +23,22 @@ class StudentController extends Controller
         // TODO: implement the store method
     }
 
-    public function show(Stundet $stundet)
+    public function show(Student $student)
     {
         // TODO: implement the show method
     }
 
-    public function edit(Stundet $stundet)
+    public function edit(Student $student)
     {
         // TODO: implement the edit method
     }
 
-    public function update(Stundet $stundet)
+    public function update(Student $student)
     {
         // TODO: implement the update method
     }
 
-    public function destroy(Stundet $stundet)
+    public function destroy(Student $student)
     {
         // TODO: implement the destroy method
     }

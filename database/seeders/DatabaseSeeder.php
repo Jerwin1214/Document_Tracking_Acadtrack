@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Student;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -22,24 +22,6 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Teacher'],
             ['name' => 'Student'],
         ]);
-
-        // User::factory()->create([
-        //     [
-        //         'email' => 'test@admin.com',
-        //         'role_id' => 1,
-        //         'password' => 'admin123',
-        //     ],
-        //     [
-        //         'email' => 'test@teacher.com',
-        //         'password' => 'teacher123',
-        //         'role_id' => 2,
-        //     ],
-        //     [
-        //         'email' => 'test@student.com',
-        //         'password' => 'student123',
-        //         'role_id' => 3,
-        //     ],
-        // ]);
 
         DB::table('users')->insert([
             [
@@ -70,10 +52,6 @@ class DatabaseSeeder extends Seeder
                 'created_at' => now(),
             ],
         ]);
-        // Admin::factory()->create([
-        //     'user_id' => 1,
-        //     'name' => 'Test Admin',
-        // ]);
 
         // for test teacher
         DB::table('teachers')->insert([
@@ -87,14 +65,6 @@ class DatabaseSeeder extends Seeder
                 'created_at' => now(),
             ],
         ]);
-        // Teacher::factory()->create([
-        //     'user_id' => 2,
-        //     'salutation' => 'Mr.',
-        //     'initials' => 'T.',
-        //     'first_name' => 'Test',
-        //     'last_name' => 'Teacher',
-        //     'nic' => '123456789V',
-        // ]);
 
         // for test student
         DB::table('students')->insert([
@@ -104,15 +74,22 @@ class DatabaseSeeder extends Seeder
                 'last_name' => 'Student',
                 'gender' => 'Male',
                 'nic' => '987654321V',
+                'dob' => '2000-01-01',
                 'created_at' => now(),
             ]
         ]);
-        // Stundet::factory()->create([
-        //     'user_id' => 3,
-        //     'first_name' => 'Test',
-        //     'last_name' => 'Student',
-        //     'gender' => 'Male',
-        //     'nic' => '987654321V',
-        // ]);
+
+        // for test guardian
+        DB::table('guardians')->insert([
+            [
+                'initials' => 'T.',
+                'first_name' => 'Test',
+                'last_name' => 'Guardian',
+                'nic' => '123456789V',
+                'phone_number' => '0712345678',
+                'student_id' => Student::first()->id,
+                'created_at' => now(),
+            ],
+        ]);
     }
 }
