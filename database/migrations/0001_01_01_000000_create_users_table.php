@@ -11,10 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // create a table named 'user_roles'
+        Schema::create('user_roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+        });
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->foreignId('role_id')->constrained('user_roles');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

@@ -11,11 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // create a table named 'user_roles'
-        Schema::create('user_roles', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-        });
+
+
+        try {
+            //code...
+            // create a table named 'user_roles'
+            Schema::create('user_roles', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+            });
+        } catch (\Exception $th) {
+            //throw $th;
+        }
     }
 
     /**

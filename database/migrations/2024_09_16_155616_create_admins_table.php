@@ -15,11 +15,9 @@ return new class extends Migration
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();
-            $table->foreignId('role_id')->constrained('user_roles');
+            $table->foreignId('user_id')->constrained('users');
             // $table->foreignIdFor(UserRole::class, 'role_id')->constrained('user_role', 'id')->cascadeOnDelete();
             $table->timestamps();
         });
