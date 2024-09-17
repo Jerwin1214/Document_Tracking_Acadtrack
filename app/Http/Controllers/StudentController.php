@@ -88,9 +88,44 @@ class StudentController extends Controller
         return view('pages.admin.student.edit', ['student' => $student]);
     }
 
-    public function update(Student $student)
+    public function update(Student $student, Request $request)
     {
-        // TODO: implement the update method
+        $request->validate([
+            'std_first_name' => ['required', 'string', 'max:30'],
+            'std_last_name' => ['required', 'string', 'max:50'],
+            'gender' => ['required', 'string', 'max:5'],
+            'std_nic' => ['string', 'max:12'],
+            'dob' => ['required', 'date'],
+            'initials' => ['required', 'string', 'max:10'],
+            'g_first_name' => ['required', 'string', 'max:30'],
+            'g_last_name' => ['required', 'string', 'max:50'],
+            'g_nic' => ['required', 'string', 'max:12'],
+            'g_phone' => ['required', 'string', 'max:10'],
+        ]);
+
+        // update the student
+
+        // store data into the guardians table
+        $student->guardian->update([
+            'initials' => $request->initials,
+            'first_name' => $request->g_first_name,
+            'last_name' => $request->g_last_name,
+            'nic' => $request->g_nic,
+            'phone_number' => $request->g_phone,
+            'updated_at' => now(),
+        ]);
+
+        // store data into the students table
+        $student->update([
+            'first_name' => $request->std_first_name,
+            'last_name' => $request->std_last_name,
+            'gender' => $request->gender,
+            'dob' => $request->dob,
+            'nic' => $request->std_nic ?? "",
+            'updated_at' => now(),
+        ]);
+
+        return redirect('/admin/students/show')->with('success', 'Student updated successfully');
     }
 
     public function destroy(Student $student)

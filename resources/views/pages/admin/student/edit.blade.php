@@ -41,6 +41,7 @@
             <h2>Update Student: {{$student->first_name}} {{$student->last_name}}</h2>
             <form action="/admin/students/{{$student->id}}" method="post" class="shadow-lg p-3 mb-5 mt-3 bg-body-tertiary rounded">
                 @csrf
+                @method('PATCH')
                 <h5>Student Info</h5>
                 <div class="row">
                     <div class="col-md-6">
@@ -78,18 +79,6 @@
                             <input type="date" class="form-control" id="dob" name="dob" value="{{$student->dob}}" required>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{$student->user->email}}" required>
-                        </div>
-                    </div>
-                    <!-- <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required readonly>
-                        </div>
-                    </div> -->
                 </div>
                 <hr>
                 <h5>Guardian Info</h5>
