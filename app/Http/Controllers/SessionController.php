@@ -14,32 +14,39 @@ class SessionController extends Controller
 
     public function store()
     {
-        // login functionality
-        // validate the request
+        // Validate the request data
         $attrs = request()->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        // dd($attr);
-
-        // redirect to the dashboard according to the user role
+        // Attempt login
         if (!Auth::attempt($attrs)) {
             throw ValidationException::withMessages([
                 'email' => 'Your provided credentials could not be verified.'
             ]);
         }
 
-        // regenerate the session token
+        // Regenerate session token for security
         request()->session()->regenerate();
 
-        // check the role of the current user
-        if (auth()->user()->role->name == 'Admin') {
-            return redirect('/admin/dashboard');
-        } elseif (auth()->user()->role->name == 'Student') {
-            return redirect('/student/dashboard');
-        } elseif (auth()->user()->role->name == 'Teacher') {
-            return redirect('/teacher/dashboard');
+        // Retrieve the user's role
+        $role = auth()->user()->role->name ?? null;
+
+        // Redirect based on role
+        switch ($role) {
+            case 'Admin':
+                return redirect('/admin/dashboard');
+            case 'Student':
+                return redirect('/student/dashboard');
+            case 'Teacher':
+                return redirect('/teacher/dashboard');
+            default:
+                // Handle if the user doesn't have a role
+                Auth::logout();
+                return redirect('/login')->withErrors([
+                    'role' => 'User does not have a valid role.'
+                ]);
         }
     }
 
