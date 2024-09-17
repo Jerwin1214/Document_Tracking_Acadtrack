@@ -60,9 +60,9 @@
                             <label for="gender" class="form-label">Gender</label>
                             <select name="gender" id="gender" class="form-select">
                                 <option value="">-- Choose One --</option>
-                                <option value="mae">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
                             </select>
                         </div>
                     </div>

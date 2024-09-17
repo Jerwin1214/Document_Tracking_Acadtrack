@@ -13,9 +13,11 @@ Route::view('/register', 'auth.register')->name('register');
 
 // Admin routes
 Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard')->middleware('auth');
-Route::get('/admin/students/show', [AdminController::class, 'showAllStudents'])->name('admin.students.index')->middleware('auth');
-Route::get('/admin/students/create', [AdminController::class, 'create'])->name('admin.students.create')->middleware('auth');
-Route::post('/admin/students', [AdminController::class, 'store'])->name('admin.students.store')->middleware('auth');
+Route::get('/admin/students/show', [StudentController::class, 'showAllStudents'])->name('admin.students.index')->middleware('auth');
+Route::get('/admin/students/create', [StudentController::class, 'create'])->name('admin.students.create')->middleware('auth');
+Route::post('/admin/students', [StudentController::class, 'store'])->name('admin.students.store')->middleware('auth');
+Route::get('/admin/students/{student}/edit', [StudentController::class, 'edit'])->name('admin.students.edit')->middleware('auth');
+Route::patch('/admin/students/{student}', [StudentController::class, 'update'])->name('admin.students.update')->middleware('auth');
 
 // Student routes
 Route::get('/student/dashboard', [StudentController::class, 'index'])

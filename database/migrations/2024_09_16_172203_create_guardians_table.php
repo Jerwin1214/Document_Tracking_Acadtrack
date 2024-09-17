@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('phone_number');
             $table->string('nic')->unique();
-            $table->foreignIdFor(Student::class)->constrained('students')->cascadeOnDelete();
             $table->timestamps();
         });
     }

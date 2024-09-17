@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Guardian;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -66,18 +67,6 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
-        // for test student
-        DB::table('students')->insert([
-            [
-                'user_id' => User::find(3)->id,
-                'first_name' => 'Test',
-                'last_name' => 'Student',
-                'gender' => 'Male',
-                'nic' => '987654321V',
-                'dob' => '2000-01-01',
-                'created_at' => now(),
-            ]
-        ]);
 
         // for test guardian
         DB::table('guardians')->insert([
@@ -87,9 +76,22 @@ class DatabaseSeeder extends Seeder
                 'last_name' => 'Guardian',
                 'nic' => '123456789V',
                 'phone_number' => '0712345678',
-                'student_id' => Student::first()->id,
                 'created_at' => now(),
             ],
+        ]);
+
+        // for test student
+        DB::table('students')->insert([
+            [
+                'user_id' => User::find(3)->id,
+                'first_name' => 'Test',
+                'last_name' => 'Student',
+                'gender' => 'Male',
+                'nic' => '987654321V',
+                'dob' => '2000-01-01',
+                'guardian_id' => Guardian::first()->id,
+                'created_at' => now(),
+            ]
         ]);
     }
 }
