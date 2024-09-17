@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \App\Models\User;
 
 class Stundet extends Model
 {
@@ -18,9 +19,11 @@ class Stundet extends Model
      */
     protected function casts(): array
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return [];
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
