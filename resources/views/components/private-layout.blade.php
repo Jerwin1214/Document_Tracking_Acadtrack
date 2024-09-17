@@ -12,21 +12,9 @@
     <link rel="stylesheet" href="{{ asset('build/assets/navbar.css') }}">
 </head>
 
-<body>
-    <!-- Navbar -->
+<body class="sb-nav-fixed">
 
-    <body class="sb-nav-fixed">
-        <x-navbar></x-navbar>
-        <x-nav-top></x-nav-top>
-        <div id="layoutSidenav_content">
-            <div class="container-fluid">
-                <!-- Slotted content -->
-                {{ $slot }}
-                <!--  -->
-            </div>
-        </div>
-    </body>
-    <!--  -->
+    {{$slot}}
 
     <script src="{{ asset('build/assets/navbar.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
