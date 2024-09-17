@@ -15,6 +15,7 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // TODO: implement the handle method and register the middleware in the bootstrap/app.php file
         return $next($request);
     }
 }

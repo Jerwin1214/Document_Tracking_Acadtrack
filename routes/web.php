@@ -18,6 +18,7 @@ Route::get('/admin/students/create', [StudentController::class, 'create'])->name
 Route::post('/admin/students', [StudentController::class, 'store'])->name('admin.students.store')->middleware('auth');
 Route::get('/admin/students/{student}/edit', [StudentController::class, 'edit'])->name('admin.students.edit')->middleware('auth');
 Route::patch('/admin/students/{student}', [StudentController::class, 'update'])->name('admin.students.update')->middleware('auth');
+Route::get('/admin/students/{student}', [StudentController::class, 'show'])->name('admin.students.show')->middleware('auth');
 
 // Student routes
 Route::get('/student/dashboard', [StudentController::class, 'index'])

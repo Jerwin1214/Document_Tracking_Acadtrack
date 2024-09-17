@@ -80,7 +80,7 @@ class StudentController extends Controller
 
     public function show(Student $student)
     {
-        // TODO: implement the show method
+        return view('pages.admin.student.show', ['student' => $student]);
     }
 
     public function edit(Student $student)
