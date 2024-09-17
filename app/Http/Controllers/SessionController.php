@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class SessionController extends Controller
 {
@@ -16,21 +16,31 @@ class SessionController extends Controller
     {
         // login functionality
         // validate the request
-        $attr = request()->validate([
+        $attrs = request()->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        // attempt to login the user
-        if (!Auth::attempt($attr)) {
-            // if the login fails
-            return back()->withErrors(['email' => 'Your provided credentials could not be verified.']);
+        // dd($attr);
+
+        // redirect to the dashboard according to the user role
+        if (!Auth::attempt($attrs)) {
+            throw ValidationException::withMessages([
+                'email' => 'Your provided credentials could not be verified.'
+            ]);
         }
 
         // regenerate the session token
         request()->session()->regenerate();
-        // redirect to the admin page
-        // TODO: create the Admin Dashboard
+
+        // check the role of the current user
+        if (auth()->user()->role->name == 'Admin') {
+            return redirect('/admin/dashboard');
+        } elseif (auth()->user()->role->name == 'Student') {
+            return redirect('/student/dashboard');
+        } elseif (auth()->user()->role->name == 'Teacher') {
+            return redirect('/teacher/dashboard');
+        }
     }
 
     public function destroy()

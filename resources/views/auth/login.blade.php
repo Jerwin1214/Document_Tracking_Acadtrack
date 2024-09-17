@@ -39,27 +39,25 @@
                             <!-- Form column -->
                             <div class="col-xl-6">
                                 <div class="card-body p-md-5 text-black h-100">
-                                    <h3 class="mb-5 text-uppercase">Login</h3>
-                                    <div class="form-outline mb-4">
-                                        <label class="form-label" for="form3Example97">Email</label>
-                                        <input type="text" name="email" id="form3Example97" class="form-control form-control" />
-                                    </div>
+                                    <form action="/" method="post">
+                                        @csrf
+                                        <h3 class="mb-5 text-uppercase">Login</h3>
+                                        <div class="form-outline mb-4">
+                                            <label class="form-label" for="form3Example97">Email</label>
+                                            <input type="text" name="email" id="form3Example97" class="form-control form-control" />
+                                        </div>
 
-                                    <div class="form-outline mb-4">
-                                        <label class="form-label" for="form3Example98">Password</label>
-                                        <input type="password" name="password" id="form3Example97" class="form-control form-control" />
-                                    </div>
+                                        <div class="form-outline mb-4">
+                                            <label class="form-label" for="form3Example98">Password</label>
+                                            <input type="password" name="password" id="form3Example98" class="form-control form-control" />
+                                        </div>
 
-                                    <div class="form-outline mb-4">
-                                        <label class="form-label" for="password_confirmation">Confirm Password</label>
-                                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control form-control" />
-                                    </div>
-
-                                    <div class="d-flex justify-content-end pt-3">
-                                        <button type="button" class="btn btn-warning btn ms-2">Login</button>
-                                        <button type="button" class="btn btn-light btn">Reset</button>
-                                    </div>
-                                    <a href="/register">I don't have an account</a>
+                                        <div class="d-flex justify-content-end pt-3">
+                                            <button type="submit" class="btn btn-warning btn ms-2">Login</button>
+                                            <button type="button" class="btn btn-light btn">Reset</button>
+                                        </div>
+                                        <a href="/register">I don't have an account</a>
+                                    </form>
                                 </div>
                             </div>
                         </div>

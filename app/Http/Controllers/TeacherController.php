@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Teacher;
 
 class TeacherController extends Controller
@@ -8,6 +9,7 @@ class TeacherController extends Controller
     public function index()
     {
         // TODO: implement the index method
+        return view('pages.teachers.dashboard');
     }
 
     public function create()

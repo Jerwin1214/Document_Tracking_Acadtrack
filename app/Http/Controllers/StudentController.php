@@ -10,6 +10,7 @@ class StudentController extends Controller
     public function index()
     {
         // TODO: implement the index method
+        return view('pages.students.dashboard');
     }
 
     public function create()

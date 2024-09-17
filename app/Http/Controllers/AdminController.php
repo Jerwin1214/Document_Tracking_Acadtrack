@@ -10,6 +10,7 @@ class AdminController extends Controller
     public function index()
     {
         // TODO: implement the index method
+        return view('pages.admin.dashboard');
     }
 
     public function create()
