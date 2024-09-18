@@ -3,13 +3,15 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudentRegisterController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 
 // Auth and login routes
 Route::get('/', [SessionController::class, 'create'])->name('login');
 Route::post('/', [SessionController::class, 'store'])->name('login');
-Route::view('/register', 'auth.register')->name('register');
+Route::get('/register', [StudentRegisterController::class, 'create'])->name('register');
+Route::post('/register', [StudentRegisterController::class, 'store'])->name('register');
 
 // Admin routes
 Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard')->middleware('auth');

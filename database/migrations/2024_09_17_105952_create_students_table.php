@@ -22,10 +22,7 @@ return new class extends Migration
             $table->string('index_no')->unique()->nullable();
             $table->timestamps();
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('guardian_id')->nullable()->constrained('guardians');
-
-            // $table->foreign('role_id')->references('id')->on('user_roles');
-            // $table->foreignIdFor(UserRole::class, 'role_id')->constrained('user_role', 'id')->cascadeOnDelete();
+            $table->foreignId('guardian_id')->nullable()->constrained('guardians')->onDelete('cascade');
         });
     }
 
