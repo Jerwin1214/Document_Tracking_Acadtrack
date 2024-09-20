@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RoleMiddleware
+class StudentMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,7 +15,9 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // TODO: implement the handle method and register the middleware in the bootstrap/app.php file
-        return $next($request);
+        if (auth()->check() && auth()->user()->role->name == 'Student') {
+            return $next($request);
+        }
+        abort(401, 'Unauthorized Access');
     }
 }

@@ -56,6 +56,10 @@ class SessionController extends Controller
     {
         // logout functionality
         Auth::logout();
+        // invalidate the user
+        request()->session()->invalidate();
+        // regenerte the CSRF token
+        request()->session()->regenerateToken();
         // redirect to the login page
         return redirect('/');
     }
