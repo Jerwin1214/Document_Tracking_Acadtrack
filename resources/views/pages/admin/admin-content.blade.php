@@ -9,13 +9,19 @@
             </a>
 
             <x-nav-link idNumber="1" link_name="Students" icon_class="fa-solid fa-user-graduate">
-                <x-sub-nav-link href="/admin/students/show">View</x-sub-nav-link>
                 <x-sub-nav-link href="/admin/students/create">Add</x-sub-nav-link>
+                <x-sub-nav-link href="/admin/students/show">View</x-sub-nav-link>
             </x-nav-link>
 
             <x-nav-link idNumber="2" link_name="Teachers" icon_class="fa-solid fa-chalkboard-user">
-                <x-sub-nav-link href="/admin/teachers/show">View</x-sub-nav-link>
                 <x-sub-nav-link href="/admin/teachers/create">Add</x-sub-nav-link>
+                <x-sub-nav-link href="/admin/teachers/show">View</x-sub-nav-link>
+            </x-nav-link>
+
+            <x-nav-link idNumber="3" link_name="Subjects" icon_class="fa-solid fa-book">
+                <x-sub-nav-link href="/admin/subjects/create">Add</x-sub-nav-link>
+                <x-sub-nav-link href="/admin/subjects/show">View</x-sub-nav-link>
+                <x-sub-nav-link href="/admin/subjects/assign">Assign Teachers</x-sub-nav-link>
             </x-nav-link>
 
             <div class="sb-sidenav-menu-heading">Addons</div>

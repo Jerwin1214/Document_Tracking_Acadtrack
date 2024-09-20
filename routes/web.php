@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentRegisterController;
+use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
 
 // middlewares
@@ -45,6 +46,24 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         ->name('admin.teachers.create');
     Route::post('/admin/teachers', [TeacherController::class, 'store'])
         ->name('admin.teachers.store');
+
+    // subjects
+    Route::get('/admin/subjects/show', [SubjectController::class, 'showAllSubjects'])
+        ->name('admin.subjects.index');
+    Route::get('/admin/subjects/create', [SubjectController::class, 'create'])
+        ->name('admin.subjects.create');
+    Route::post('/admin/subjects', [SubjectController::class, 'store'])
+        ->name('admin.subjects.store');
+    Route::get('/admin/subjects/{subject}/edit', [SubjectController::class, 'edit'])
+        ->name('admin.subjects.edit');
+    Route::patch('/admin/subjects/{subject}', [SubjectController::class, 'update'])
+        ->name('admin.subjects.update');
+    Route::delete('/admin/subjects/{subject}', [SubjectController::class, 'destroy'])
+        ->name('admin.subjects.destroy');
+    Route::get('/admin/subjects/assign', [SubjectController::class, 'assignTeachersView'])
+        ->name('admin.subjects.assign');
+    Route::post('/admin/subjects/assign', [SubjectController::class, 'assignTeachers'])
+        ->name('admin.subjects.assign');
 });
 
 // Student routes
