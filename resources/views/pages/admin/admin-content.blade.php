@@ -38,7 +38,7 @@
     <div id="layoutSidenav_content">
         <div class="container-fluid mt-2">
             <!-- Slotted content -->
-            <h2>Dashboard</h2>
+            @yield('content')
             <!--  -->
         </div>
     </div>
