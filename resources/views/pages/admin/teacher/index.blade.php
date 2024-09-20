@@ -2,6 +2,41 @@
 
 @section('content')
 <!-- Slotted content -->
+
+<!-- Popup messages -->
+@if (session('success'))
+<script>
+    Swal.fire({
+        icon: "success",
+        title: "{{ session('success') }}",
+        showConfirmButton: false,
+        timer: 1500
+    });
+</script>
+@endif
+
+@if (session('warning'))
+<script>
+    Swal.fire({
+        icon: "warning",
+        title: "{{ session('warning') }}",
+        showConfirmButton: true,
+    });
+</script>
+@endif
+
+@if (session('error'))
+<script>
+    Swal.fire({
+        icon: "error",
+        title: "{{ session('error') }}",
+        showConfirmButton: true,
+    });
+</script>
+@endif
+<!--  -->
+
+
 <h2>All Teachers</h2>
 <table class="table table-responsive">
     <thead>

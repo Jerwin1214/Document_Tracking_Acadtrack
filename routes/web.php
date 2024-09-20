@@ -43,6 +43,8 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         ->name('admin.teachers.index');
     Route::get('/admin/teachers/create', [TeacherController::class, 'create'])
         ->name('admin.teachers.create');
+    Route::post('/admin/teachers', [TeacherController::class, 'store'])
+        ->name('admin.teachers.store');
 });
 
 // Student routes
