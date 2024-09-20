@@ -13,11 +13,9 @@
             </x-nav-link>
 
             <x-nav-link idNumber="2" link_name="Teachers" icon_class="fa-solid fa-chalkboard-user">
-                <x-sub-nav-link href="./view-playlists.php">View</x-sub-nav-link>
-                <x-sub-nav-link href="./add-playlist.php">Add</x-sub-nav-link>
+                <x-sub-nav-link href="/admin/teachers/show">View</x-sub-nav-link>
+                <x-sub-nav-link href="/admin/teachers/create">Add</x-sub-nav-link>
             </x-nav-link>
-
-
 
             <div class="sb-sidenav-menu-heading">Addons</div>
             <a class="nav-link" href="./teacher-profile.php">
@@ -38,7 +36,7 @@
     <div id="layoutSidenav_content">
         <div class="container-fluid mt-2">
             <!-- Slotted content -->
-            <h1>This is {{ auth()->user()->role }}</h1>
+            <h2>Dashboard</h2>
             <!--  -->
         </div>
     </div>

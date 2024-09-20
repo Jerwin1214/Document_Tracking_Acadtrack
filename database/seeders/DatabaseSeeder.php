@@ -63,6 +63,7 @@ class DatabaseSeeder extends Seeder
                 'first_name' => 'Test',
                 'last_name' => 'Teacher',
                 'nic' => '123456789V',
+                'dob' => '1990-01-01',
                 'created_at' => now(),
             ],
         ]);

@@ -17,7 +17,9 @@ class UserRoleFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            ['name' => 'Admin',],
+            ['name' => 'Teacher',],
+            ['name' => 'Student',]
         ];
     }
 }

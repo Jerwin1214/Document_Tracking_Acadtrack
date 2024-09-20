@@ -1,10 +1,13 @@
 <?php
 
+// controllers
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentRegisterController;
 use App\Http\Controllers\TeacherController;
+
+// middlewares
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\StudentMiddleware;
 use App\Http\Middleware\TeacherMiddleware;
@@ -20,6 +23,8 @@ Route::post('/register', [StudentRegisterController::class, 'store'])->name('reg
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])
         ->name('admin.dashboard');
+
+    // students
     Route::get('/admin/students/show', [StudentController::class, 'showAllStudents'])
         ->name('admin.students.index');
     Route::get('/admin/students/create', [StudentController::class, 'create'])
@@ -32,6 +37,12 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         ->name('admin.students.update');
     Route::get('/admin/students/{student}', [StudentController::class, 'show'])
         ->name('admin.students.show');
+
+    // teachers
+    Route::get('/admin/teachers/show', [TeacherController::class, 'showAllTeachers'])
+        ->name('admin.teachers.index');
+    Route::get('/admin/teachers/create', [TeacherController::class, 'create'])
+        ->name('admin.teachers.create');
 });
 
 // Student routes

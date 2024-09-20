@@ -14,7 +14,7 @@ class TeacherController extends Controller
 
     public function create()
     {
-        // TODO: implement the create method
+        return view('pages.admin.teacher.add');
     }
 
     public function store()
@@ -22,6 +22,11 @@ class TeacherController extends Controller
         // TODO: implement the store method
     }
 
+    public function showAllTeachers()
+    {
+        $teachers = Teacher::all();
+        return view('pages.admin.teacher.index', ['teachers' => $teachers]);
+    }
     public function show(Teacher $teacher)
     {
         // TODO: implement the show method

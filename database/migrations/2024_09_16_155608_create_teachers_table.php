@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use \App\Models\UserRole;
 
 return new class extends Migration
 {
@@ -19,9 +18,8 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name')->nullable();
             $table->string('nic')->unique();
+            $table->date('dob');
             $table->foreignId('user_id')->constrained('users');
-            // $table->foreign('role_id')->references('id')->on('user_roles');
-            // $table->foreignIdFor(UserRole::class, 'role_id')->constrained('user_role', 'id')->cascadeOnDelete();
             $table->timestamps();
         });
     }
