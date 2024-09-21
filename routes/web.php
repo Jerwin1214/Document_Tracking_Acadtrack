@@ -49,8 +49,9 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/subjects/{subject}/edit', [SubjectController::class, 'edit'])->name('admin.subjects.edit');
     Route::patch('/admin/subjects/{subject}', [SubjectController::class, 'update'])->name('admin.subjects.update');
     Route::delete('/admin/subjects/{subject}', [SubjectController::class, 'destroy'])->name('admin.subjects.destroy');
-    Route::get('/admin/subjects/assign', [SubjectController::class, 'assignTeachersView'])->name('admin.subjects.assign');
+    Route::get('/admin/subjects/assign', [SubjectController::class, 'assignTeachersView'])->name('admin.subjects.assignView');
     Route::post('/admin/subjects/assign', [SubjectController::class, 'assignTeachers'])->name('admin.subjects.assign');
+    Route::get('/admin/subjects/teachers/{teacher}', [SubjectController::class, 'showAssignedSubjectsForTeacher'])->name('admin.subjects.teachers');
 });
 
 // Student routes

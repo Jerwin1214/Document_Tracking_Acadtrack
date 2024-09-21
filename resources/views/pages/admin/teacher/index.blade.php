@@ -44,6 +44,7 @@
             <th>#</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Subjects</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -57,6 +58,13 @@
             <td>{{ $i }}</td>
             <td>{{ $teacher->salutation }} {{ $teacher->initials }} {{ $teacher->first_name }} {{ $teacher->last_name }}</td>
             <td>{{ $teacher->user->email }}</td>
+            <td>
+                <ul>
+                    @foreach ($teacher->subjects as $subject)
+                    <li title="{{$subject->name}}">{{$subject->code}}</li>
+                    @endforeach
+                </ul>
+            </td>
             <td>
                 <a href="/admin/teachers/{{ $teacher->id }}" class="btn btn-primary btn-sm">View</a>
                 <a href="/admin/teachers/{{ $teacher->id }}/edit" class="btn btn-warning btn-sm">Edit</a>
