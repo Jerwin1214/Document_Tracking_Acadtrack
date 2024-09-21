@@ -65,21 +65,41 @@ class TeacherController extends Controller
     }
     public function show(Teacher $teacher)
     {
-        // TODO: implement the show method
+        return view('pages.admin.teacher.show', ['teacher' => $teacher]);
     }
 
     public function edit(Teacher $teacher)
     {
-        // TODO: implement the edit method
+        return view('pages.admin.teacher.edit', ['teacher' => $teacher]);
     }
 
-    public function update(Teacher $teacher)
+    public function update(Request $request, Teacher $teacher)
     {
         // TODO: implement the update method
+        $request->validate([
+            'salutation' => ['required', 'string', 'max:5'],
+            'initials' => ['required', 'string', 'max:15'],
+            'first_name' => ['required', 'string', 'max:30'],
+            'last_name' => ['required', 'string', 'max:50'],
+            'nic' => ['required', 'string', 'max:12'],
+            'dob' => ['required', 'date'],
+        ]);
+
+        $teacher->update([
+            'salutation' => $request->salutation,
+            'initials' => $request->initials,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'nic' => $request->nic,
+            'dob' => $request->dob,
+        ]);
+
+        return redirect('/admin/teachers/show')->with('success', 'Teacher updated successfully');
     }
 
     public function destroy(Teacher $teacher)
     {
-        // TODO: implement the destroy method
+        $teacher->user()->delete();
+        return redirect('/admin/teachers/show')->with('success', 'Teacher deleted successfully');
     }
 }

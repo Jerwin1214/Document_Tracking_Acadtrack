@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('index_no')->unique()->nullable();
             $table->timestamps();
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('guardian_id')->nullable()->constrained('guardians')->onDelete('cascade');
+            $table->foreignId('guardian_id')->nullable()->constrained('guardians')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 
