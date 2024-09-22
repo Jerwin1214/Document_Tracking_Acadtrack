@@ -102,4 +102,10 @@ class TeacherController extends Controller
         $teacher->user()->delete();
         return redirect('/admin/teachers/show')->with('success', 'Teacher deleted successfully');
     }
+
+    public function countTeachers()
+    {
+        $count = Teacher::count();
+        return response($count);
+    }
 }

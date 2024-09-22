@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\Student;
+use App\Models\Subject;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        return view('pages.admin.dashboard');
+        return view('pages.admin.dashboard', ['students' => Student::all(), 'teachers' => Teacher::all(), 'subjects' => Subject::all()]);
     }
 
     public function create()

@@ -101,4 +101,10 @@ class SubjectController extends Controller
         $subjects = $teacher->subjects;
         return response($subjects);
     }
+
+    public function countSubjects()
+    {
+        $count = Subject::count();
+        return response($count);
+    }
 }

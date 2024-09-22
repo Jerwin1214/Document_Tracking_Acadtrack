@@ -15,10 +15,10 @@ use App\Http\Middleware\TeacherMiddleware;
 use Illuminate\Support\Facades\Route;
 
 // Auth and login routes
-Route::get('/', [SessionController::class, 'create'])->name('login');
-Route::post('/', [SessionController::class, 'store'])->name('login');
-Route::get('/register', [StudentRegisterController::class, 'create'])->name('register');
-Route::post('/register', [StudentRegisterController::class, 'store'])->name('register');
+Route::get('/', [SessionController::class, 'create'])->name('login.create');
+Route::post('/', [SessionController::class, 'store'])->name('login.store');
+Route::get('/register', [StudentRegisterController::class, 'create'])->name('register.create');
+Route::post('/register', [StudentRegisterController::class, 'store'])->name('register.store');
 
 // Admin routes
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {

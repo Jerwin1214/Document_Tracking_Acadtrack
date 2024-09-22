@@ -132,4 +132,10 @@ class StudentController extends Controller
     {
         // TODO: implement the destroy method
     }
+
+    public function countStudents()
+    {
+        $count = Student::count();
+        return response($count);
+    }
 }
