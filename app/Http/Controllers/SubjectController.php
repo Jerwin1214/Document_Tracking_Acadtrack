@@ -86,12 +86,25 @@ class SubjectController extends Controller
             'teacher' => ['required'],
             'subjects' => ['required'],
         ]);
-        foreach ($request->subjects as $subject_id) {
-            DB::table('subject_teacher')->insert([
-                'subject_id' => $subject_id,
-                'teacher_id' => $request->teacher,
-                'created_at' => now(),
-            ]);
+
+        // Get the subjects already assigned to this teacher
+        $existingSubjects = DB::table('subject_teacher')
+            ->where('teacher_id', $request->teacher)
+            ->pluck('subject_id')
+            ->toArray();
+
+        // Filter out the subjects that are already assigned
+        $newSubjects = array_diff($request->subjects, $existingSubjects);
+
+        // If there are new subjects, insert them
+        if (!empty($newSubjects)) {
+            foreach ($newSubjects as $subject_id) {
+                DB::table('subject_teacher')->insert([
+                    'subject_id' => $subject_id,
+                    'teacher_id' => $request->teacher,
+                    'created_at' => now(),
+                ]);
+            }
         }
         return redirect('/admin/teachers/show')->with('success', 'Subject assiged to teacher successfully');
     }
