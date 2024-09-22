@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Subject;
 use App\Models\User;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
@@ -70,7 +71,7 @@ class TeacherController extends Controller
 
     public function edit(Teacher $teacher)
     {
-        return view('pages.admin.teacher.edit', ['teacher' => $teacher]);
+        return view('pages.admin.teacher.edit', ['teacher' => $teacher, 'subjects' => Subject::all()]);
     }
 
     public function update(Request $request, Teacher $teacher)

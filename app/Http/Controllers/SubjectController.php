@@ -93,10 +93,13 @@ class SubjectController extends Controller
             ->pluck('subject_id')
             ->toArray();
 
-        // Filter out the subjects that are already assigned
+        // Find subjects that need to be added (checked but not in the database)
         $newSubjects = array_diff($request->subjects, $existingSubjects);
 
-        // If there are new subjects, insert them
+        // Find subjects that need to be removed (unchecked but in the database)
+        $removedSubjects = array_diff($existingSubjects, $request->subjects);
+
+        // Insert new subjects
         if (!empty($newSubjects)) {
             foreach ($newSubjects as $subject_id) {
                 DB::table('subject_teacher')->insert([
@@ -105,6 +108,14 @@ class SubjectController extends Controller
                     'created_at' => now(),
                 ]);
             }
+        }
+
+        // Delete unassigned subjects
+        if (!empty($removedSubjects)) {
+            DB::table('subject_teacher')
+                ->where('teacher_id', $request->teacher)
+                ->whereIn('subject_id', $removedSubjects)
+                ->delete();
         }
         return redirect('/admin/teachers/show')->with('success', 'Subject assiged to teacher successfully');
     }
