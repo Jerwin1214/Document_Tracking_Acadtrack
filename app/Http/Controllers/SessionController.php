@@ -46,7 +46,7 @@ class SessionController extends Controller
             default:
                 // Handle if the user doesn't have a role
                 Auth::logout();
-                return redirect('/login')->withErrors([
+                return redirect('/')->withErrors([
                     'role' => 'User does not have a valid role.'
                 ]);
         }

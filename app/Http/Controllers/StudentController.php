@@ -130,7 +130,8 @@ class StudentController extends Controller
 
     public function destroy(Student $student)
     {
-        // TODO: implement the destroy method
+        $student->user()->delete();
+        return redirect('/admin/students/show')->with('success', 'Student deleted successfully');
     }
 
     public function countStudents()
