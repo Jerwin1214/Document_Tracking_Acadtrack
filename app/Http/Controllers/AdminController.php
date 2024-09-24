@@ -41,4 +41,19 @@ class AdminController extends Controller
     {
         // TODO: implement the destroy method
     }
+
+    public function showProfile()
+    {
+        return view('pages.admin.profile');
+    }
+
+    public function showSettings()
+    {
+        return view('pages.admin.settings');
+    }
+
+    public function updateSettings(Request $request)
+    {
+        // TODO: implement the updateSettings method
+    }
 }

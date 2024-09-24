@@ -12,13 +12,14 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\StudentMiddleware;
 use App\Http\Middleware\TeacherMiddleware;
+
 use Illuminate\Support\Facades\Route;
 
 // Auth and login routes
 Route::get('/', [SessionController::class, 'create'])->name('login');
 Route::post('/', [SessionController::class, 'store'])->name('login');
-Route::get('/register', [StudentRegisterController::class, 'create'])->name('register.create');
-Route::post('/register', [StudentRegisterController::class, 'store'])->name('register.store');
+Route::get('/register', [StudentRegisterController::class, 'create'])->name('register');
+Route::post('/register', [StudentRegisterController::class, 'store'])->name('register');
 
 // Admin routes
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
@@ -52,6 +53,13 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/subjects/assign', [SubjectController::class, 'assignTeachersView'])->name('admin.subjects.assignView');
     Route::post('/admin/subjects/assign', [SubjectController::class, 'assignTeachers'])->name('admin.subjects.assign');
     Route::get('/admin/subjects/teachers/{teacher}', [SubjectController::class, 'showAssignedSubjectsForTeacher'])->name('admin.subjects.teachers');
+
+    // profile
+    Route::get('/admin/profile', [AdminController::class, 'showProfile'])->name('admin.profile');
+
+    // settings
+    Route::get('/admin/settings', [AdminController::class, 'showSettings'])->name('admin.settings');
+    Route::patch('/admin/settings', [AdminController::class, 'updateSettings'])->name('admin.settings.update');
 });
 
 // Student routes

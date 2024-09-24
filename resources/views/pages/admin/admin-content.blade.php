@@ -25,11 +25,11 @@
             </x-nav-link>
 
             <div class="sb-sidenav-menu-heading">Addons</div>
-            <a class="nav-link" href="./teacher-profile.php">
+            <a class="nav-link" href="/admin/profile">
                 <div class="sb-nav-link-icon"><i class="fa fa-user" aria-hidden="true"></i></div>
                 Profile
             </a>
-            <a class="nav-link getPopup" href="./settings.php">
+            <a class="nav-link getPopup" href="/admin/settings">
                 <div class="sb-nav-link-icon"><i class="fa-solid fa-gear"></i></div>
                 Settings
             </a>
