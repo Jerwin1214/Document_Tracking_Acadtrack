@@ -62,23 +62,35 @@ class AdminController extends Controller
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
-        if ($request->email != auth()->user()->email) {
-            // email has changed
-            $request->validate([
-                'email' => ['unique:users,email'],
-            ]);
-            // change the email and logout with a message
-            User::where('id', auth()->user()->id)
-                ->update(['email' => $request->email]);
-            // logout functionality
-            Auth::logout();
-            // invalidate the user
-            request()->session()->invalidate();
-            // regenerte the CSRF token
-            request()->session()->regenerateToken();
-            // redirect to the login page
-            return redirect('/')->with('success', 'Email changed successfully. Please login again');
+        $user = auth()->user();
+
+        // Flag to track if email changed
+        $emailChanged = false;
+
+        // Check if email has changed
+        if ($request->email != $user->email) {
+            $request->validate(['email' => ['unique:users,email']]);
+            $user->update(['email' => $request->email]);
+            $emailChanged = true;
         }
-        return back()->with('info', 'Changes not saved');
+
+        // Check if password change is requested
+        if ($request->old_password && $request->password) {
+            if (!password_verify($request->old_password, $user->password)) {
+                return back()->with('error', 'Old password is incorrect');
+            }
+
+            $user->update(['password' => bcrypt($request->password)]);
+        }
+
+        // If email changed, log the user out
+        if ($emailChanged) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect('/')->with('success', 'Email and password changed. Please login again.');
+        }
+
+        return redirect('/')->with('success', 'Password changed successfully');
     }
 }
