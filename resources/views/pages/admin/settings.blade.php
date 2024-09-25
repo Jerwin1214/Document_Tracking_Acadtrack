@@ -2,6 +2,49 @@
 
 @section('content')
 <h2>Settings</h2>
+
+<!-- Popup messages -->
+@if (session('success'))
+<script>
+    Swal.fire({
+        icon: "success",
+        title: "{{ session('success') }}",
+        showConfirmButton: false,
+        timer: 1500
+    });
+</script>
+@endif
+
+@if (session('warning'))
+<script>
+    Swal.fire({
+        icon: "warning",
+        title: "{{ session('warning') }}",
+        showConfirmButton: true,
+    });
+</script>
+@endif
+
+@if (session('error'))
+<script>
+    Swal.fire({
+        icon: "error",
+        title: "{{ session('error') }}",
+        showConfirmButton: true,
+    });
+</script>
+@endif
+@if (session('info'))
+<script>
+    Swal.fire({
+        icon: "info",
+        title: "{{ session('info') }}",
+        showConfirmButton: true,
+    });
+</script>
+@endif
+<!--  -->
+
 <div class="shadow-lg p-3 mb-5 mt-3 bg-body-tertiary rounded">
     <form action="/admin/settings" method="post">
         @csrf
@@ -13,17 +56,17 @@
         </div>
         <div class="mb-3">
             <label for="old_password" class="form-label">Old Password</label>
-            <input type="password" name="old_password" id="old_password" class="form-control" required>
+            <input type="password" name="old_password" id="old_password" class="form-control">
             <x-form-error name="old_password" />
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">New Password</label>
-            <input type="password" name="password" id="password" class="form-control" required>
+            <input type="password" name="password" id="password" class="form-control">
             <x-form-error name="password" />
         </div>
         <div class="mb-3">
             <label for="password_confirmation" class="form-label">Re-enter the New Password</label>
-            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
+            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
             <x-form-error name="password_confirmation" />
         </div>
 

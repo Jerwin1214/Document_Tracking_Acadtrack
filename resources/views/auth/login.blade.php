@@ -7,6 +7,8 @@
     <title>Login | Student Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Sweetalert 2 cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .card-registration .select-input.form-control[readonly]:not([disabled]) {
             font-size: 1rem;
@@ -22,6 +24,48 @@
 </head>
 
 <body>
+
+    <!-- Popup messages -->
+    @if (session('success'))
+    <script>
+        Swal.fire({
+            icon: "success",
+            title: "{{ session('success') }}",
+            showConfirmButton: false,
+            timer: 1500
+        });
+    </script>
+    @endif
+
+    @if (session('warning'))
+    <script>
+        Swal.fire({
+            icon: "warning",
+            title: "{{ session('warning') }}",
+            showConfirmButton: true,
+        });
+    </script>
+    @endif
+
+    @if (session('error'))
+    <script>
+        Swal.fire({
+            icon: "error",
+            title: "{{ session('error') }}",
+            showConfirmButton: true,
+        });
+    </script>
+    @endif
+    @if (session('info'))
+    <script>
+        Swal.fire({
+            icon: "info",
+            title: "{{ session('info') }}",
+            showConfirmButton: true,
+        });
+    </script>
+    @endif
+    <!--  -->
 
     <!-- Content -->
     <section class="d-flex justify-content-center align-items-center bg-dark" style="min-height: 100vh;">
