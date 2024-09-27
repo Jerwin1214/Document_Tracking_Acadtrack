@@ -95,4 +95,12 @@
     </div>
 </form>
 <!--  -->
+
+<script>
+    $(document).ready(function() {
+        // set page title
+        $(document).prop('title', 'Add New Student | Student Management System');
+    });
+</script>
+
 @endsection

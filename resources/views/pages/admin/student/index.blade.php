@@ -74,4 +74,12 @@
     </tbody>
 </table>
 <!--  -->
+
+<script>
+    $(document).ready(function() {
+        // set page title
+        $(document).prop('title', 'All Students | Student Management System');
+    });
+</script>
+
 @endsection

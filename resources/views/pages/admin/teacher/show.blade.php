@@ -93,4 +93,12 @@
     </div>
 </div>
 <!--  -->
+
+<script>
+    $(document).ready(function() {
+        // set page title
+        $(document).prop('title', 'Teacher Profile | Student Management System');
+    });
+</script>
+
 @endsection

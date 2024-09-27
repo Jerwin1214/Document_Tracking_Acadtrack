@@ -72,4 +72,12 @@
     </tbody>
 </table>
 <!--  -->
+
+<script>
+    $(document).ready(function() {
+        // set page title
+        $(document).prop('title', 'All Subjects | Student Management System');
+    });
+</script>
+
 @endsection

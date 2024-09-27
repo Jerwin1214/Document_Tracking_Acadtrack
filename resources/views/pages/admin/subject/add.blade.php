@@ -28,4 +28,12 @@
     </div>
 </form>
 <!--  -->
+
+<script>
+    $(document).ready(function() {
+        // set page title
+        $(document).prop('title', 'Add New Subject | Student Management System');
+    });
+</script>
+
 @endsection

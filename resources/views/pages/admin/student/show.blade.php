@@ -108,4 +108,12 @@
     </div>
 </div>
 <!--  -->
+
+<script>
+    $(document).ready(function() {
+        // set page title
+        $(document).prop('title', 'Student Profile | Student Management System');
+    });
+</script>
+
 @endsection

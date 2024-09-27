@@ -1,7 +1,7 @@
 @extends('pages.admin.admin-content');
 <!-- Slotted content -->
 @section('content')
-<h2>Add New Subject</h2>
+<h2>Edit {{$subject->name}}</h2>
 <form action="/admin/subjects/{{$subject->id}}" method="post" class="shadow-lg p-3 mb-5 mt-3 bg-body-tertiary rounded">
     @csrf
     @method('PATCH')
@@ -29,4 +29,12 @@
     </div>
 </form>
 <!--  -->
+
+<script>
+    $(document).ready(function() {
+        // set page title
+        $(document).prop('title', 'Edit Subject | Student Management System');
+    });
+</script>
+
 @endsection

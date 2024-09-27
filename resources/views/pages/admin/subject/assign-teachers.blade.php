@@ -42,6 +42,9 @@
 
 <script>
     $(document).ready(function() {
+        // set page title
+        $(document).prop('title', 'Assign Subjects to Teachers | Student Management System');
+
         const $assignButton = $("button[type=submit]");
         const preAssignedSubjects = [];
 

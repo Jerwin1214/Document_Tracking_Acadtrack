@@ -28,5 +28,10 @@
         </div>
     </div>
 </div>
-
+<script>
+    $(document).ready(function() {
+        // set page title
+        $(document).prop('title', 'Admin Dashboard | Student Management System');
+    });
+</script>
 @endsection

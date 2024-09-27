@@ -76,4 +76,12 @@
         </div>
     </form>
 </div>
+
+<script>
+    $(document).ready(function() {
+        // set page title
+        $(document).prop('title', 'Settings | Student Management System');
+    });
+</script>
+
 @endsection

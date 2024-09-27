@@ -6,7 +6,7 @@
 <form action="/admin/teachers/{{$teacher->id}}" method="post" class="shadow-lg p-3 mb-5 mt-3 bg-body-tertiary rounded">
     @csrf
     @method('PATCH')
-    <h3>Teacher's Details</h3>
+    <h3>Edit {{$teacher->first_name}} {{$teacher->last_name}}</h3>
     <div class="row">
         <div class="col-md-2">
             <div class="mb-3">
@@ -95,6 +95,10 @@
 
 <script>
     $(document).ready(function() {
+
+        // set page title
+        $(document).prop('title', 'Edit Teacher | Student Management System');
+
         const $assignButton = $("#asgn[type=submit]");
         let preAssignedSubjects = [];
 
