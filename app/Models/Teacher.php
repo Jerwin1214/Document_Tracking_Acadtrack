@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use \App\Models\Subject;
 use \App\Models\User;
+use \App\Models\Classes;
 
 class Teacher extends Model
 {
@@ -22,13 +23,21 @@ class Teacher extends Model
         return [];
     }
 
+    // for user
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    // for subjects
     public function subjects()
     {
         return $this->belongsToMany(Subject::class);
+    }
+
+    // for classes
+    public function classes()
+    {
+        return $this->belongsToMany(Classes::class);
     }
 }

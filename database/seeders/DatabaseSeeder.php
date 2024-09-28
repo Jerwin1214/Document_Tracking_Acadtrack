@@ -93,5 +93,24 @@ class DatabaseSeeder extends Seeder
                 'created_at' => now(),
             ]
         ]);
+
+        // for grade table
+        DB::table('grades')->insert([
+            ['name' => 'Grade 1'],
+            ['name' => 'Grade 2'],
+            ['name' => 'Grade 3'],
+            ['name' => 'Grade 4'],
+            ['name' => 'Grade 5'],
+            ['name' => 'Grade 6'],
+            ['name' => 'Grade 7'],
+            ['name' => 'Grade 8'],
+            ['name' => 'Grade 9'],
+            ['name' => 'Grade 10'],
+            ['name' => 'Grade 11'],
+            ['name' => 'After O/L'],
+            ['name' => 'Grade 12'],
+            ['name' => 'Grade 13'],
+            ['name' => 'After A/L'],
+        ]);
     }
 }

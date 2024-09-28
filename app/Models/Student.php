@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use \App\Models\Guardian;
 use \App\Models\User;
+use \App\Models\Classes;
 
 class Student extends Model
 {
@@ -31,5 +32,10 @@ class Student extends Model
     public function guardian()
     {
         return $this->belongsTo(Guardian::class);
+    }
+
+    public function classes()
+    {
+        return $this->belongsToMany(Classes::class);
     }
 }
