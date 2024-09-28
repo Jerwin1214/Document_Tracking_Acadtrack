@@ -11,7 +11,7 @@ use App\Models\Subject;
 class Classes extends Model
 {
 
-    protected $table = 'class';
+    protected $table = 'classes';
 
     protected $guared = [];
 

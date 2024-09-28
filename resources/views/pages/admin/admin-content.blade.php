@@ -24,6 +24,12 @@
                 <x-sub-nav-link href="/admin/subjects/assign">Assign Teachers</x-sub-nav-link>
             </x-nav-link>
 
+            <x-nav-link idNumber="4" link_name="Classes" icon_class="fa-solid fa-chalkboard">
+                <x-sub-nav-link href="/admin/class/create">Add</x-sub-nav-link>
+                <x-sub-nav-link href="/admin/class/show">View</x-sub-nav-link>
+                <x-sub-nav-link href="/admin/class/assign">Assign Students</x-sub-nav-link>
+            </x-nav-link>
+
             <div class="sb-sidenav-menu-heading">Addons</div>
             <a class="nav-link" href="/admin/profile">
                 <div class="sb-nav-link-icon"><i class="fa fa-user" aria-hidden="true"></i></div>

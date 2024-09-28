@@ -2,6 +2,7 @@
 
 // controllers
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ClassController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentRegisterController;
@@ -53,6 +54,17 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/subjects/assign', [SubjectController::class, 'assignTeachersView'])->name('admin.subjects.assignView');
     Route::post('/admin/subjects/assign', [SubjectController::class, 'assignTeachers'])->name('admin.subjects.assign');
     Route::get('/admin/subjects/teachers/{teacher}', [SubjectController::class, 'showAssignedSubjectsForTeacher'])->name('admin.subjects.teachers');
+
+    // classes
+    Route::get('/admin/class/create', [ClassController::class, 'create'])->name('admin.classes.create');
+    Route::post('/admin/class', [ClassController::class, 'store'])->name('admin.classes.store');
+    Route::get('/admin/class/show', [ClassController::class, 'index'])->name('admin.classes.index');
+    Route::get('/admin/class/{class}', [ClassController::class, 'show'])->name('admin.classes.show');
+    Route::get('/admin/class/{class}/edit', [ClassController::class, 'edit'])->name('admin.classes.edit');
+    Route::patch('/admin/class/{class}', [ClassController::class, 'update'])->name('admin.classes.update');
+    Route::delete('/admin/class/{class}', [ClassController::class, 'destroy'])->name('admin.classes.destroy');
+    // Route::get('/admin/class/assign', [ClassController::class, 'assignStudentsView'])->name('admin.classes.assignView');
+    // Route::post('/admin/class/assign', [ClassController::class, 'assignStudents'])->name('admin.classes.assign');
 
     // profile
     Route::get('/admin/profile', [AdminController::class, 'showProfile'])->name('admin.profile');
