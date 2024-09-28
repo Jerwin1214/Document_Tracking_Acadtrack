@@ -13,7 +13,7 @@ class Classes extends Model
 
     protected $table = 'classes';
 
-    protected $guared = [];
+    protected $guarded = [];
 
     // for students
     public function students()

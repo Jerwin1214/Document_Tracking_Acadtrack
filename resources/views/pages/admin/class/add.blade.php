@@ -61,4 +61,11 @@
 
 </form>
 
+<script>
+    $(document).ready(function() {
+        // set page title
+        $(document).prop('title', 'Add New Class');
+    })
+</script>
+
 @endsection

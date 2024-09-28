@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Classes;
 use App\Models\Grade;
-use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
@@ -23,7 +22,26 @@ class ClassController extends Controller
 
     public function store(Request $request)
     {
-        // TODO: implement the store method
+        // validate the request
+        $request->validate([
+            'grade' => ['required'],
+            'class_name' => ['required', 'string'],
+            'subject' => ['required'],
+            'teacher' => ['required'],
+            'year' => ['required', 'numeric'],
+        ]);
+
+        // create the class
+        Classes::create([
+            'grade_id' => $request->grade,
+            'name' => $request->class_name,
+            'subject_id' => $request->subject,
+            'teacher_id' => $request->teacher,
+            'year' => $request->year,
+        ]);
+
+        // redirect to the all classes page
+        return redirect('/admin/class/show')->with('success', 'Class created successfully');
     }
 
     public function show(Classes $class)
@@ -44,6 +62,8 @@ class ClassController extends Controller
     public function destroy(Classes $class)
     {
         // TODO: implement the destroy method
+        $class->delete();
+        return redirect('/admin/class/show')->with('success', 'Class deleted successfully');
     }
 
     public function assignStudentsView(Classes $class)
