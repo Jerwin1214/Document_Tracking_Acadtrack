@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Guardian;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,12 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'gender'=>'Male',
+            'dob'=>fake()->date(),
+            'user_id'=>User::factory(),
+            'guardian_id' => Guardian::factory(),
         ];
     }
 }

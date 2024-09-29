@@ -6,6 +6,7 @@ use App\Models\Classes;
 use App\Models\Grade;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class ClassController extends Controller
@@ -86,8 +87,7 @@ class ClassController extends Controller
 
     public function assignStudentsView(Classes $class)
     {
-        // return view('pages.admin.class.assign-students', ['class' => $class, 'students' => Student::all()]);
-        dd("HI");
+         return view('pages.admin.class.assign-students', ['class' => $class, 'students' => Student::all()]);
     }
 
     public function assignStudents(Request $request, Classes $class)

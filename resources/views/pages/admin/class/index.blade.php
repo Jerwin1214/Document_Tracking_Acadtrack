@@ -70,6 +70,7 @@
                 <td>0</td>
                 <td>
                     <a href="/admin/class/{{ $class->id }}" class="btn btn-primary btn-sm">View</a>
+                    <a href="/admin/class/{{ $class->id }}/assign" class="btn btn-info btn-sm">Assign</a>
                     <a href="/admin/class/{{ $class->id }}/edit" class="btn btn-warning btn-sm">Edit</a>
                     <form action="/admin/class/{{ $class->id }}" method="POST" style="display: inline;">
                         @csrf

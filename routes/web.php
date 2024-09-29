@@ -63,8 +63,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/class/{class}/edit', [ClassController::class, 'edit'])->name('admin.classes.edit');
     Route::patch('/admin/class/{class}', [ClassController::class, 'update'])->name('admin.classes.update');
     Route::delete('/admin/class/{class}', [ClassController::class, 'destroy'])->name('admin.classes.destroy');
-    // Route::get('/admin/class/assign', [ClassController::class, 'assignStudentsView'])->name('admin.classes.assignView');
-    // Route::post('/admin/class/assign', [ClassController::class, 'assignStudents'])->name('admin.classes.assign');
+    Route::get('/admin/class/{class}/assign', [ClassController::class, 'assignStudentsView'])->name('admin.classes.assignView');
 
     // profile
     Route::get('/admin/profile', [AdminController::class, 'showProfile'])->name('admin.profile');
