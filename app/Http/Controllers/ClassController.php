@@ -51,7 +51,7 @@ class ClassController extends Controller
 
     public function edit(Classes $class)
     {
-        return view('pages.admin.class.edit', ['class' => $class]);
+        return view('pages.admin.class.edit', ['class' => $class, 'grades' => Grade::all(), 'subjects' => Subject::all(), 'teachers' => Teacher::all(),]);
     }
 
     public function update(Request $request, Classes $class)

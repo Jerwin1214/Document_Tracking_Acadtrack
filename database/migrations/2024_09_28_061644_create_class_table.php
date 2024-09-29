@@ -20,7 +20,7 @@ return new class extends Migration
             $table->year('year');
             $table->timestamps();
         });
-        // 2024_09_27_165302
+
     }
 
     /**
