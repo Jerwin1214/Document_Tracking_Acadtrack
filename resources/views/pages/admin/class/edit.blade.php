@@ -4,6 +4,7 @@
     <h2>Edit {{$class->name}} - {{$class->year}}</h2>
     <form action="/admin/class/{{$class->id}}" method="post" class="shadow-lg p-3 mb-5 mt-3 bg-body-tertiary rounded">
         @csrf
+        @method('PATCH')
         <div class="mb-3">
             <label for="grade" class="form-label">Grade</label>
             <select name="grade" id="grade" class="form-select">

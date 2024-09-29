@@ -56,7 +56,25 @@ class ClassController extends Controller
 
     public function update(Request $request, Classes $class)
     {
-        // TODO: implement the update method
+        // validate the user input
+        $request->validate([
+            'grade' => ['required'],
+            'class_name' => ['required', 'string'],
+            'subject' => ['required'],
+            'teacher' => ['required'],
+            'year' => ['required', 'numeric'],
+        ]);
+
+        $class->update([
+            'grade_id' => $request->grade,
+            'name' => $request->class_name,
+            'subject_id' => $request->subject,
+            'teacher_id' => $request->teacher,
+            'year' => $request->year,
+        ]);
+
+        // redirect to the show classes page with a success message
+        return redirect('/admin/class/show')->with('success', 'Class details updated successfully!');
     }
 
     public function destroy(Classes $class)
