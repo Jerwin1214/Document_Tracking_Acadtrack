@@ -92,6 +92,6 @@ class ClassController extends Controller
 
     public function assignStudents(Request $request, Classes $class)
     {
-        // TODO: implement the assignStudents method
+        dd($request->all());
     }
 }
