@@ -94,7 +94,16 @@ class ClassController extends Controller
 
     public function assignStudentsView(Classes $class)
     {
-        return view('pages.admin.class.assign-students', ['class' => $class, 'students' => Student::all()]);
+        $unassignedStudents = DB::table('students')
+            ->leftJoin('class_student', 'students.id', '=', 'class_student.student_id')
+            ->whereNull('class_student.class_id')
+            ->select('students.*')
+            ->get();
+
+        return view('pages.admin.class.assign-students', [
+            'class' => $class,
+            'students' => $unassignedStudents,
+        ]);
     }
 
     public function assignStudents(Request $request, Classes $class)
