@@ -60,14 +60,16 @@
                 @php
                     $teacher = \App\Models\Teacher::find($class->teacher_id);
                     $grade = \App\Models\Grade::find($class->grade_id);
+                    $subject = \App\Models\Subject::find($class->subject_id);
                 @endphp
+
                 <td>{{ $i }}</td>
                 <td>{{ $grade->name }}</td>
                 <td>{{ $class->name }}</td>
-                <td>{{ $class->subject->code }}</td>
+                <td>{{$subject->code}}</td>
                 <td>{{ $teacher->first_name }} {{ $teacher->last_name }}</td>
                 <td>{{ $class->year }}</td>
-                <td>0</td>
+                <td>{{$class->students_count}}</td>
                 <td>
                     <a href="/admin/class/{{ $class->id }}" class="btn btn-primary btn-sm">View</a>
                     <a href="/admin/class/{{ $class->id }}/assign" class="btn btn-info btn-sm">Assign</a>

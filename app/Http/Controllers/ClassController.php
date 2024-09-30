@@ -8,12 +8,19 @@ use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ClassController extends Controller
 {
     public function index()
     {
-        return view('pages.admin.class.index', ['classes' => Classes::all()]);
+        $classes = DB::table('classes')
+            ->leftJoin('class_student', 'classes.id', '=', 'class_student.class_id')
+            ->select('classes.id', 'classes.grade_id', 'classes.teacher_id', 'classes.subject_id', 'classes.name', 'classes.year', DB::raw('COUNT(class_student.student_id) as students_count'))
+            ->groupBy('classes.id', 'classes.grade_id', 'classes.teacher_id', 'classes.subject_id', 'classes.name', 'classes.year')
+            ->get();
+
+        return view('pages.admin.class.index', ['classes' => $classes]);
     }
 
     public function create()
@@ -87,11 +94,20 @@ class ClassController extends Controller
 
     public function assignStudentsView(Classes $class)
     {
-         return view('pages.admin.class.assign-students', ['class' => $class, 'students' => Student::all()]);
+        return view('pages.admin.class.assign-students', ['class' => $class, 'students' => Student::all()]);
     }
 
     public function assignStudents(Request $request, Classes $class)
     {
-        dd($request->all());
+//        dd($request->students);
+        foreach ($request->students as $student) {
+            DB::table('class_student')->insert([
+                'class_id' => $class->id,
+                'student_id' => $student,
+                'created_at' => now(),
+            ]);
+        }
+        // redirect to the show classes page with a success message
+        return redirect('/admin/class/show')->with('success', 'Students assigned to class successfully!');
     }
 }
