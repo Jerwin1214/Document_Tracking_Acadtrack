@@ -6,7 +6,6 @@ use App\Models\Classes;
 use App\Models\Grade;
 use App\Models\Subject;
 use App\Models\Teacher;
-use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
