@@ -92,4 +92,13 @@ class AdminController extends Controller
 
         return redirect('/')->with('success', 'Password changed successfully');
     }
+
+    public function showMessages()
+    {
+        return view('pages.admin.messages.index');
+    }
+
+    public function showMessage() {
+        return view('pages.admin.messages.show');
+    }
 }

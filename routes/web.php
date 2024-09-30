@@ -72,6 +72,11 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     // settings
     Route::get('/admin/settings', [AdminController::class, 'showSettings'])->name('admin.settings');
     Route::post('/admin/settings', [AdminController::class, 'updateSettings'])->name('admin.settings.update');
+
+    // messages
+    Route::get('/admin/messages', [AdminController::class, 'showMessages'])->name('admin.messages');
+    Route::get('/admin/messages/{message}', [AdminController::class, 'showMessage'])->name('admin.messages.show');
+
 });
 
 // Student routes

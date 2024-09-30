@@ -38,6 +38,10 @@
                 <div class="sb-nav-link-icon"><i class="fa-solid fa-gear"></i></div>
                 Settings
             </a>
+            <a class="nav-link getPopup" href="/admin/messages">
+                <div class="sb-nav-link-icon"><i class="fa-solid fa-message"></i></div>
+                Messages
+            </a>
             <a class="nav-link getPopup" href="/logout">
                 <div class="sb-nav-link-icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></div>
                 Logout
