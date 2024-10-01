@@ -40,8 +40,8 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/teachers/create', [TeacherController::class, 'create'])->name('admin.teachers.create');
     Route::post('/admin/teachers', [TeacherController::class, 'store'])->name('admin.teachers.store');
     Route::get('/admin/teachers/{teacher}', [TeacherController::class, 'show'])->name('admin.teacher.show');
-    Route::get('/admin/teachers/{teacher}/edit', [TeacherController::class, 'edit'])->name('admin.teachers.edit')->can('update', 'teacher');
-    Route::patch('/admin/teachers/{teacher}', [TeacherController::class, 'update'])->name('admin.teachers.update')->can('update', 'teacher');
+    Route::get('/admin/teachers/{teacher}/edit', [TeacherController::class, 'edit'])->name('admin.teachers.edit');
+    Route::patch('/admin/teachers/{teacher}', [TeacherController::class, 'update'])->name('admin.teachers.update');
     Route::delete('/admin/teachers/{teacher}', [TeacherController::class, 'destroy'])->name('admin.teachers.destroy');
 
     // subjects
@@ -79,15 +79,25 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
 });
 
+// Teacher routes
+Route::middleware(['auth', TeacherMiddleware::class])->group(function () {
+    Route::get('/teacher/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
+
+    // students section
+    Route::get('teacher/students/add', [StudentController::class, 'create'])->name('teacher.students.create');
+    Route::post('/teacher/students', [StudentController::class, 'store'])->name('teacher.student.store');
+    Route::get('/teacher/students/show', [StudentController::class, 'showAllStudents'])->name('teacher.students.index');
+    Route::get('/teacher/students/{student}', [StudentController::class, 'show'])->name('teacher.students.show')->can('view', 'student');
+    Route::get('/teacher/students/{student}/edit', [StudentController::class, 'edit'])->name('teacher.students.edit')->can('update', 'student');
+    Route::patch('/teacher/students/{student}', [StudentController::class, 'update'])->name('teacher.students.update')->can('update', 'student');
+    Route::delete('/teacher/students/{student}', [StudentController::class, 'destroy'])->name('teacher.students.destroy');
+});
+
 // Student routes
 Route::middleware(['auth', StudentMiddleware::class])->group(function () {
     Route::get('/student/dashboard', [StudentController::class, 'index'])->name('student.dashboard');
 });
 
-// Teacher routes
-Route::middleware(['auth', TeacherMiddleware::class])->group(function () {
-    Route::get('/teacher/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
-});
 
 // Logout route
 Route::get('/logout', [SessionController::class, 'destroy'])->name('logout');

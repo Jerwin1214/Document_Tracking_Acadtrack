@@ -6,18 +6,26 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use App\Models\Guardian;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
     public function index()
     {
-        // TODO: implement the index method
-        return view('pages.students.dashboard');
+        if (Auth::user()->role->name == 'Admin') {
+            return view('pages.admin.students.index');
+        } elseif (Auth::user()->role->name == 'Teacher') {
+            return view('pages.teachers.students.index');
+        }
     }
 
     public function create()
     {
-        return view('pages.admin.student.add');
+        if (Auth::user()->role->name == 'Admin') {
+            return view('pages.admin.student.add');
+        } elseif (Auth::user()->role->name == 'Teacher') {
+            return view('pages.teachers.students.add');
+        }
     }
 
     public function store(Request $request)
@@ -69,23 +77,40 @@ class StudentController extends Controller
             'guardian_id' => $guardian->id,
         ]);
 
-        return redirect('/admin/students/show')->with('success', 'Student added successfully');
+        if (Auth::user()->role->name == 'Admin') {
+            return redirect('/admin/students/show')->with('success', 'Student added successfully');
+        } elseif (Auth::user()->role->name == 'Teacher') {
+            return redirect('/teacher/students/show')->with('success', 'Student added successfully');
+
+        }
     }
 
     public function showAllStudents()
     {
         $students = Student::all();
-        return view('pages.admin.student.index', ['students' => $students]);
+        if (Auth::user()->role->name == 'Admin') {
+            return view('pages.admin.student.index', ['students' => $students]);
+        } elseif (Auth::user()->role->name == 'Teacher') {
+            return view('pages.teachers.students.index', ['students' => $students]);
+        }
     }
 
     public function show(Student $student)
     {
-        return view('pages.admin.student.show', ['student' => $student]);
+        if (Auth::user()->role->name == 'Admin') {
+            return view('pages.admin.student.show', ['student' => $student]);
+        } elseif (Auth::user()->role->name == 'Teacher') {
+            return view('pages.teachers.students.show', ['student' => $student]);
+        }
     }
 
     public function edit(Student $student)
     {
-        return view('pages.admin.student.edit', ['student' => $student]);
+        if (Auth::user()->role->name == 'Admin') {
+            return view('pages.admin.student.edit', ['student' => $student]);
+        } elseif (Auth::user()->role->name == 'Teacher') {
+            return view('pages.teachers.student.edit', ['student' => $student]);
+        }
     }
 
     public function update(Student $student, Request $request)
@@ -124,14 +149,21 @@ class StudentController extends Controller
             'nic' => $request->std_nic ?? "",
             'updated_at' => now(),
         ]);
-
-        return redirect('/admin/students/show')->with('success', 'Student updated successfully');
+        if (Auth::user()->role->name == 'Admin') {
+            return redirect('/admin/students/show')->with('success', 'Student updated successfully');
+        } elseif (Auth::user()->role->name == 'Teacher') {
+            return redirect('/teacher/students/show')->with('success', 'Student updated successfully');
+        }
     }
 
     public function destroy(Student $student)
     {
         $student->user()->delete();
-        return redirect('/admin/students/show')->with('success', 'Student deleted successfully');
+        if (Auth::user()->role->name == 'Admin') {
+            return redirect('/admin/students/show')->with('success', 'Student deleted successfully');
+        } elseif (Auth::user()->role->name == 'Teacher') {
+            return redirect('/teacher/students/show')->with('success', 'Student deleted successfully');
+        }
     }
 
     public function countStudents()
