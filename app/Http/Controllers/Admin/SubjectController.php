@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ class SubjectController extends Controller
 {
     public function index()
     {
-        // 
+        //
     }
 
     public function create()
