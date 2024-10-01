@@ -40,8 +40,8 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/teachers/create', [TeacherController::class, 'create'])->name('admin.teachers.create');
     Route::post('/admin/teachers', [TeacherController::class, 'store'])->name('admin.teachers.store');
     Route::get('/admin/teachers/{teacher}', [TeacherController::class, 'show'])->name('admin.teacher.show');
-    Route::get('/admin/teachers/{teacher}/edit', [TeacherController::class, 'edit'])->name('admin.teachers.edit');
-    Route::patch('/admin/teachers/{teacher}', [TeacherController::class, 'update'])->name('admin.teachers.update');
+    Route::get('/admin/teachers/{teacher}/edit', [TeacherController::class, 'edit'])->name('admin.teachers.edit')->can('update', 'teacher');
+    Route::patch('/admin/teachers/{teacher}', [TeacherController::class, 'update'])->name('admin.teachers.update')->can('update', 'teacher');
     Route::delete('/admin/teachers/{teacher}', [TeacherController::class, 'destroy'])->name('admin.teachers.destroy');
 
     // subjects
