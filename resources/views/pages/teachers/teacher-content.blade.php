@@ -8,8 +8,8 @@
             </a>
 
             <x-nav-link idNumber="1" link_name="Students" icon_class="fa-solid fa-user-graduate">
-                <x-sub-nav-link href="/teacher/students/add">View</x-sub-nav-link>
-                <x-sub-nav-link href="/teacher/students/view">Add</x-sub-nav-link>
+                <x-sub-nav-link href="/teacher/students/add">Add</x-sub-nav-link>
+                <x-sub-nav-link href="/teacher/students/show">View</x-sub-nav-link>
             </x-nav-link>
 
             <div class="sb-sidenav-menu-heading">Addons</div>

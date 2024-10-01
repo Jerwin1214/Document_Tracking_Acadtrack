@@ -1,4 +1,4 @@
-@extends('pages.students.student-content')
+@extends('pages.teachers.teacher-content')
 
 @section('content')
 <h2>Dashboard</h2>

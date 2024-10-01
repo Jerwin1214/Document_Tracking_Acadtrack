@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use App\Models\Guardian;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -87,11 +89,19 @@ class StudentController extends Controller
 
     public function showAllStudents()
     {
-        $students = Student::all();
         if (Auth::user()->role->name == 'Admin') {
+            $students = Student::all();
             return view('pages.admin.student.index', ['students' => $students]);
         } elseif (Auth::user()->role->name == 'Teacher') {
-            return view('pages.teachers.students.index', ['students' => $students]);
+            $teacherId = Teacher::where('user_id', Auth::user()->id)->first()->id;
+            $studentsOfTeacher = DB::table('students')
+                ->join('class_student', 'students.id', '=', 'class_student.student_id')
+                ->join('classes', 'class_student.class_id', '=', 'classes.id')
+                ->where('classes.teacher_id', $teacherId)
+                ->select('students.*')
+                ->distinct()
+                ->get();
+            return view('pages.teachers.students.index', ['students' => $studentsOfTeacher]);
         }
     }
 
