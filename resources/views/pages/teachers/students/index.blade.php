@@ -41,7 +41,6 @@
         <tr>
             <th>#</th>
             <th>Name</th>
-            <th>Email</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -55,10 +54,6 @@
             <tr>
                 <td>{{ $i }}</td>
                 <td>{{ $student->first_name }} {{ $student->last_name }}</td>
-                @php
-                    $user_email = \App\Models\User::where('id', $student->user_id)->first()->email;
-                @endphp
-                <td>{{ $user_email }}</td>
                 <td>
                     <a href="/admin/students/{{ $student->id }}" class="btn btn-primary btn-sm">View</a>
                     <a href="/admin/students/{{ $student->id }}/edit" class="btn btn-warning btn-sm">Edit</a>

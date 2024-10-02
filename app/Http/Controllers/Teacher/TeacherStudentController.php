@@ -72,20 +72,32 @@ class TeacherStudentController extends Controller
             'guardian_id' => $guardian->id,
         ]);
 
+        // insert data into class_student table
+        $teacherId = Teacher::where('user_id', Auth::user()->id)->first()->id;
+        $classId = DB::table('classes')->where('teacher_id', $teacherId)->first()->id;
+        DB::table('class_student')->insert([
+            'class_id' => $classId,
+            'student_id' => $student->id,
+            'created_at' => now(),
+        ]);
+
         return redirect('/teacher/students/show')->with('success', 'Student added successfully');
     }
 
     public function showAllStudents()
     {
-        $teacherId = Teacher::where('user_id', Auth::user()->id)->first()->id;
-        $studentsOfTeacher = DB::table('students')
-            ->join('class_student', 'students.id', '=', 'class_student.student_id')
-            ->join('classes', 'class_student.class_id', '=', 'classes.id')
-            ->where('classes.teacher_id', $teacherId)
-            ->select('students.*')
-            ->distinct()
-            ->get();
+        $teacher = Teacher::where('user_id', Auth::user()->id)->first();
+
+// Fetch students with the classes taught by the specific teacher
+        $studentsOfTeacher = Student::whereHas('classes', function ($query) use ($teacher) {
+            $query->where('teacher_id', $teacher->id);
+        })
+            ->with(['classes' => function ($query) use ($teacher) {
+                $query->where('teacher_id', $teacher->id);
+            }])->distinct()->get();
+
         return view('pages.teachers.students.index', ['students' => $studentsOfTeacher]);
+
     }
 
     public function show(Student $student)

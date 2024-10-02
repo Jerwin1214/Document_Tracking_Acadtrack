@@ -13,6 +13,7 @@ class Teacher extends Model
     use HasFactory;
 
     protected $guarded = [];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -38,6 +39,6 @@ class Teacher extends Model
     // for classes
     public function classes()
     {
-        return $this->belongsToMany(Classes::class);
+        return $this->hasMany(Classes::class);
     }
 }

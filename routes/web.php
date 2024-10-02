@@ -86,8 +86,8 @@ Route::middleware(['auth', TeacherMiddleware::class])->group(function () {
     Route::get('/teacher/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
 
     // students section
-    Route::get('teacher/students/add', [TeacherStudentController::class, 'create'])->name('teacher.students.create');
-    Route::post('/teacher/students', [TeacherStudentController::class, 'store'])->name('teacher.student.store');
+    Route::get('teacher/students/add', [TeacherStudentController::class, 'create'])->name('teacher.students.create')->can('create', \App\Models\Student::class);
+    Route::post('/teacher/students', [TeacherStudentController::class, 'store'])->name('teacher.student.store')->can('create', \App\Models\Student::class);
     Route::get('/teacher/students/show', [TeacherStudentController::class, 'showAllStudents'])->name('teacher.students.index');
     Route::get('/teacher/students/{student}', [TeacherStudentController::class, 'show'])->name('teacher.students.show')->can('view', 'student');
     Route::get('/teacher/students/{student}/edit', [TeacherStudentController::class, 'edit'])->name('teacher.students.edit')->can('update', 'student');
