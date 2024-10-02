@@ -5,42 +5,33 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Guardian;
 use App\Models\Student;
-use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
     public function index()
     {
-        if (Auth::user()->role->name == 'Admin') {
-            return view('pages.admin.students.index');
-        } elseif (Auth::user()->role->name == 'Teacher') {
-            return view('pages.teachers.students.index');
-        }
+        $students = Student::all();
+        return view('pages.admin.students.index', ['students' => $students]);
     }
 
     public function create()
     {
-        if (Auth::user()->role->name == 'Admin') {
-            return view('pages.admin.student.add');
-        } elseif (Auth::user()->role->name == 'Teacher') {
-            return view('pages.teachers.students.add');
-        }
+        return view('pages.admin.student.add');
     }
 
     public function store(Request $request)
     {
-        // validate user inputs
+        // Validate user inputs
         $request->validate([
             'std_first_name' => ['required', 'string', 'max:30'],
             'std_last_name' => ['required', 'string', 'max:50'],
             'gender' => ['required', 'string', 'max:5'],
-            'std_nic' => ['string', 'max:12'],
+            'std_nic' => ['nullable', 'string', 'max:12'], // Nullable to allow empty input
             'dob' => ['required', 'date'],
-            'email' => ['required', 'string', 'email', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'], // Ensure email is unique
             'password' => ['required', 'string', 'min:5'],
             'initials' => ['required', 'string', 'max:10'],
             'g_first_name' => ['required', 'string', 'max:30'],
@@ -49,79 +40,57 @@ class StudentController extends Controller
             'g_phone' => ['required', 'string', 'max:10'],
         ]);
 
-        // create a new student
-        // store data into the users table
-        $user = User::create([
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role_id' => 3,
-            'created_at' => now(),
-        ]);
+        // Use a transaction to ensure all data is stored correctly
+        DB::transaction(function () use ($request) {
+            // Create user
+            $user = User::create([
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'role_id' => 3, // Assuming role_id 3 is for students
+                'created_at' => now(),
+            ]);
 
-        // store data into the guardians table
-        $guardian = Guardian::create([
-            'initials' => $request->initials,
-            'first_name' => $request->g_first_name,
-            'last_name' => $request->g_last_name,
-            'nic' => $request->g_nic,
-            'phone_number' => $request->g_phone,
-            'created_at' => now(),
-        ]);
+            // Create guardian
+            $guardian = Guardian::create([
+                'initials' => $request->initials,
+                'first_name' => $request->g_first_name,
+                'last_name' => $request->g_last_name,
+                'nic' => $request->g_nic,
+                'phone_number' => $request->g_phone,
+                'created_at' => now(),
+            ]);
 
-        // store data into the students table
-        $student = Student::create([
-            'first_name' => $request->std_first_name,
-            'last_name' => $request->std_last_name,
-            'gender' => $request->gender,
-            'dob' => $request->dob,
-            'nic' => $request->std_nic ?? "",
-            'created_at' => now(),
-            'user_id' => $user->id,
-            'guardian_id' => $guardian->id,
-        ]);
+            // Create student
+            Student::create([
+                'first_name' => $request->std_first_name,
+                'last_name' => $request->std_last_name,
+                'gender' => $request->gender,
+                'dob' => $request->dob,
+                'nic' => $request->std_nic ?? "",
+                'created_at' => now(),
+                'user_id' => $user->id,
+                'guardian_id' => $guardian->id,
+            ]);
+        });
 
-        if (Auth::user()->role->name == 'Admin') {
-            return redirect('/admin/students/show')->with('success', 'Student added successfully');
-        } elseif (Auth::user()->role->name == 'Teacher') {
-            return redirect('/teacher/students/show')->with('success', 'Student added successfully');
-
-        }
+        return redirect('/admin/students/show')->with('success', 'Student added successfully');
     }
+
 
     public function showAllStudents()
     {
-        if (Auth::user()->role->name == 'Admin') {
-            $students = Student::all();
-            return view('pages.admin.student.index', ['students' => $students]);
-        } elseif (Auth::user()->role->name == 'Teacher') {
-            $teacherId = Teacher::where('user_id', Auth::user()->id)->first()->id;
-            $studentsOfTeacher = DB::table('students')
-                ->join('class_student', 'students.id', '=', 'class_student.student_id')
-                ->join('classes', 'class_student.class_id', '=', 'classes.id')
-                ->where('classes.teacher_id', $teacherId)
-                ->select('students.*')
-                ->distinct()
-                ->get();
-            return view('pages.teachers.students.index', ['students' => $studentsOfTeacher]);
-        }
+        $students = Student::all();
+        return view('pages.admin.student.index', ['students' => $students]);
     }
 
     public function show(Student $student)
     {
-        if (Auth::user()->role->name == 'Admin') {
-            return view('pages.admin.student.show', ['student' => $student]);
-        } elseif (Auth::user()->role->name == 'Teacher') {
-            return view('pages.teachers.students.show', ['student' => $student]);
-        }
+        return view('pages.admin.student.show', ['student' => $student]);
     }
 
     public function edit(Student $student)
     {
-        if (Auth::user()->role->name == 'Admin') {
-            return view('pages.admin.student.edit', ['student' => $student]);
-        } elseif (Auth::user()->role->name == 'Teacher') {
-            return view('pages.teachers.student.edit', ['student' => $student]);
-        }
+        return view('pages.admin.student.edit', ['student' => $student]);
     }
 
     public function update(Student $student, Request $request)
@@ -129,7 +98,7 @@ class StudentController extends Controller
         $request->validate([
             'std_first_name' => ['required', 'string', 'max:30'],
             'std_last_name' => ['required', 'string', 'max:50'],
-            'gender' => ['required', 'string', 'max:5'],
+            'gender' => ['required', 'string'],
             'std_nic' => ['string', 'max:12'],
             'dob' => ['required', 'date'],
             'initials' => ['required', 'string', 'max:10'],
@@ -139,9 +108,7 @@ class StudentController extends Controller
             'g_phone' => ['required', 'string', 'max:10'],
         ]);
 
-        // update the student
-
-        // store data into the guardians table
+        // update the guardian information
         $student->guardian->update([
             'initials' => $request->initials,
             'first_name' => $request->g_first_name,
@@ -151,7 +118,7 @@ class StudentController extends Controller
             'updated_at' => now(),
         ]);
 
-        // store data into the students table
+        // update the student information
         $student->update([
             'first_name' => $request->std_first_name,
             'last_name' => $request->std_last_name,
@@ -160,21 +127,14 @@ class StudentController extends Controller
             'nic' => $request->std_nic ?? "",
             'updated_at' => now(),
         ]);
-        if (Auth::user()->role->name == 'Admin') {
-            return redirect('/admin/students/show')->with('success', 'Student updated successfully');
-        } elseif (Auth::user()->role->name == 'Teacher') {
-            return redirect('/teacher/students/show')->with('success', 'Student updated successfully');
-        }
+
+        return redirect('/admin/students/show')->with('success', 'Student updated successfully');
     }
 
     public function destroy(Student $student)
     {
         $student->user()->delete();
-        if (Auth::user()->role->name == 'Admin') {
-            return redirect('/admin/students/show')->with('success', 'Student deleted successfully');
-        } elseif (Auth::user()->role->name == 'Teacher') {
-            return redirect('/teacher/students/show')->with('success', 'Student deleted successfully');
-        }
+        return redirect('/admin/students/show')->with('success', 'Student deleted successfully');
     }
 
     public function countStudents()

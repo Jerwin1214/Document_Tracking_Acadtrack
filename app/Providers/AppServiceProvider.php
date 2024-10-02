@@ -15,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // You can register services here if needed.
     }
 
     /**
@@ -23,7 +23,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::policies(Student::class, StudentPolicy::class);
-        Model::preventLazyLoading();
+        // Register policies
+        Gate::policy(Student::class, StudentPolicy::class);
+
+        // Prevent lazy loading of relationships
+        Model::preventLazyLoading(! app()->isProduction());
+
+        // You can add other global optimizations here
     }
 }
