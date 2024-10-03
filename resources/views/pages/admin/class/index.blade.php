@@ -57,19 +57,13 @@
 
         @foreach ($classes as $class)
             <tr>
-                @php
-                    $teacher = \App\Models\Teacher::find($class->teacher_id);
-                    $grade = \App\Models\Grade::find($class->grade_id);
-                    $subject = \App\Models\Subject::find($class->subject_id);
-                @endphp
-
                 <td>{{ $i }}</td>
-                <td>{{ $grade->name }}</td>
+                <td>{{ $class->grade_name }}</td>
                 <td>{{ $class->name }}</td>
-                <td>{{$subject->code}}</td>
-                <td>{{ $teacher->first_name }} {{ $teacher->last_name }}</td>
+                <td>{{ $class->subject_code }}</td>
+                <td>{{ $class->teacher_first_name }} {{ $class->teacher_last_name }}</td>
                 <td>{{ $class->year }}</td>
-                <td>{{$class->students_count}}</td>
+                <td>{{ $class->students_count }}</td>
                 <td>
                     <a href="/admin/class/{{ $class->id }}" class="btn btn-primary btn-sm">View</a>
                     <a href="/admin/class/{{ $class->id }}/assign" class="btn btn-info btn-sm">Assign</a>
@@ -85,8 +79,8 @@
                 $i++;
             @endphp
         @endforeach
-
         </tbody>
+
     </table>
     <!--  -->
 
