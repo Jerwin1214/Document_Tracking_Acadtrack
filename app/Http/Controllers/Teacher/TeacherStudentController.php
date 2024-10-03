@@ -161,9 +161,4 @@ class TeacherStudentController extends Controller
 
         return redirect('/teacher/students/show')->with('success', 'Student deleted successfully');
     }
-
-    public function countStudents()
-    {
-        return response()->json(['count' => Student::count()]);
-    }
 }
