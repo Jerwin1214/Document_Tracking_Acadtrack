@@ -14,8 +14,13 @@ class AdminController extends Controller
 {
     public function index()
     {
-        return view('pages.admin.dashboard', ['students' => Student::all(), 'teachers' => Teacher::all(), 'subjects' => Subject::all()]);
+        $students = Student::count();
+        $teachers = Teacher::count();
+        $subjects = Subject::count();
+
+        return view('pages.admin.dashboard', compact('students', 'teachers', 'subjects'));
     }
+
 
     public function create()
     {
