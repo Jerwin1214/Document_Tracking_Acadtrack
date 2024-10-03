@@ -7,6 +7,7 @@ use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 
 class TeacherController extends Controller
@@ -14,7 +15,6 @@ class TeacherController extends Controller
     public function index()
     {
         // TODO: implement the index method
-        return view('pages.teachers.dashboard');
     }
 
     public function create()
@@ -62,7 +62,9 @@ class TeacherController extends Controller
 
     public function showAllTeachers()
     {
-        $teachers = Teacher::all();
+        $teachers = Cache::remember('teachers_list', 60, function () {
+            return Teacher::get();
+        });
         return view('pages.admin.teacher.index', ['teachers' => $teachers]);
     }
     public function show(Teacher $teacher)
@@ -72,7 +74,10 @@ class TeacherController extends Controller
 
     public function edit(Teacher $teacher)
     {
-        return view('pages.admin.teacher.edit', ['teacher' => $teacher, 'subjects' => Subject::all()]);
+        $subjects = Cache::remember('subjects_list', 60, function () {
+            return Subject::get();
+        });
+        return view('pages.admin.teacher.edit', ['teacher' => $teacher, 'subjects' => $subjects]);
     }
 
     public function update(Request $request, Teacher $teacher)
@@ -103,11 +108,5 @@ class TeacherController extends Controller
     {
         $teacher->user()->delete();
         return redirect('/admin/teachers/show')->with('success', 'Teacher deleted successfully');
-    }
-
-    public function countTeachers()
-    {
-        $count = Teacher::count();
-        return response($count);
     }
 }

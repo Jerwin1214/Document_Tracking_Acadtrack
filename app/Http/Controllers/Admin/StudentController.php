@@ -80,7 +80,6 @@ class StudentController extends Controller
     {
         $students = Cache::remember('students_list', 60, function () {
             return Student::select(['id', 'first_name', 'last_name'])
-                ->with(['user:id,email'])
                 ->get();
         });
 
