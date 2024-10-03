@@ -7,6 +7,7 @@ use App\Models\Guardian;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
@@ -79,7 +80,12 @@ class StudentController extends Controller
 
     public function showAllStudents()
     {
-        $students = Student::all();
+        $students = Cache::remember('students_list', 60, function () {
+            return Student::select(['id', 'first_name', 'last_name'])
+                ->with(['user:id,email'])
+                ->get();
+        });
+
         return view('pages.admin.student.index', ['students' => $students]);
     }
 
@@ -135,11 +141,5 @@ class StudentController extends Controller
     {
         $student->user()->delete();
         return redirect('/admin/students/show')->with('success', 'Student deleted successfully');
-    }
-
-    public function countStudents()
-    {
-        $count = Student::count();
-        return response($count);
     }
 }
