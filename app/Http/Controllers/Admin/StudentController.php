@@ -14,8 +14,6 @@ class StudentController extends Controller
 {
     public function index()
     {
-        $students = Student::all();
-        return view('pages.admin.students.index', ['students' => $students]);
     }
 
     public function create()
