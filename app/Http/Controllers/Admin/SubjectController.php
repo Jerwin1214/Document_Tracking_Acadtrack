@@ -22,7 +22,7 @@ class SubjectController extends Controller
 
     public function showAllSubjects()
     {
-        $subjects = Subject::all();
+        $subjects = Subject::get();
         return view('pages.admin.subject.index', ['subjects' => $subjects]);
     }
 
@@ -125,11 +125,5 @@ class SubjectController extends Controller
     {
         $subjects = $teacher->subjects;
         return response($subjects);
-    }
-
-    public function countSubjects()
-    {
-        $count = Subject::count();
-        return response($count);
     }
 }
