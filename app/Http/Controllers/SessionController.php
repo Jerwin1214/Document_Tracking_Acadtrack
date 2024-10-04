@@ -38,11 +38,11 @@ class SessionController extends Controller
         // Redirect based on role
         switch ($role) {
             case 'Admin':
-                return redirect('/admin/dashboard');
+                return redirect('/admin/dashboard')->with('greeting', 'Welcome back, Admin!');
             case 'Student':
-                return redirect('/student/dashboard');
+                return redirect('/student/dashboard')->with('greeting', 'Welcome back, Student!');
             case 'Teacher':
-                return redirect('/teacher/dashboard');
+                return redirect('/teacher/dashboard')->with('greeting', 'Welcome back, Teacher!');
             default:
                 // Handle if the user doesn't have a role
                 Auth::logout();
