@@ -14,6 +14,7 @@ class StudentController extends Controller
 {
     public function index()
     {
+        return view('pages.students.dashboard');
     }
 
     public function create()

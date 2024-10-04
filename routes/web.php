@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\TeacherController;
 
+use App\Http\Controllers\Student\StudentStdController;
+use App\Http\Controllers\Teacher\TeacherMainController;
 use App\Http\Controllers\Teacher\TeacherStudentController;
 
 use App\Http\Controllers\SessionController;
@@ -86,18 +88,30 @@ Route::middleware(['auth', TeacherMiddleware::class])->group(function () {
     Route::get('/teacher/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
 
     // students section
-    Route::get('teacher/students/add', [TeacherStudentController::class, 'create'])->name('teacher.students.create')->can('create', \App\Models\Student::class);
+    Route::get('/teacher/students/add', [TeacherStudentController::class, 'create'])->name('teacher.students.create')->can('create', \App\Models\Student::class);
     Route::post('/teacher/students', [TeacherStudentController::class, 'store'])->name('teacher.student.store')->can('create', \App\Models\Student::class);
     Route::get('/teacher/students/show', [TeacherStudentController::class, 'showAllStudents'])->name('teacher.students.index');
     Route::get('/teacher/students/{student}', [TeacherStudentController::class, 'show'])->name('teacher.students.show')->can('view', 'student');
     Route::get('/teacher/students/{student}/edit', [TeacherStudentController::class, 'edit'])->name('teacher.students.edit')->can('update', 'student');
     Route::patch('/teacher/students/{student}', [TeacherStudentController::class, 'update'])->name('teacher.students.update')->can('update', 'student');
     Route::delete('/teacher/students/{student}', [TeacherStudentController::class, 'destroy'])->name('teacher.students.destroy');
+
+    // profile
+    Route::get('/teacher/profile', [TeacherMainController::class, 'showProfilePage'])->name('teacher.profile');
+
+    // settings
+    Route::get('/teacher/settings', [TeacherMainController::class, 'showSettingsPage'])->name('teacher.settings');
 });
 
 // Student routes
 Route::middleware(['auth', StudentMiddleware::class])->group(function () {
     Route::get('/student/dashboard', [StudentController::class, 'index'])->name('student.dashboard');
+
+    // profile
+    Route::get('/student/profile', [StudentStdController::class, 'showProfilePage'])->name('student.profile');
+
+    // settings
+    Route::get('/student/settings', [StudentStdController::class, 'showSettingsPage'])->name('student.settings');
 });
 
 
