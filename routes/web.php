@@ -112,6 +112,7 @@ Route::middleware(['auth', StudentMiddleware::class])->group(function () {
 
     // settings
     Route::get('/student/settings', [StudentStdController::class, 'showSettingsPage'])->name('student.settings');
+    Route::post('/student/settings', [StudentStdController::class, 'updateSettings'])->name('student.settings.update');
 });
 
 

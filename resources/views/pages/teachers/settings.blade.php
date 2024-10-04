@@ -46,7 +46,7 @@
 <!--  -->
 
 <div class="shadow-lg p-3 mb-5 mt-3 bg-body-tertiary rounded">
-    <form action="/admin/settings" method="post">
+    <form action="/teacher/settings" method="post">
         @csrf
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
