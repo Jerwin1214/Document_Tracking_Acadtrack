@@ -18,7 +18,7 @@
         <div class="col-md-8">
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" value="{{\App\Models\Admin::first()->first_name}}" name="name" id="name" class="form-control" readonly>
+                <input type="text" value="{{$teacher->first_name}} {{$teacher->last_name}}" name="name" id="name" class="form-control" readonly>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
