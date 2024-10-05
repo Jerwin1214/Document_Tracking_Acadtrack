@@ -9,25 +9,30 @@ use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        $students = Student::count();
-        $teachers = Teacher::count();
-        $subjects = Subject::count();
+        $counts = DB::table('students')
+            ->selectRaw('(SELECT COUNT(*) FROM students INNER JOIN users ON (students.user_id=users.id) WHERE users.is_active=1) as students_count')
+            ->selectRaw('(SELECT COUNT(*) FROM teachers INNER JOIN users ON (teachers.user_id=users.id) WHERE users.is_active=1) as teachers_count')
+            ->selectRaw('(SELECT COUNT(*) FROM subjects) as subjects_count')
+            ->first();
 
-        return view('pages.admin.dashboard', compact('students', 'teachers', 'subjects'));
+        return view('pages.admin.dashboard', compact('counts'));
     }
-
 
     public function create()
     {
         // TODO: implement the create method
     }
 
-    public function store(Request $request) {}
+    public function store(Request $request)
+    {
+        // TODO: implement the store method
+    }
 
     public function show(Admin $admin)
     {
@@ -104,7 +109,8 @@ class AdminController extends Controller
         return view('pages.admin.messages.index');
     }
 
-    public function showMessage() {
+    public function showMessage()
+    {
         return view('pages.admin.messages.show');
     }
 }
