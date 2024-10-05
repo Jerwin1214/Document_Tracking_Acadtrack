@@ -79,12 +79,9 @@ class StudentController extends Controller
 
     public function showAllStudents()
     {
-        $students = Cache::remember('students_list', 60, function () {
-            return Student::select(['id', 'first_name', 'last_name'])
-                ->get();
-        });
-
-        return view('pages.admin.student.index', ['students' => $students]);
+        return view('pages.admin.student.index', [
+            'students' => Student::select(['id', 'first_name', 'last_name'])->paginate(10)
+        ]);
     }
 
     public function show(Student $student)

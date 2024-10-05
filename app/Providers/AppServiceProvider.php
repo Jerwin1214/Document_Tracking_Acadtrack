@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Student;
 use App\Policies\StudentPolicy;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -29,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
         // Prevent lazy loading of relationships
         Model::preventLazyLoading(! app()->isProduction());
 
-        // You can add other global optimizations here
+        // paginator settings to bootstrap 5
+        Paginator::useBootstrapFive();
     }
 }
