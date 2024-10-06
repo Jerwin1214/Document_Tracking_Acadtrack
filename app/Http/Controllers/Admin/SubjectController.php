@@ -22,8 +22,7 @@ class SubjectController extends Controller
 
     public function showAllSubjects()
     {
-        $subjects = Subject::get();
-        return view('pages.admin.subject.index', ['subjects' => $subjects]);
+        return view('pages.admin.subject.index', ['subjects' => Subject::select('id', 'name', 'code', 'description')->paginate(10)]);
     }
 
     public function store(Request $request)
