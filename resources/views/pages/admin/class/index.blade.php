@@ -52,7 +52,7 @@
         </thead>
         <tbody>
         @php
-            $i = 1;
+            $i = ($classes->currentpage() - 1) * $classes->perpage() + 1;
         @endphp
 
         @foreach ($classes as $class)
@@ -83,7 +83,7 @@
 
     </table>
     <div class="container">
-        {{$classes->links()}}
+        {{ $classes->links() }}
     </div>
     <!--  -->
 
