@@ -86,7 +86,7 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->group(func
 
 // Teacher routes
 Route::middleware(['auth', TeacherMiddleware::class])->prefix('teacher')->group(function () {
-    Route::get('/teacher/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
+    Route::get('/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
 
     // students section
     Route::get('/students/add', [TeacherStudentController::class, 'create'])->name('teacher.students.create')->can('create', Student::class);

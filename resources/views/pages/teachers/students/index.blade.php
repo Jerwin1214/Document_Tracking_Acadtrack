@@ -46,7 +46,7 @@
         </thead>
         <tbody>
         @php
-            $i = 1;
+            $i = ($students->currentpage() - 1) * $students->perpage() + 1;
 
         @endphp
 
@@ -71,6 +71,9 @@
 
         </tbody>
     </table>
+    <div class="container">
+        {{ $students->links() }}
+    </div>
     <!--  -->
 
     <script>

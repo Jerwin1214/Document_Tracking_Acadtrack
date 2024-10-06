@@ -94,7 +94,7 @@ class TeacherStudentController extends Controller
                 $query->where('teacher_id', $this->teacherId);
             }])
             ->distinct()
-            ->get();
+            ->paginate(10);
 
         return view('pages.teachers.students.index', ['students' => $studentsOfTeacher]);
     }
