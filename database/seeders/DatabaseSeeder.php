@@ -112,5 +112,16 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Grade 13'],
             ['name' => 'After A/L'],
         ]);
+
+        // for subject_streams table
+        DB::table('subject_streams')->insert([
+            ['stream_name' => 'Physical Science'],
+            ['stream_name' => 'Biological Science'],
+            ['stream_name' => 'Technology'],
+            ['stream_name' => 'Commerce'],
+            ['stream_name' => 'Arts'],
+            ['stream_name' => 'Common'],
+            ['stream_name' => 'Other'],
+        ]);
     }
 }

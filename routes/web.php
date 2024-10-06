@@ -13,10 +13,13 @@ use App\Http\Controllers\Teacher\TeacherStudentController;
 
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\StudentRegisterController;
+
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\StudentMiddleware;
 use App\Http\Middleware\TeacherMiddleware;
+
 use App\Models\Student;
+
 use Illuminate\Support\Facades\Route;
 
 // middlewares
@@ -76,7 +79,7 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->group(func
 
     // settings
     Route::get('/settings', [AdminController::class, 'showSettings'])->name('admin.settings');
-    Route::post('/admin/settings', [AdminController::class, 'updateSettings'])->name('admin.settings.update');
+    Route::post('/settings', [AdminController::class, 'updateSettings'])->name('admin.settings.update');
 
     // messages
     Route::get('/messages', [AdminController::class, 'showMessages'])->name('admin.messages');

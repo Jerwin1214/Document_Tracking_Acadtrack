@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('grade_id')->constrained('grades');
             $table->foreignId('teacher_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('subject_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('subject_stream_id')->constrained('subject_streams')->onDelete('cascade')->onUpdate('cascade');
             $table->string('name');
             $table->year('year');
             $table->timestamps();
