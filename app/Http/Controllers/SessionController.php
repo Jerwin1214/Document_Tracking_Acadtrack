@@ -45,7 +45,7 @@ class SessionController extends Controller
                 return redirect('/teacher/dashboard')->with('greeting', 'Welcome back, Teacher!');
             default:
                 // Handle if the user doesn't have a role
-                Auth::logout();
+                auth()->logout();
                 return redirect('/')->withErrors([
                     'role' => 'User does not have a valid role.'
                 ]);
@@ -55,7 +55,7 @@ class SessionController extends Controller
     public function destroy()
     {
         // logout functionality
-        Auth::logout();
+        auth()->logout();
         // invalidate the user
         request()->session()->invalidate();
         // regenerte the CSRF token
