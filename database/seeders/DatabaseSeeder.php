@@ -115,13 +115,13 @@ class DatabaseSeeder extends Seeder
 
         // for subject_streams table
         DB::table('subject_streams')->insert([
-            ['stream_name' => 'Physical Science'],
-            ['stream_name' => 'Biological Science'],
-            ['stream_name' => 'Technology'],
-            ['stream_name' => 'Commerce'],
-            ['stream_name' => 'Arts'],
-            ['stream_name' => 'Common'],
-            ['stream_name' => 'Other'],
+            ['stream_name' => 'Physical Science', 'created_at' => now()],
+            ['stream_name' => 'Biological Science', 'created_at' => now()],
+            ['stream_name' => 'Technology', 'created_at' => now()],
+            ['stream_name' => 'Commerce', 'created_at' => now()],
+            ['stream_name' => 'Arts', 'created_at' => now()],
+            ['stream_name' => 'Common', 'created_at' => now()],
+            ['stream_name' => 'Other', 'created_at' => now()],
         ]);
     }
 }

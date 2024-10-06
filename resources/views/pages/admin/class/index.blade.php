@@ -60,7 +60,7 @@
                 <td>{{ $i }}</td>
                 <td>{{ $class->grade_name }}</td>
                 <td>{{ $class->name }}</td>
-                <td>{{ $class->subject_code }}</td>
+                <td>{{ $class->subject_stream_name }}</td>
                 <td>{{ $class->teacher_first_name }} {{ $class->teacher_last_name }}</td>
                 <td>{{ $class->year }}</td>
                 <td>{{ $class->students_count }}</td>

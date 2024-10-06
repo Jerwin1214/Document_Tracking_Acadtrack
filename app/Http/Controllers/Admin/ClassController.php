@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Classes;
 use App\Models\Grade;
 use App\Models\Subject;
+use App\Models\SubjectStream;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -19,31 +20,31 @@ class ClassController extends Controller
             ->leftJoin('class_student', 'classes.id', '=', 'class_student.class_id')
             ->leftJoin('teachers', 'classes.teacher_id', '=', 'teachers.id')
             ->leftJoin('grades', 'classes.grade_id', '=', 'grades.id')
-            ->leftJoin('subjects', 'classes.subject_id', '=', 'subjects.id')
+            ->leftJoin('subject_streams', 'classes.subject_stream_id', '=', 'subject_streams.id')
             ->select(
                 'classes.id',
                 'classes.grade_id',
                 'classes.teacher_id',
-                'classes.subject_id',
+                'classes.subject_stream_id',
                 'classes.name',
                 'classes.year',
                 'teachers.first_name as teacher_first_name',
                 'teachers.last_name as teacher_last_name',
                 'grades.name as grade_name',
-                'subjects.code as subject_code',
+                'subject_streams.stream_name as subject_stream_name',
                 DB::raw('COUNT(class_student.student_id) as students_count')
             )
             ->groupBy(
                 'classes.id',
                 'classes.grade_id',
                 'classes.teacher_id',
-                'classes.subject_id',
+                'classes.subject_stream_id',
                 'classes.name',
                 'classes.year',
                 'teachers.first_name',
                 'teachers.last_name',
                 'grades.name',
-                'subjects.code'
+                'subject_streams.stream_name'
             )
             ->paginate(20);
 
@@ -63,11 +64,9 @@ class ClassController extends Controller
         });
 
         // Cache the subjects for 10 minutes
-        $subjects = Cache::remember('subjects', 600, function () {
-            return Subject::select(['id', 'name'])->get();
-        });
+        $streams = SubjectStream::select(['id', 'stream_name'])->get();
 
-        return view('pages.admin.class.add', compact('teachers', 'grades', 'subjects'));
+        return view('pages.admin.class.add', compact('teachers', 'grades', 'streams'));
     }
 
     public function store(Request $request)
@@ -76,7 +75,7 @@ class ClassController extends Controller
         $request->validate([
             'grade' => ['required'],
             'class_name' => ['required', 'string'],
-            'subject' => ['required'],
+            'subject_stream' => ['required'],
             'teacher' => ['required'],
             'year' => ['required', 'numeric'],
         ]);
@@ -85,7 +84,7 @@ class ClassController extends Controller
         Classes::create([
             'grade_id' => $request->grade,
             'name' => $request->class_name,
-            'subject_id' => $request->subject,
+            'subject_stream_id' => $request->subject_stream,
             'teacher_id' => $request->teacher,
             'year' => $request->year,
         ]);

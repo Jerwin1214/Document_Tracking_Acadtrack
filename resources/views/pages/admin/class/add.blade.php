@@ -21,11 +21,11 @@
     </div>
 
     <div class="mb-3">
-        <label for="subject" class="form-label">Subject</label>
-        <select name="subject" id="subject" class="form-select">
+        <label for="subject_stream" class="form-label">Subject Stream</label>
+        <select name="subject_stream" id="subject_stream" class="form-select">
             <option value="">-- Choose One --</option>
-            @foreach ($subjects as $subject)
-            <option value="{{$subject->id}}">{{$subject->name}}</option>
+            @foreach ($streams as $stream)
+            <option value="{{$stream->id}}">{{$stream->stream_name}}</option>
             @endforeach
         </select>
     </div>

@@ -27,7 +27,7 @@ return new class extends Migration
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
-
+// 2024_09_28_061644
     }
 
     /**
