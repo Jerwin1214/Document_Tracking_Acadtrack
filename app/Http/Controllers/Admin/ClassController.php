@@ -45,7 +45,7 @@ class ClassController extends Controller
                 'grades.name',
                 'subjects.code'
             )
-            ->get();
+            ->paginate(20);
 
         return view('pages.admin.class.index', ['classes' => $classes]);
     }

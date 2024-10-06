@@ -82,6 +82,9 @@
 
     </tbody>
 </table>
+<div class="container">
+    {{ $teachers->links() }}
+</div>
 <!--  -->
 
 <script>

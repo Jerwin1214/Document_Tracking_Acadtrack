@@ -80,7 +80,7 @@ class StudentController extends Controller
     public function showAllStudents()
     {
         return view('pages.admin.student.index', [
-            'students' => Student::select(['id', 'first_name', 'last_name'])->paginate(10)
+            'students' => Student::select(['id', 'first_name', 'last_name'])->paginate(20)
         ]);
     }
 

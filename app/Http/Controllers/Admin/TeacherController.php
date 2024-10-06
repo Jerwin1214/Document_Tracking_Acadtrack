@@ -63,11 +63,13 @@ class TeacherController extends Controller
 
     public function showAllTeachers()
     {
-        $teachers = Cache::remember('teachers_list', 60, function () {
-            return Teacher::get();
-        });
-        return view('pages.admin.teacher.index', ['teachers' => $teachers]);
+        return view('pages.admin.teacher.index', [
+            'teachers' => Teacher::with(['user', 'subjects']) // eager load the user
+            ->select(['id', 'first_name', 'last_name', 'user_id'])
+                ->paginate(20)
+        ]);
     }
+
     public function show(Teacher $teacher)
     {
         return view('pages.admin.teacher.show', ['teacher' => $teacher]);
