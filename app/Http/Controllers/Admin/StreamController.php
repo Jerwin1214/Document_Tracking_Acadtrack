@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Subject;
 use App\Models\SubjectStream;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StreamController extends Controller
 {
@@ -59,7 +60,22 @@ class StreamController extends Controller
         return view('pages.admin.stream.assign-subjects', ['stream' => $stream, 'subjects' => $subjects]);
     }
 
-    public static function assignSubjects(Request $request, SubjectStream $subjectStream) {
-        // TODO: Implement assignSubjects() method.
+    public static function assignSubjects(Request $request, SubjectStream $stream) {
+        // Validate the incoming request
+        $validatedData = $request->validate([
+            'subjects' => 'required|array',
+            'subjects.*' => 'exists:subjects,id',
+        ]);
+
+        foreach ($validatedData['subjects'] as $subject) {
+            DB::table('subject_stream_subject')->insert([
+                'subject_id' => $subject,
+                'subject_stream_id' => $stream->id,
+                'created_at' => now(),
+            ]);
+        }
+
+        // Redirect with success message
+        return redirect()->route('admin.streams.index')->with('success', 'Subjects assigned to stream successfully');
     }
 }

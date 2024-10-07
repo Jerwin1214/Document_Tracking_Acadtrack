@@ -3,7 +3,7 @@
 
 @section('content')
     <h2>Assign Subjects</h2>
-    <form action="/admin/stream/{{$stream->id}}/assign" method="post" class="shadow-lg p-3 mb-5 mt-3 bg-body-tertiary rounded">
+    <form action="/admin/streams/{{$stream->id}}/assign" method="post" class="shadow-lg p-3 mb-5 mt-3 bg-body-tertiary rounded">
         @csrf
         <div class="mb-3">
             <label for="stream" class="form-label">Stream</label>
@@ -32,7 +32,7 @@
             <button type="submit" class="btn btn-primary">Assign</button>
             <button type="reset" class="btn btn-outline-secondary">Clear</button>
         </div>
-        
+
     </form>
 
     <script>

@@ -18,6 +18,13 @@ return new class extends Migration
             $table->text('stream_description')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('subject_stream_subject', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('subject_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('subject_stream_id')->constrained('subject_streams')->onDelete('cascade')->onUpdate('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
