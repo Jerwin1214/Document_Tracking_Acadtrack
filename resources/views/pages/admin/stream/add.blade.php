@@ -8,16 +8,19 @@
         <div class="mb-3">
             <label for="form-label">Stream Name</label>
             <input type="text" class="form-control" id="stream_name" name="stream_name" required>
+            <x-form-error name="stream_name"/>
         </div>
 
         <div class="mb-3">
             <label for="form-label">Stream Code</label>
-            <input type="text" class="form-control" id="stream_code" name="stream_code" required>
+            <input type="text" class="form-control" id="stream_code" name="stream_code">
+            <x-form-error name="stream_code"/>
         </div>
 
         <div class="mb-3">
             <label for="form-label">Stream Description</label>
-            <textarea class="form-control" id="stream_description" name="stream_description" required></textarea>
+            <textarea class="form-control" id="stream_description" name="stream_description"></textarea>
+            <x-form-error name="stream_description"/>
         </div>
 
         <div class="mb-3">

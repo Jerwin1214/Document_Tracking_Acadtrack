@@ -19,7 +19,22 @@ class StreamController extends Controller
     }
 
     public function store(Request $request) {
-        // TODO: Implement store() method.
+        // validate the user inputs
+        $request->validate([
+            'stream_name' => ['required', 'string', 'max:255'],
+            'stream_code' => ['string', 'max:255', 'nullable'],
+            'stream_description' => ['string', 'max:255', 'nullable'],
+        ]);
+
+        // insert to table
+        SubjectStream::create([
+            'stream_name' => $request->stream_name,
+            'stream_code' => $request->stream_code,
+            'stream_description' => $request->stream_description,
+        ]);
+
+        // redirect to the index page
+        return redirect()->route('admin.streams.index')->with('success', 'New Subject Stream added successfully');
     }
 
     public function show(SubjectStream $subjectStream) {
