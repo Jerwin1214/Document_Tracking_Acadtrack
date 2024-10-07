@@ -7,6 +7,7 @@ use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class SubjectController extends Controller
 {
@@ -124,5 +125,40 @@ class SubjectController extends Controller
     {
         $subjects = $teacher->subjects;
         return response($subjects);
+    }
+
+    public function uploadSubjects(Request $request)
+    {
+        // validate the request
+        $request->validate([
+            'file' => ['file', 'mimes:xls,xlsx'],
+        ]);
+
+        // Load the uploaded file using PhpSpreadsheet
+        $file = $request->file('file');
+//        dd($file);
+        $spreadsheet = IOFactory::load($file->getRealPath());
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Loop through each row in the spreadsheet
+        foreach ($sheet->getRowIterator() as $rowIndex => $row) {
+            // Skip header row if it exists (e.g., first row with column names)
+            if ($rowIndex == 1) continue;
+
+            $name = $sheet->getCell("A$rowIndex")->getValue();
+            $code = $sheet->getCell("B$rowIndex")->getValue();
+            $description = $sheet->getCell("C$rowIndex")->getValue();
+
+            // Only save if the 'name' field is provided
+            if ($name) {
+                Subject::create([
+                    'name' => $name,
+                    'code' => $code,
+                    'description' => $description,
+                ]);
+            }
+        }
+
+        return redirect('/admin/subjects/show')->with('success', 'Subjects uploaded successfully');
     }
 }

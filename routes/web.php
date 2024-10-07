@@ -63,6 +63,7 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->group(func
     Route::get('/subjects/assign', [SubjectController::class, 'assignTeachersView'])->name('admin.subjects.assignView');
     Route::post('/subjects/assign', [SubjectController::class, 'assignTeachers'])->name('admin.subjects.assign');
     Route::get('/subjects/teachers/{teacher}', [SubjectController::class, 'showAssignedSubjectsForTeacher'])->name('admin.subjects.teachers');
+    Route::post('/subjects/upload', [SubjectController::class, 'uploadSubjects'])->name('admin.subjects.upload');
 
     // subject streams
     Route::get('/streams/show', [StreamController::class, 'index'])->name('admin.streams.index');
