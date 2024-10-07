@@ -3,22 +3,23 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Subject;
 use App\Models\SubjectStream;
 use Illuminate\Http\Request;
 
 class StreamController extends Controller
 {
-    public function index() {
+    public static function index() {
         // TODO: Implement index() method.
         $streams = SubjectStream::select(['id', 'stream_name'])->get();
         return view('pages.admin.stream.index', ['streams' => $streams]);
     }
 
-    public function create() {
+    public static function create() {
         return view('pages.admin.stream.add');
     }
 
-    public function store(Request $request) {
+    public static function store(Request $request) {
         // validate the user inputs
         $request->validate([
             'stream_name' => ['required', 'string', 'max:255'],
@@ -37,27 +38,28 @@ class StreamController extends Controller
         return redirect()->route('admin.streams.index')->with('success', 'New Subject Stream added successfully');
     }
 
-    public function show(SubjectStream $subjectStream) {
+    public static function show(SubjectStream $subjectStream) {
         // TODO: Implement show() method.
     }
 
-    public function edit(SubjectStream $subjectStream) {
+    public static function edit(SubjectStream $subjectStream) {
         // TODO: Implement edit() method.
     }
 
-    public function update(Request $request, SubjectStream $subjectStream) {
+    public static function update(Request $request, SubjectStream $subjectStream) {
         // TODO: Implement update() method.
     }
 
-    public function destroy(SubjectStream $subjectStream) {
+    public static function destroy(SubjectStream $subjectStream) {
         // TODO: Implement destroy() method.
     }
 
-    public function assignSubjectsView(SubjectStream $subjectStream) {
-        // TODO: Implement assignSubjectsView() method.
+    public static function assignSubjectsView(SubjectStream $stream) {
+        $subjects = Subject::select(['id', 'name'])->get();
+        return view('pages.admin.stream.assign-subjects', ['stream' => $stream, 'subjects' => $subjects]);
     }
 
-    public function assignSubjects(Request $request, SubjectStream $subjectStream) {
+    public static function assignSubjects(Request $request, SubjectStream $subjectStream) {
         // TODO: Implement assignSubjects() method.
     }
 }

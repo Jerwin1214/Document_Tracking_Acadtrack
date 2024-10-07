@@ -22,12 +22,12 @@
             <label for="subjects" class="form-label">Subjects</label>
             <div class="row">
                 @foreach ($subjects as $subject)
-                    <div class="col-sm-2">
+                    <div class="col-sm-6">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="{{$subject->id}}" name="subjects[]"
                                    id="{{$subject->code}}">
                             <label class="form-check-label" for="{{$subject->code}}">
-                                {{$subject->code}}
+                                {{$subject->name}}
                             </label>
                         </div>
                         <x-form-error name="subjects"/>

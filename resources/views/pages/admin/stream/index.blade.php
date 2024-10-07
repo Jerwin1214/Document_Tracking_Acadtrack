@@ -59,6 +59,7 @@
                 <td></td>
                 <td>
                     <a href="/admin/streams/{{ $stream->id }}" class="btn btn-primary btn-sm">View</a>
+                    <a href="/admin/streams/{{ $stream->id }}/assign" class="btn btn-info btn-sm">Assign</a>
                     <a href="/admin/streams/{{ $stream->id }}/edit" class="btn btn-warning btn-sm">Edit</a>
                     <form action="/admin/streams/{{ $stream->id }}" method="POST" style="display: inline;">
                         @csrf
