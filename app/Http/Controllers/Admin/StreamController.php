@@ -10,10 +10,11 @@ class StreamController extends Controller
 {
     public function index() {
         // TODO: Implement index() method.
+        return view('pages.admin.stream.index');
     }
 
     public function create() {
-        // TODO: Implement create() method.
+        return view('pages.admin.stream.add');
     }
 
     public function store(Request $request) {

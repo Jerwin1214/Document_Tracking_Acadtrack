@@ -3,6 +3,7 @@
 // controllers
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ClassController;
+use App\Http\Controllers\Admin\StreamController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\TeacherController;
@@ -62,6 +63,17 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->group(func
     Route::get('/subjects/assign', [SubjectController::class, 'assignTeachersView'])->name('admin.subjects.assignView');
     Route::post('/subjects/assign', [SubjectController::class, 'assignTeachers'])->name('admin.subjects.assign');
     Route::get('/subjects/teachers/{teacher}', [SubjectController::class, 'showAssignedSubjectsForTeacher'])->name('admin.subjects.teachers');
+
+    // subject streams
+    Route::get('/streams/show', [StreamController::class, 'index'])->name('admin.streams.index');
+    Route::get('/streams/create', [StreamController::class, 'create'])->name('admin.streams.create');
+    Route::post('/streams', [StreamController::class, 'store'])->name('admin.streams.store');
+    Route::get('/streams/{stream}', [StreamController::class, 'show'])->name('admin.streams.show');
+    Route::get('/streams/{stream}/edit', [StreamController::class, 'edit'])->name('admin.streams.edit');
+    Route::patch('/streams/{stream}', [StreamController::class, 'update'])->name('admin.streams.update');
+    Route::delete('/streams/{stream}', [StreamController::class, 'destroy'])->name('admin.streams.destroy');
+    Route::get('/streams/{stream}/assign', [StreamController::class, 'assignSubjectsView'])->name('admin.streams.assignView');
+    Route::post('/streams/{stream}/assign', [StreamController::class, 'assignSubjects'])->name('admin.streams.assign');
 
     // classes
     Route::get('/class/create', [ClassController::class, 'create'])->name('admin.classes.create');
