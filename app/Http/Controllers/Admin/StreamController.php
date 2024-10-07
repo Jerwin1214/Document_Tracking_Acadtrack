@@ -10,7 +10,8 @@ class StreamController extends Controller
 {
     public function index() {
         // TODO: Implement index() method.
-        return view('pages.admin.stream.index');
+        $streams = SubjectStream::select(['id', 'stream_name'])->get();
+        return view('pages.admin.stream.index', ['streams' => $streams]);
     }
 
     public function create() {
