@@ -117,7 +117,8 @@ class DatabaseSeeder extends Seeder
         DB::table('subject_streams')->insert([
             ['stream_name' => 'Physical Science', 'created_at' => now()],
             ['stream_name' => 'Biological Science', 'created_at' => now()],
-            ['stream_name' => 'Technology', 'created_at' => now()],
+            ['stream_name' => 'Engineering Technology', 'created_at' => now()],
+            ['stream_name' => 'Bio System Technology', 'created_at' => now()],
             ['stream_name' => 'Commerce', 'created_at' => now()],
             ['stream_name' => 'Arts', 'created_at' => now()],
             ['stream_name' => 'Common', 'created_at' => now()],

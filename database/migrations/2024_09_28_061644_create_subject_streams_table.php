@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('subject_streams', function (Blueprint $table) {
             $table->id();
             $table->string('stream_name');
+            $table->string('stream_code')->nullable();
+            $table->text('stream_description')->nullable();
             $table->timestamps();
         });
     }

@@ -9,7 +9,7 @@ class SubjectStream extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['stream_name', 'id'];
+    protected $fillable = ['stream_name', 'id', 'stream_code', 'stream_description'];
 
     public function subjects()
     {
