@@ -12,7 +12,19 @@ class StreamController extends Controller
 {
     public static function index() {
         // TODO: Implement index() method.
-        $streams = SubjectStream::select(['id', 'stream_name'])->get();
+        $streams = SubjectStream::select(['id', 'stream_name'])
+            ->with(['classes.students'])
+            ->get()
+            ->map(function ($stream) {
+                $studentCount = $stream->classes->sum(fn($class) => $class->students->count());
+                return [
+                    'id' => $stream->id,
+                    'stream_name' => $stream->stream_name,
+                    'student_count' => $studentCount,
+                ];
+            });
+
+//        dd($streams);
         return view('pages.admin.stream.index', ['streams' => $streams]);
     }
 
@@ -55,10 +67,21 @@ class StreamController extends Controller
         // TODO: Implement destroy() method.
     }
 
-    public static function assignSubjectsView(SubjectStream $stream) {
-        $subjects = Subject::select(['id', 'name'])->get();
-        return view('pages.admin.stream.assign-subjects', ['stream' => $stream, 'subjects' => $subjects]);
+    public static function assignSubjectsView(SubjectStream $stream)
+    {
+        // Fetch all subjects
+        $subjects = Subject::select(['id', 'name', 'code'])->get();
+
+        // Get the IDs of subjects already assigned to the stream from the pivot table
+        $assignedSubjectIds = $stream->subjects()->pluck('subjects.id')->toArray();
+
+        return view('pages.admin.stream.assign-subjects', [
+            'stream' => $stream,
+            'subjects' => $subjects,
+            'assignedSubjectIds' => $assignedSubjectIds
+        ]);
     }
+
 
     public static function assignSubjects(Request $request, SubjectStream $stream) {
         // Validate the incoming request

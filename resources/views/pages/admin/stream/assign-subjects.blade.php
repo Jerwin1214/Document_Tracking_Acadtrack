@@ -1,4 +1,3 @@
-
 @extends('pages.admin.admin-content')
 
 @section('content')
@@ -16,8 +15,13 @@
                 @foreach ($subjects as $subject)
                     <div class="col-sm-6">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="{{$subject->id}}" name="subjects[]"
-                                   id="{{$subject->code}}">
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                value="{{$subject->id}}"
+                                name="subjects[]"
+                                id="{{$subject->code}}"
+                                @if(in_array($subject->id, $assignedSubjectIds)) checked @endif>
                             <label class="form-check-label" for="{{$subject->code}}">
                                 {{$subject->name}}
                             </label>
@@ -37,7 +41,7 @@
 
     <script>
         $(document).ready(function () {
-            // set page title
+            // Set page title
             $(document).prop('title', 'Assign Subjects | Student Management System');
         });
     </script>
