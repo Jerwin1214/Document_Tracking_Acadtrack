@@ -24,10 +24,9 @@
                 <x-sub-nav-link href="/admin/subjects/assign">Assign Teachers</x-sub-nav-link>
             </x-nav-link>
 
-            <x-nav-link idNumber="4" link_name="Streams" icon_class="fa-solid fa-book">
+            <x-nav-link idNumber="4" link_name="Streams" icon_class="fa-solid fa-school">
                 <x-sub-nav-link href="/admin/streams/create">Add</x-sub-nav-link>
                 <x-sub-nav-link href="/admin/streams/show">View</x-sub-nav-link>
-                <x-sub-nav-link href="/admin/streams/assign">Assign Subjects</x-sub-nav-link>
             </x-nav-link>
 
             <x-nav-link idNumber="5" link_name="Classes" icon_class="fa-solid fa-chalkboard">
