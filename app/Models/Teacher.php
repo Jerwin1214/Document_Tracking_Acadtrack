@@ -12,7 +12,16 @@ class Teacher extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+//    protected $guarded = [];
+    protected $fillable = [
+        'salutation',
+        'initials',
+        'first_name',
+        'last_name',
+        'nic',
+        'dob',
+        'user_id',
+    ];
 
     /**
      * Get the attributes that should be cast.

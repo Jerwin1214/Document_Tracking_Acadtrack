@@ -31,8 +31,10 @@ class StudentController extends Controller
             'gender' => ['required', 'string', 'max:5'],
             'std_nic' => ['nullable', 'string', 'max:12'], // Nullable to allow empty input
             'dob' => ['required', 'date'],
+            'index'=> ['nullable', 'string', 'max:20'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'], // Ensure email is unique
             'password' => ['required', 'string', 'min:5'],
+
             'initials' => ['nullable', 'string', 'max:10'],
             'g_first_name' => ['nullable', 'string', 'max:30'],
             'g_last_name' => ['nullable', 'string', 'max:50'],

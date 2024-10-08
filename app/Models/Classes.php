@@ -13,7 +13,14 @@ class Classes extends Model
 
     protected $table = 'classes';
 
-    protected $guarded = [];
+//    protected $guarded = [];
+    protected $fillable = [
+        'grade_id',
+        'teacher_id',
+        'subject_stream_id',
+        'name',
+        'year',
+    ];
 
     // for students
     public function students()

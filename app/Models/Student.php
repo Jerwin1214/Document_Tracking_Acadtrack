@@ -4,15 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use \App\Models\Guardian;
-use \App\Models\User;
-use \App\Models\Classes;
 
 class Student extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+//    protected $guarded = [];
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'gender',
+        'nic',
+        'dob',
+        'index_no',
+        'user_id',
+        'guardian_id',
+    ];
 
     /**
      * Get the attributes that should be cast.

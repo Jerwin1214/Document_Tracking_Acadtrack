@@ -11,7 +11,10 @@ class Grade extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+//    protected $guarded = [];
+    protected $fillable = [
+        'name',
+    ];
 
     public function students()
     {
