@@ -139,4 +139,8 @@ class StudentController extends Controller
         $student->user()->delete();
         return redirect('/admin/students/show')->with('success', 'Student deleted successfully');
     }
+
+    public static function uploadStudents(Request $request) {
+        //
+    }
 }

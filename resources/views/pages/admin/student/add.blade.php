@@ -1,7 +1,22 @@
 @extends('pages.admin.admin-content');
 <!-- Slotted content -->
 @section('content')
-    <h2>Add New Student</h2>
+    <div class="d-flex mb-3">
+        <div class="p-2">
+            <h2>Add Student</h2>
+        </div>
+        <div class="ms-auto p-2">
+            <form action="/admin/students/upload" method="post" enctype="multipart/form-data" id="uploadForm">
+                @csrf
+                <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                    <i class="fa-solid fa-upload"></i> Bulk Upload
+                </button>
+                <input type="file" name="file" id="fileInput" accept=".xls, .xlsx" style="display: none;" onchange="submitForm()"/>
+                <x-form-error name="file"/>
+            </form>
+        </div>
+    </div>
+
     <form action="/admin/students" method="post" class="shadow-lg p-3 mb-5 mt-3 bg-body-tertiary rounded">
         @csrf
         <h5>Student Info</h5>

@@ -43,6 +43,7 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->group(func
     Route::patch('/students/{student}', [StudentController::class, 'update'])->name('admin.students.update');
     Route::get('/students/{student}', [StudentController::class, 'show'])->name('admin.students.show');
     Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('admin.students.destroy');
+    Route::post('/students/upload', [StudentController::class, 'uploadStudents'])->name('admin.students.upload');
 
     // teachers
     Route::get('/teachers/show', [TeacherController::class, 'showAllTeachers'])->name('admin.teachers.index');
