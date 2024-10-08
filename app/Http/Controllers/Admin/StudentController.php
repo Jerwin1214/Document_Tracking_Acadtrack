@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Guardian;
 use App\Models\Student;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class StudentController extends Controller
 {
@@ -140,7 +142,74 @@ class StudentController extends Controller
         return redirect('/admin/students/show')->with('success', 'Student deleted successfully');
     }
 
-    public static function uploadStudents(Request $request) {
-        //
+    public static function uploadStudents(Request $request)
+    {
+        // Validate the uploaded file
+        $request->validate([
+            'file' => 'required|file|mimes:xls,xlsx',
+        ]);
+
+        $file = $request->file('file');
+        $spreadsheet = IOFactory::load($file->getRealPath());
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Define possible headers for each field
+        $fieldMappings = [
+            'first_name' => ['first name', 'firstname', 'f name'],
+            'last_name' => ['last name', 'lastname', 'surname'],
+            'gender' => ['gender', 'sex'],
+            'nic' => ['nic', 'national id', 'id'],
+            'dob' => ['dob', 'date of birth', 'birthdate'],
+            'index_no' => ['index', 'index no.', 'index number'],
+        ];
+
+        // Get the header row and map columns
+        $headerRow = [];
+        foreach ($sheet->getRowIterator(1, 1)->current()->getCellIterator() as $cell) {
+            $headerRow[] = strtolower(trim($cell->getValue()));
+        }
+
+        // Map headers to fields
+        $columnMap = [];
+        foreach ($fieldMappings as $dbField => $possibleHeaders) {
+            foreach ($possibleHeaders as $header) {
+                $columnIndex = array_search($header, $headerRow);
+                if ($columnIndex !== false) {
+                    $columnMap[$dbField] = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex + 1);
+                    break;
+                }
+            }
+        }
+
+        // Ensure required fields are mapped
+        $requiredFields = ['first_name', 'last_name', 'gender', 'nic', 'dob', 'index_no'];
+        foreach ($requiredFields as $field) {
+            if (!isset($columnMap[$field])) {
+                return redirect()->back()->withErrors("Missing required field: $field in the spreadsheet.");
+            }
+        }
+
+        // Process each row and insert into the database
+        foreach ($sheet->getRowIterator(2) as $row) {
+            $data = [];
+            $rowIndex = $row->getRowIndex();
+            foreach ($columnMap as $dbField => $columnLetter) {
+                $cellValue = $sheet->getCell($columnLetter . $rowIndex)->getValue();
+
+                // Convert Excel date serial number to proper date format for 'dob'
+                if ($dbField === 'dob' && is_numeric($cellValue)) {
+                    $data[$dbField] = Carbon::instance(Date::excelToDateTimeObject($cellValue))->format('Y-m-d');
+                } else {
+                    $data[$dbField] = $cellValue;
+                }
+            }
+
+            // Hardcode and 'user_id'
+            $data['user_id'] = 1; // Hardcoded user_id value
+
+            // Save the student record
+            Student::create($data);
+        }
+        return redirect('/admin/students/show')->with('success', 'Students uploaded successfully');
     }
 }

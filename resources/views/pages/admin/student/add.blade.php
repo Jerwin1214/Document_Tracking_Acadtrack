@@ -11,7 +11,8 @@
                 <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
                     <i class="fa-solid fa-upload"></i> Bulk Upload
                 </button>
-                <input type="file" name="file" id="fileInput" accept=".xls, .xlsx" style="display: none;" onchange="submitForm()"/>
+                <input type="file" name="file" id="fileInput" accept=".xls, .xlsx" style="display: none;"
+                       onchange="submitForm()"/>
                 <x-form-error name="file"/>
             </form>
         </div>
@@ -40,7 +41,8 @@
             <div class="col-md-2">
                 <div class="mb-3">
                     <label for="indexNo" class="form-label">Index No.</label>
-                    <input type="text" class="form-control" id="indexNo" name="indexNo" :value="old('indexNo')" required>
+                    <input type="text" class="form-control" id="indexNo" name="indexNo" :value="old('indexNo')"
+                           required>
                     <x-form-error name="indexNo"/>
                 </div>
             </div>
@@ -138,6 +140,13 @@
             // set page title
             $(document).prop('title', 'Add New Student | Student Management System');
         });
+
+        function submitForm() {
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length > 0) {
+                document.getElementById('uploadForm').submit();
+            }
+        }
     </script>
 
 @endsection
