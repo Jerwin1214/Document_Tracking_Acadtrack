@@ -33,11 +33,11 @@ class StudentController extends Controller
             'dob' => ['required', 'date'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'], // Ensure email is unique
             'password' => ['required', 'string', 'min:5'],
-            'initials' => ['required', 'string', 'max:10'],
-            'g_first_name' => ['required', 'string', 'max:30'],
-            'g_last_name' => ['required', 'string', 'max:50'],
-            'g_nic' => ['required', 'string', 'max:12'],
-            'g_phone' => ['required', 'string', 'max:10'],
+            'initials' => ['nullable', 'string', 'max:10'],
+            'g_first_name' => ['nullable', 'string', 'max:30'],
+            'g_last_name' => ['nullable', 'string', 'max:50'],
+            'g_nic' => ['nullable', 'string', 'max:12'],
+            'g_phone' => ['nullable', 'string', 'max:10'],
         ]);
 
         // Use a transaction to ensure all data is stored correctly

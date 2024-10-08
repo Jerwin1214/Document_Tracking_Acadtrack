@@ -67,21 +67,21 @@
         <div class="col-md-4">
             <div class="mb-3">
                 <label for="initials" class="form-label">Initials</label>
-                <input type="text" class="form-control" id="initials" name="initials" :value="old('initials')" required>
+                <input type="text" class="form-control" id="initials" name="initials" :value="old('initials')">
                 <x-form-error name="initials" />
             </div>
         </div>
         <div class="col-md-4">
             <div class="mb-3">
                 <label for="g_fname" class="form-label">First Name</label>
-                <input type="text" class="form-control" id="g_fname" name="g_first_name" :value="old('g_first_name')" required>
+                <input type="text" class="form-control" id="g_fname" name="g_first_name" :value="old('g_first_name')">
                 <x-form-error name="g_first_name" />
             </div>
         </div>
         <div class="col-md-4">
             <div class="mb-3">
                 <label for="g_lname" class="form-label">Last Name</label>
-                <input type="text" class="form-control" id="g_lname" name="g_last_name" :value="old('g_last_name')" required>
+                <input type="text" class="form-control" id="g_lname" name="g_last_name" :value="old('g_last_name')">
                 <x-form-error name="g_last_name" />
             </div>
         </div>

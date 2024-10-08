@@ -14,10 +14,10 @@ return new class extends Migration
     {
         Schema::create('guardians', function (Blueprint $table) {
             $table->id();
-            $table->string('initials');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('phone_number');
+            $table->string('initials')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('phone_number')->nullable();
             $table->string('nic')->unique()->nullable();
             $table->timestamps();
         });
