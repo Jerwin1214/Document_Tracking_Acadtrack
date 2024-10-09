@@ -67,6 +67,7 @@
                 </td>
                 <td>
                     <a href="/admin/teachers/{{ $teacher->id }}" class="btn btn-primary btn-sm">View</a>
+                    <a href="/admin/teachers/{{ $teacher->id }}/assign-class" class="btn btn-info btn-sm">Assign</a>
                     <a href="/admin/teachers/{{ $teacher->id }}/edit" class="btn btn-warning btn-sm">Edit</a>
                     <form action="/admin/teachers/{{ $teacher->id }}" method="POST" style="display: inline;">
                         @csrf

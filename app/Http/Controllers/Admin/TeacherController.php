@@ -112,4 +112,13 @@ class TeacherController extends Controller
         $teacher->user()->delete();
         return redirect('/admin/teachers/show')->with('success', 'Teacher deleted successfully');
     }
+
+    public static function assignClassView (Teacher $teacher) {
+        return view('pages.admin.teacher.assign-classes', ['teacher' => $teacher]);
+    }
+
+    public static function assignClasses(Request $request, Teacher $teacher) {
+        // TODO: implement the assignClasses method
+    }
+
 }

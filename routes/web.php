@@ -53,6 +53,8 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->group(func
     Route::get('/teachers/{teacher}/edit', [TeacherController::class, 'edit'])->name('admin.teachers.edit');
     Route::patch('/teachers/{teacher}', [TeacherController::class, 'update'])->name('admin.teachers.update');
     Route::delete('/teachers/{teacher}', [TeacherController::class, 'destroy'])->name('admin.teachers.destroy');
+    Route::get('/teachers/{teacher}/assign-class', [TeacherController::class, 'assignClassView'])->name('admin.teachers.assignView');
+    Route::post('/teachers/{teacher}/assign-class', [TeacherController::class, 'assignClasses'])->name('admin.teachers.assign');
 
     // subjects
     Route::get('/subjects/show', [SubjectController::class, 'showAllSubjects'])->name('admin.subjects.index');
