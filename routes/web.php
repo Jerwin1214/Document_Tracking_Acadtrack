@@ -115,10 +115,10 @@ Route::middleware(['auth', TeacherMiddleware::class])->prefix('teacher')->group(
     Route::delete('/students/{student}', [TeacherStudentController::class, 'destroy'])->name('teacher.students.destroy');
 
     // profile
-    Route::get('/teacher/profile', [TeacherMainController::class, 'showProfilePage'])->name('teacher.profile');
+    Route::get('/profile', [TeacherMainController::class, 'showProfilePage'])->name('teacher.profile');
 
     // settings
-    Route::get('/teacher/settings', [TeacherMainController::class, 'showSettingsPage'])->name('teacher.settings');
+    Route::get('/settings', [TeacherMainController::class, 'showSettingsPage'])->name('teacher.settings');
 });
 
 // Student routes
