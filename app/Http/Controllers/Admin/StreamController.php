@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\DB;
 
 class StreamController extends Controller
 {
-    public static function index() {
+    public static function index()
+    {
         // TODO: Implement index() method.
         $streams = SubjectStream::select(['id', 'stream_name'])
             ->with(['classes.students'])
@@ -24,15 +25,17 @@ class StreamController extends Controller
                 ];
             });
 
-//        dd($streams);
+        //        dd($streams);
         return view('pages.admin.stream.index', ['streams' => $streams]);
     }
 
-    public static function create() {
+    public static function create()
+    {
         return view('pages.admin.stream.add');
     }
 
-    public static function store(Request $request) {
+    public static function store(Request $request)
+    {
         // validate the user inputs
         $request->validate([
             'stream_name' => ['required', 'string', 'max:255'],
@@ -51,20 +54,37 @@ class StreamController extends Controller
         return redirect()->route('admin.streams.index')->with('success', 'New Subject Stream added successfully');
     }
 
-    public static function show(SubjectStream $subjectStream) {
+    public static function show(SubjectStream $stream)
+    {
         // TODO: Implement show() method.
     }
 
-    public static function edit(SubjectStream $subjectStream) {
-        // TODO: Implement edit() method.
+    public static function edit(SubjectStream $stream)
+    {
+        return view('pages.admin.stream.edit', ['stream' => $stream]);
     }
 
-    public static function update(Request $request, SubjectStream $subjectStream) {
-        // TODO: Implement update() method.
+    public static function update(Request $request, SubjectStream $stream)
+    {
+        $request->validate([
+            'stream_name' => ['required', 'string', 'max:255'],
+            'stream_code' => ['string', 'max:255', 'nullable'],
+            'stream_description' => ['string', 'max:255', 'nullable'],
+        ]);
+
+        $stream->update([
+            'stream_name' => $request->stream_name,
+            'stream_code' => $request->stream_code,
+            'stream_description' => $request->stream_description,
+        ]);
+
+        return redirect()->route('admin.streams.index')->with('success', 'Stream updated successfully');
     }
 
-    public static function destroy(SubjectStream $subjectStream) {
-        // TODO: Implement destroy() method.
+    public static function destroy(SubjectStream $stream)
+    {
+        $stream->delete();
+        return redirect()->route('admin.streams.index')->with('success', 'Stream deleted successfully');
     }
 
     public static function assignSubjectsView(SubjectStream $stream)
@@ -83,7 +103,8 @@ class StreamController extends Controller
     }
 
 
-    public static function assignSubjects(Request $request, SubjectStream $stream) {
+    public static function assignSubjects(Request $request, SubjectStream $stream)
+    {
         // Validate the incoming request
         $validatedData = $request->validate([
             'subjects' => 'required|array',
