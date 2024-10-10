@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Classes;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\User;
@@ -65,7 +66,7 @@ class TeacherController extends Controller
     {
         return view('pages.admin.teacher.index', [
             'teachers' => Teacher::with(['user', 'subjects']) // eager load the user
-            ->select(['id', 'first_name', 'last_name', 'user_id'])
+                ->select(['id', 'first_name', 'last_name', 'user_id'])
                 ->paginate(20)
         ]);
     }
@@ -113,12 +114,16 @@ class TeacherController extends Controller
         return redirect('/admin/teachers/show')->with('success', 'Teacher deleted successfully');
     }
 
-    public static function assignClassView (Teacher $teacher) {
-        return view('pages.admin.teacher.assign-classes', ['teacher' => $teacher]);
+    public static function assignClassView(Teacher $teacher)
+    {
+        // $classes = Cache::remember('classes_list', 60, function () {
+        //     return Classes::all();
+        // });
+        return redirect('/admin/teachers/show')->with('info', 'This feature is not implemented yet!');
     }
 
-    public static function assignClasses(Request $request, Teacher $teacher) {
+    public static function assignClasses(Request $request, Teacher $teacher)
+    {
         // TODO: implement the assignClasses method
     }
-
 }
