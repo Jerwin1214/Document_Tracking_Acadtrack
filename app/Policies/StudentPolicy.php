@@ -37,7 +37,7 @@ class StudentPolicy
      */
     public function update(User $user, Student $student): bool
     {
-        return $user->role->name === 'Admin' || $user->role->name === 'Teacher';
+        return $user->role->name === 'Admin' || $user->role->name === 'Teacher' || $user->role->name === 'Student';
     }
 
     /**

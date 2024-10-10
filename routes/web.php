@@ -20,7 +20,7 @@ use App\Http\Middleware\StudentMiddleware;
 use App\Http\Middleware\TeacherMiddleware;
 
 use App\Models\Student;
-
+use App\Models\Teacher;
 use Illuminate\Support\Facades\Route;
 
 // middlewares
@@ -47,12 +47,12 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->group(func
 
     // teachers
     Route::get('/teachers/show', [TeacherController::class, 'showAllTeachers'])->name('admin.teachers.index');
-    Route::get('/teachers/create', [TeacherController::class, 'create'])->name('admin.teachers.create');
-    Route::post('/teachers', [TeacherController::class, 'store'])->name('admin.teachers.store');
+    Route::get('/teachers/create', [TeacherController::class, 'create'])->name('admin.teachers.create')->can('create', Teacher::class);
+    Route::post('/teachers', [TeacherController::class, 'store'])->name('admin.teachers.store')->can('create', Teacher::class);
     Route::get('/teachers/{teacher}', [TeacherController::class, 'show'])->name('admin.teacher.show');
-    Route::get('/teachers/{teacher}/edit', [TeacherController::class, 'edit'])->name('admin.teachers.edit');
-    Route::patch('/teachers/{teacher}', [TeacherController::class, 'update'])->name('admin.teachers.update');
-    Route::delete('/teachers/{teacher}', [TeacherController::class, 'destroy'])->name('admin.teachers.destroy');
+    Route::get('/teachers/{teacher}/edit', [TeacherController::class, 'edit'])->name('admin.teachers.edit')->can('update', 'teacher');
+    Route::patch('/teachers/{teacher}', [TeacherController::class, 'update'])->name('admin.teachers.update')->can('update', 'teacher');
+    Route::delete('/teachers/{teacher}', [TeacherController::class, 'destroy'])->name('admin.teachers.destroy')->can('delete', 'teacher');
     Route::get('/teachers/{teacher}/assign-class', [TeacherController::class, 'assignClassView'])->name('admin.teachers.assignView');
     Route::post('/teachers/{teacher}/assign-class', [TeacherController::class, 'assignClasses'])->name('admin.teachers.assign');
 
@@ -129,8 +129,8 @@ Route::middleware(['auth', StudentMiddleware::class])->prefix('student')->group(
     Route::get('/profile', [StudentStdController::class, 'showProfilePage'])->name('student.profile');
 
     // settings
-    Route::get('/settings', [StudentStdController::class, 'showSettingsPage'])->name('student.settings');
-    Route::post('/settings', [StudentStdController::class, 'updateSettings'])->name('student.settings.update');
+    Route::get('/settings', [StudentStdController::class, 'showSettingsPage'])->name('student.settings')->can('update', Student::class);
+    Route::post('/settings', [StudentStdController::class, 'updateSettings'])->name('student.settings.update')->can('update', Student::class);
 });
 
 
