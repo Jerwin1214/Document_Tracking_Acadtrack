@@ -100,7 +100,6 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->group(func
     // messages
     Route::get('/messages', [AdminController::class, 'showMessages'])->name('admin.messages');
     Route::get('/messages/{message}', [AdminController::class, 'showMessage'])->name('admin.messages.show');
-
 });
 
 // Teacher routes

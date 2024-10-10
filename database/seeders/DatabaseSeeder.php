@@ -96,21 +96,21 @@ class DatabaseSeeder extends Seeder
 
         // for grade table
         DB::table('grades')->insert([
-            ['name' => 'Grade 1'],
-            ['name' => 'Grade 2'],
-            ['name' => 'Grade 3'],
-            ['name' => 'Grade 4'],
-            ['name' => 'Grade 5'],
-            ['name' => 'Grade 6'],
-            ['name' => 'Grade 7'],
-            ['name' => 'Grade 8'],
-            ['name' => 'Grade 9'],
-            ['name' => 'Grade 10'],
-            ['name' => 'Grade 11'],
-            ['name' => 'After O/L'],
-            ['name' => 'Grade 12'],
-            ['name' => 'Grade 13'],
-            ['name' => 'After A/L'],
+            ['name' => 'Grade 1', 'created_at' => now()],
+            ['name' => 'Grade 2', 'created_at' => now()],
+            ['name' => 'Grade 3', 'created_at' => now()],
+            ['name' => 'Grade 4', 'created_at' => now()],
+            ['name' => 'Grade 5', 'created_at' => now()],
+            ['name' => 'Grade 6', 'created_at' => now()],
+            ['name' => 'Grade 7', 'created_at' => now()],
+            ['name' => 'Grade 8', 'created_at' => now()],
+            ['name' => 'Grade 9', 'created_at' => now()],
+            ['name' => 'Grade 10', 'created_at' => now()],
+            ['name' => 'Grade 11', 'created_at' => now()],
+            ['name' => 'After O/L', 'created_at' => now()],
+            ['name' => 'Grade 12', 'created_at' => now()],
+            ['name' => 'Grade 13', 'created_at' => now()],
+            ['name' => 'After A/L', 'created_at' => now()],
         ]);
 
         // for subject_streams table
