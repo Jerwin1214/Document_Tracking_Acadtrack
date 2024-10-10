@@ -7,12 +7,12 @@ use Illuminate\Validation\ValidationException;
 
 class SessionController extends Controller
 {
-    public function create()
+    public static function create()
     {
         return view('auth.login');
     }
 
-    public function store()
+    public static function store()
     {
         // Validate the request data
         $attrs = request()->validate([
@@ -52,7 +52,7 @@ class SessionController extends Controller
         }
     }
 
-    public function destroy()
+    public static function destroy()
     {
         // logout functionality
         auth()->logout();

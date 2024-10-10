@@ -13,18 +13,18 @@ use Illuminate\Support\Facades\Hash;
 
 class TeacherController extends Controller
 {
-    public function index()
+    public static function index()
     {
         // TODO: implement the index method
         return view('pages.teachers.dashboard');
     }
 
-    public function create()
+    public static function create()
     {
         return view('pages.admin.teacher.add');
     }
 
-    public function store(Request $request)
+    public static function store(Request $request)
     {
         // validate the teacher details
         $request->validate([
@@ -62,7 +62,7 @@ class TeacherController extends Controller
         return redirect('/admin/teachers/show')->with('success', 'Teacher added successfully');
     }
 
-    public function showAllTeachers()
+    public static function showAllTeachers()
     {
         return view('pages.admin.teacher.index', [
             'teachers' => Teacher::with(['user', 'subjects']) // eager load the user
@@ -71,7 +71,7 @@ class TeacherController extends Controller
         ]);
     }
 
-    public function show(Teacher $teacher)
+    public static function show(Teacher $teacher)
     {
         return view('pages.admin.teacher.show', ['teacher' => $teacher]);
     }
@@ -84,7 +84,7 @@ class TeacherController extends Controller
         return view('pages.admin.teacher.edit', ['teacher' => $teacher, 'subjects' => $subjects]);
     }
 
-    public function update(Request $request, Teacher $teacher)
+    public static function update(Request $request, Teacher $teacher)
     {
         // TODO: implement the update method
         $request->validate([
@@ -108,7 +108,7 @@ class TeacherController extends Controller
         return redirect('/admin/teachers/show')->with('success', 'Teacher updated successfully');
     }
 
-    public function destroy(Teacher $teacher)
+    public static function destroy(Teacher $teacher)
     {
         $teacher->user()->delete();
         return redirect('/admin/teachers/show')->with('success', 'Teacher deleted successfully');

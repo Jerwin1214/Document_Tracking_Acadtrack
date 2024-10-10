@@ -11,22 +11,22 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class SubjectController extends Controller
 {
-    public function index()
+    public static function index()
     {
         //
     }
 
-    public function create()
+    public static function create()
     {
         return view('pages.admin.subject.add');
     }
 
-    public function showAllSubjects()
+    public static function showAllSubjects()
     {
         return view('pages.admin.subject.index', ['subjects' => Subject::select('id', 'name', 'code', 'description')->paginate(10)]);
     }
 
-    public function store(Request $request)
+    public static function store(Request $request)
     {
         // validate the request
         $request->validate([
@@ -45,12 +45,12 @@ class SubjectController extends Controller
         return redirect('/admin/subjects/show')->with('success', 'Subject added successfully');
     }
 
-    public function edit(Subject $subject)
+    public static function edit(Subject $subject)
     {
         return view('pages.admin.subject.edit', ['subject' => $subject]);
     }
 
-    public function update(Request $request, Subject $subject)
+    public static function update(Request $request, Subject $subject)
     {
         // validate the request
         $request->validate([
@@ -69,18 +69,18 @@ class SubjectController extends Controller
         return redirect('/admin/subjects/show')->with('success', 'Subject updated successfully');
     }
 
-    public function destroy(Request $request, Subject $subject)
+    public static function destroy(Request $request, Subject $subject)
     {
         $subject->delete();
         return redirect('/admin/subjects/show')->with('success', 'Subject deleted successfully');
     }
 
-    public function assignTeachersView()
+    public static function assignTeachersView()
     {
         return view('pages.admin.subject.assign-teachers', ['subjects' => Subject::all(), 'teachers' => Teacher::all()]);
     }
 
-    public function assignTeachers(Request $request)
+    public static function assignTeachers(Request $request)
     {
         // validate the inputs
         $request->validate([
@@ -121,13 +121,13 @@ class SubjectController extends Controller
         return redirect('/admin/teachers/show')->with('success', 'Subject assiged to teacher successfully');
     }
 
-    public function showAssignedSubjectsForTeacher(Teacher $teacher)
+    public static function showAssignedSubjectsForTeacher(Teacher $teacher)
     {
         $subjects = $teacher->subjects;
         return response($subjects);
     }
 
-    public function uploadSubjects(Request $request)
+    public static function uploadSubjects(Request $request)
     {
         // validate the request
         $request->validate([
@@ -136,7 +136,7 @@ class SubjectController extends Controller
 
         // Load the uploaded file using PhpSpreadsheet
         $file = $request->file('file');
-//        dd($file);
+        //        dd($file);
         $spreadsheet = IOFactory::load($file->getRealPath());
         $sheet = $spreadsheet->getActiveSheet();
 

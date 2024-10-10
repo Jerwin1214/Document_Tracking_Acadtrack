@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    public function index()
+    public static function index()
     {
         $counts = DB::table('students')
             ->selectRaw('(SELECT COUNT(*) FROM students INNER JOIN users ON (students.user_id=users.id) WHERE users.is_active=1) as students_count')
@@ -24,47 +24,47 @@ class AdminController extends Controller
         return view('pages.admin.dashboard', compact('counts'));
     }
 
-    public function create()
+    public static function create()
     {
         // TODO: implement the create method
     }
 
-    public function store(Request $request)
+    public static function store(Request $request)
     {
         // TODO: implement the store method
     }
 
-    public function show(Admin $admin)
+    public static function show(Admin $admin)
     {
         // TODO: implement the show method
     }
 
-    public function edit(Admin $admin)
+    public static function edit(Admin $admin)
     {
         // TODO: implement the edit method
     }
 
-    public function update(Admin $admin)
+    public static function update(Admin $admin)
     {
         // TODO: implement the update method
     }
 
-    public function destroy(Admin $admin)
+    public static function destroy(Admin $admin)
     {
         // TODO: implement the destroy method
     }
 
-    public function showProfile()
+    public static function showProfile()
     {
         return view('pages.admin.profile');
     }
 
-    public function showSettings()
+    public static function showSettings()
     {
         return view('pages.admin.settings');
     }
 
-    public function updateSettings(Request $request)
+    public static function updateSettings(Request $request)
     {
         $request->validate([
             'email' => ['required', 'email', 'string', 'max:255'],
@@ -104,12 +104,12 @@ class AdminController extends Controller
         return redirect('/')->with('success', 'Password changed successfully');
     }
 
-    public function showMessages()
+    public static function showMessages()
     {
         return view('pages.admin.messages.index');
     }
 
-    public function showMessage()
+    public static function showMessage()
     {
         return view('pages.admin.messages.show');
     }

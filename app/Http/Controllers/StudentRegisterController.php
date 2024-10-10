@@ -10,17 +10,17 @@ use Illuminate\Support\Facades\Hash;
 
 class StudentRegisterController extends Controller
 {
-    public function index()
+    public static function index()
     {
         //
     }
 
-    public function create(Request $request)
+    public static function create(Request $request)
     {
         return view('auth.register');
     }
 
-    public function store(Request $request)
+    public static function store(Request $request)
     {
         // validate user inputs
         // dd($request->all());
@@ -53,25 +53,5 @@ class StudentRegisterController extends Controller
         Auth::login($user);
 
         return redirect()->route('student.dashboard');
-    }
-
-    public function show(Request $request, Student $student)
-    {
-        //
-    }
-
-    public function edit(Request $request, Student $student)
-    {
-        //
-    }
-
-    public function update(Request $request, Student $student)
-    {
-        //
-    }
-
-    public function destroy(Request $request, Student $student)
-    {
-        //
     }
 }

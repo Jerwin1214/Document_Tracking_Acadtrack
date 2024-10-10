@@ -9,16 +9,19 @@ use Illuminate\Support\Facades\Auth;
 
 class TeacherMainController extends Controller
 {
-    public function showProfilePage() {
+    public static function showProfilePage()
+    {
         $teacher = Teacher::select(['first_name', 'last_name'])->where('user_id', auth()->user()->id)->first();
         return view('pages.teachers.profile', ['teacher' => $teacher]);
     }
 
-    public function showSettingsPage() {
+    public static function showSettingsPage()
+    {
         return view('pages.teachers.settings');
     }
 
-    public function updateSettings(Request $request) {
+    public static function updateSettings(Request $request)
+    {
         $request->validate([
             'email' => ['required', 'email', 'string', 'max:255'],
             'old_password' => ['nullable', 'string', 'min:8'],

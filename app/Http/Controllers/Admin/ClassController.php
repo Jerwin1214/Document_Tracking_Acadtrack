@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class ClassController extends Controller
 {
-    public function index()
+    public static function index()
     {
         $classes = DB::table('classes')
             ->leftJoin('class_student', 'classes.id', '=', 'class_student.class_id')
@@ -51,7 +51,7 @@ class ClassController extends Controller
         return view('pages.admin.class.index', ['classes' => $classes]);
     }
 
-    public function create()
+    public static function create()
     {
         // Cache the grades for 10 minutes
         $grades = Cache::remember('grades', 600, function () {
@@ -69,7 +69,7 @@ class ClassController extends Controller
         return view('pages.admin.class.add', compact('teachers', 'grades', 'streams'));
     }
 
-    public function store(Request $request)
+    public static function store(Request $request)
     {
         // validate the request
         $request->validate([
@@ -93,12 +93,12 @@ class ClassController extends Controller
         return redirect('/admin/class/show')->with('success', 'Class created successfully');
     }
 
-    public function show(Classes $class)
+    public static function show(Classes $class)
     {
         return view('pages.admin.class.show', ['class' => $class]);
     }
 
-    public function edit(Classes $class)
+    public static function edit(Classes $class)
     {
         // Cache the grades for 10 minutes
         $grades = Cache::remember('grades', 600, function () {
@@ -117,7 +117,7 @@ class ClassController extends Controller
         return view('pages.admin.class.edit', ['class' => $class, 'grades' => $grades, 'subjects' => $subjects, 'teachers' => $teachers]);
     }
 
-    public function update(Request $request, Classes $class)
+    public static function update(Request $request, Classes $class)
     {
         // validate the user input
         $request->validate([
@@ -140,14 +140,14 @@ class ClassController extends Controller
         return redirect('/admin/class/show')->with('success', 'Class details updated successfully!');
     }
 
-    public function destroy(Classes $class)
+    public static function destroy(Classes $class)
     {
         // TODO: implement the destroy method
         $class->delete();
         return redirect('/admin/class/show')->with('success', 'Class deleted successfully');
     }
 
-    public function assignStudentsView(Classes $class)
+    public static function assignStudentsView(Classes $class)
     {
         $unassignedStudents = DB::table('students')
             ->leftJoin('class_student', 'students.id', '=', 'class_student.student_id')
@@ -161,9 +161,9 @@ class ClassController extends Controller
         ]);
     }
 
-    public function assignStudents(Request $request, Classes $class)
+    public static function assignStudents(Request $request, Classes $class)
     {
-//        dd($request->students);
+        //        dd($request->students);
         foreach ($request->students as $student) {
             DB::table('class_student')->insert([
                 'class_id' => $class->id,
