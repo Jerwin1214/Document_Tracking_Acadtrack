@@ -119,7 +119,7 @@ Route::middleware(['auth', TeacherMiddleware::class])->prefix('teacher')->group(
 
     // settings
     Route::get('/settings', [TeacherMainController::class, 'showSettingsPage'])->name('teacher.settings');
-    Route::post('/settings', [TeacherMainController::class, 'updateSettings'])->name('teacher.settings.update');
+    Route::post('/settings', [TeacherMainController::class, 'updateSettings'])->name('teacher.settings.update')->can('update', Teacher::class);
 });
 
 // Student routes
