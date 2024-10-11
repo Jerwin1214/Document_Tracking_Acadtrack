@@ -5,11 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Guardian;
+use App\Models\Classes;
+use App\Models\SubjectStream;
+use App\Models\User;
+
 class Student extends Model
 {
     use HasFactory;
 
-//    protected $guarded = [];
+    //    protected $guarded = [];
     protected $fillable = [
         'first_name',
         'last_name',
@@ -44,5 +49,11 @@ class Student extends Model
     public function classes()
     {
         return $this->belongsToMany(Classes::class, 'class_student', 'student_id', 'class_id');
+    }
+
+    // In Class model
+    public function subjectStream()
+    {
+        return $this->belongsTo(SubjectStream::class);
     }
 }

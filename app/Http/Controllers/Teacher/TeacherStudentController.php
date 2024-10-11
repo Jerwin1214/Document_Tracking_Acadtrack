@@ -101,9 +101,26 @@ class TeacherStudentController extends Controller
 
     public function show(Student $student)
     {
-        // Eager load guardian to avoid extra queries
+        // Eager load the guardian to avoid extra queries
         $student->load('guardian');
-        return view('pages.teachers.students.show', ['student' => $student]);
+
+        // Get the class of the student (assuming a student is enrolled in one class at a time)
+        $class = $student->classes()->first(); // Adjust if students can belong to multiple classes
+
+        // Retrieve the subject stream ID from the class
+        $subjectStreamId = $class->subject_stream_id;
+
+        // Get all subjects for the student's subject stream
+        $subjects = DB::table('subjects')
+            ->join('subject_stream_subject', 'subjects.id', '=', 'subject_stream_subject.subject_id')
+            ->where('subject_stream_subject.subject_stream_id', $subjectStreamId)
+            ->select('subjects.*')
+            ->get();
+
+        return view('pages.teachers.students.show', [
+            'student' => $student,
+            'subjects' => $subjects,
+        ]);
     }
 
     public function edit(Student $student)

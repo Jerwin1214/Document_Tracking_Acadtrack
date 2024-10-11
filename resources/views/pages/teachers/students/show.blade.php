@@ -72,8 +72,8 @@
                 </div>
             </div>
         </div>
-        @if($student->guardian)
         <div class="row">
+            @if($student->guardian)
             <div class="col-md-4">
                 <div class="card mb-4 mb-md-0">
                     <div class="card-body">
@@ -105,8 +105,33 @@
                     </div>
                 </div>
             </div>
+            @endif
+            <div class="col-lg-8">
+                <div class="card mb-4 mb-md-0">
+                    <div class="card-body">
+                        <p class="mb-4">Assigned Subjects</p>
+                        <table class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($subjects as $subject)
+                                <tr>
+                                    <td>{{$loop->iteration}}</td>
+                                    <td>{{$subject->code}}</td>
+                                    <td>{{$subject->name}}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-        @endif
     </div>
 </div>
 <!--  -->
