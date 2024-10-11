@@ -13,18 +13,18 @@ use Illuminate\Support\Facades\Hash;
 
 class TeacherController extends Controller
 {
-    public static function index()
+    public function index()
     {
         // TODO: implement the index method
         return view('pages.teachers.dashboard');
     }
 
-    public static function create()
+    public function create()
     {
         return view('pages.admin.teacher.add');
     }
 
-    public static function store(Request $request)
+    public function store(Request $request)
     {
         // validate the teacher details
         $request->validate([
@@ -62,7 +62,7 @@ class TeacherController extends Controller
         return redirect('/admin/teachers/show')->with('success', 'Teacher added successfully');
     }
 
-    public static function showAllTeachers()
+    public function showAllTeachers()
     {
         return view('pages.admin.teacher.index', [
             'teachers' => Teacher::with(['user', 'subjects']) // eager load the user
@@ -71,7 +71,7 @@ class TeacherController extends Controller
         ]);
     }
 
-    public static function show(Teacher $teacher)
+    public function show(Teacher $teacher)
     {
         return view('pages.admin.teacher.show', ['teacher' => $teacher]);
     }
@@ -84,7 +84,7 @@ class TeacherController extends Controller
         return view('pages.admin.teacher.edit', ['teacher' => $teacher, 'subjects' => $subjects]);
     }
 
-    public static function update(Request $request, Teacher $teacher)
+    public function update(Request $request, Teacher $teacher)
     {
         // TODO: implement the update method
         $request->validate([
@@ -108,13 +108,13 @@ class TeacherController extends Controller
         return redirect('/admin/teachers/show')->with('success', 'Teacher updated successfully');
     }
 
-    public static function destroy(Teacher $teacher)
+    public function destroy(Teacher $teacher)
     {
         $teacher->user()->delete();
         return redirect('/admin/teachers/show')->with('success', 'Teacher deleted successfully');
     }
 
-    public static function assignClassView(Teacher $teacher)
+    public function assignClassView(Teacher $teacher)
     {
         // $classes = Cache::remember('classes_list', 60, function () {
         //     return Classes::all();
@@ -122,7 +122,7 @@ class TeacherController extends Controller
         return redirect('/admin/teachers/show')->with('info', 'This feature is not implemented yet!');
     }
 
-    public static function assignClasses(Request $request, Teacher $teacher)
+    public function assignClasses(Request $request, Teacher $teacher)
     {
         // TODO: implement the assignClasses method
     }

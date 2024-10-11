@@ -20,17 +20,17 @@ class TeacherStudentController extends Controller
         $this->teacherId = Teacher::where('user_id', auth()->id())->first()->id;
     }
 
-    public static function index()
+    public function index()
     {
         return view('pages.teachers.students.index');
     }
 
-    public static function create()
+    public function create()
     {
         return view('pages.teachers.students.add');
     }
 
-    public static function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'std_first_name' => 'required|string|max:30',
@@ -84,7 +84,7 @@ class TeacherStudentController extends Controller
         return redirect('/teacher/students/show')->with('success', 'Student added successfully');
     }
 
-    public static function showAllStudents()
+    public function showAllStudents()
     {
         // Fetch students with their classes taught by the current teacher, eager load only relevant data
         $studentsOfTeacher = Student::whereHas('classes', function ($query) {
@@ -99,21 +99,21 @@ class TeacherStudentController extends Controller
         return view('pages.teachers.students.index', ['students' => $studentsOfTeacher]);
     }
 
-    public static function show(Student $student)
+    public function show(Student $student)
     {
         // Eager load guardian to avoid extra queries
         $student->load('guardian');
         return view('pages.teachers.students.show', ['student' => $student]);
     }
 
-    public static function edit(Student $student)
+    public function edit(Student $student)
     {
         // Eager load guardian to avoid extra queries
         $student->load('guardian');
         return view('pages.teachers.students.edit', ['student' => $student]);
     }
 
-    public static function update(Student $student, Request $request)
+    public function update(Student $student, Request $request)
     {
         $request->validate([
             'std_first_name' => 'required|string|max:30',
@@ -151,7 +151,7 @@ class TeacherStudentController extends Controller
         return redirect('/teacher/students/show')->with('success', 'Student updated successfully');
     }
 
-    public static function destroy(Student $student)
+    public function destroy(Student $student)
     {
         // Deleting student and associated user in one go
         DB::transaction(function () use ($student) {

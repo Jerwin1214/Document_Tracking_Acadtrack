@@ -19,12 +19,12 @@ class StudentController extends Controller
         return view('pages.students.dashboard');
     }
 
-    public static function create()
+    public function create()
     {
         return view('pages.admin.student.add');
     }
 
-    public static function store(Request $request)
+    public function store(Request $request)
     {
         // Validate user inputs
         $request->validate([
@@ -81,24 +81,24 @@ class StudentController extends Controller
     }
 
 
-    public static function showAllStudents()
+    public function showAllStudents()
     {
         return view('pages.admin.student.index', [
             'students' => Student::select(['id', 'first_name', 'last_name'])->paginate(20)
         ]);
     }
 
-    public static function show(Student $student)
+    public function show(Student $student)
     {
         return view('pages.admin.student.show', ['student' => $student]);
     }
 
-    public static function edit(Student $student)
+    public function edit(Student $student)
     {
         return view('pages.admin.student.edit', ['student' => $student]);
     }
 
-    public static function update(Student $student, Request $request)
+    public function update(Student $student, Request $request)
     {
         $request->validate([
             'std_first_name' => ['required', 'string', 'max:30'],
@@ -136,13 +136,13 @@ class StudentController extends Controller
         return redirect('/admin/students/show')->with('success', 'Student updated successfully');
     }
 
-    public static function destroy(Student $student)
+    public function destroy(Student $student)
     {
         $student->user()->delete();
         return redirect('/admin/students/show')->with('success', 'Student deleted successfully');
     }
 
-    public static function uploadStudents(Request $request)
+    public function uploadStudents(Request $request)
     {
         // Validate the uploaded file
         $request->validate([

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class StreamController extends Controller
 {
-    public static function index()
+    public function index()
     {
         // TODO: Implement index() method.
         $streams = SubjectStream::select(['id', 'stream_name'])
@@ -29,12 +29,12 @@ class StreamController extends Controller
         return view('pages.admin.stream.index', ['streams' => $streams]);
     }
 
-    public static function create()
+    public function create()
     {
         return view('pages.admin.stream.add');
     }
 
-    public static function store(Request $request)
+    public function store(Request $request)
     {
         // validate the user inputs
         $request->validate([
@@ -54,17 +54,17 @@ class StreamController extends Controller
         return redirect()->route('admin.streams.index')->with('success', 'New Subject Stream added successfully');
     }
 
-    public static function show(SubjectStream $stream)
+    public function show(SubjectStream $stream)
     {
         // TODO: Implement show() method.
     }
 
-    public static function edit(SubjectStream $stream)
+    public function edit(SubjectStream $stream)
     {
         return view('pages.admin.stream.edit', ['stream' => $stream]);
     }
 
-    public static function update(Request $request, SubjectStream $stream)
+    public function update(Request $request, SubjectStream $stream)
     {
         $request->validate([
             'stream_name' => ['required', 'string', 'max:255'],
@@ -81,13 +81,13 @@ class StreamController extends Controller
         return redirect()->route('admin.streams.index')->with('success', 'Stream updated successfully');
     }
 
-    public static function destroy(SubjectStream $stream)
+    public function destroy(SubjectStream $stream)
     {
         $stream->delete();
         return redirect()->route('admin.streams.index')->with('success', 'Stream deleted successfully');
     }
 
-    public static function assignSubjectsView(SubjectStream $stream)
+    public function assignSubjectsView(SubjectStream $stream)
     {
         // Fetch all subjects
         $subjects = Subject::select(['id', 'name', 'code'])->get();
@@ -103,7 +103,7 @@ class StreamController extends Controller
     }
 
 
-    public static function assignSubjects(Request $request, SubjectStream $stream)
+    public function assignSubjects(Request $request, SubjectStream $stream)
     {
         // Validate the incoming request
         $validatedData = $request->validate([

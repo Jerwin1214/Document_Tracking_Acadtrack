@@ -10,17 +10,17 @@ use Illuminate\Support\Facades\Hash;
 
 class StudentRegisterController extends Controller
 {
-    public static function index()
+    public function index()
     {
         //
     }
 
-    public static function create(Request $request)
+    public function create(Request $request)
     {
         return view('auth.register');
     }
 
-    public static function store(Request $request)
+    public function store(Request $request)
     {
         // validate user inputs
         // dd($request->all());
