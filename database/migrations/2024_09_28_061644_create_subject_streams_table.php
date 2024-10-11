@@ -25,6 +25,13 @@ return new class extends Migration
             $table->foreignId('subject_stream_id')->constrained('subject_streams')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
+
+        Schema::create('custom_student_subjects', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('subject_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
