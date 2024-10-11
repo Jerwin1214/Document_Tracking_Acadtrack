@@ -1,36 +1,18 @@
 @extends('pages.teachers.teacher-content')
 
 @section('content')
+
 <!-- Popup messages -->
 @if (session('success'))
-<script>
-    Swal.fire({
-        icon: "success",
-        title: "{{ session('success') }}",
-        showConfirmButton: false,
-        timer: 1500
-    });
-</script>
+<x-popup-message type="success" :message="session('success')" />
 @endif
 
 @if (session('warning'))
-<script>
-    Swal.fire({
-        icon: "warning",
-        title: "{{ session('warning') }}",
-        showConfirmButton: true,
-    });
-</script>
+<x-popup-message type="warning" :message="session('warning')" />
 @endif
 
 @if (session('error'))
-<script>
-    Swal.fire({
-        icon: "error",
-        title: "{{ session('error') }}",
-        showConfirmButton: true,
-    });
-</script>
+<x-popup-message type="error" :message="session('error')" />
 @endif
 <!--  -->
 
