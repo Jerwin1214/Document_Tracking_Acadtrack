@@ -112,7 +112,6 @@ Route::middleware(['auth', TeacherMiddleware::class])->prefix('teacher')->group(
     Route::get('/students/{student}', [TeacherStudentController::class, 'show'])->name('teacher.students.show')->can('view', 'student');
     Route::get('/students/{student}/edit', [TeacherStudentController::class, 'edit'])->name('teacher.students.edit')->can('update', 'student');
     Route::patch('/students/{student}', [TeacherStudentController::class, 'update'])->name('teacher.students.update')->can('update', 'student');
-    Route::delete('/students/{student}', [TeacherStudentController::class, 'destroy'])->name('teacher.students.destroy')->can('delete', 'student');
 
     // profile
     Route::get('/profile', [TeacherMainController::class, 'showProfilePage'])->name('teacher.profile');

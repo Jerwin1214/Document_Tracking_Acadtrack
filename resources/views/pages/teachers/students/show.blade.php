@@ -13,11 +13,6 @@
                     <h5 class="my-2">{{$student->first_name}} {{$student->last_name}}</h5>
                     <div class="d-flex justify-content-center mb-2">
                         <a href="/teacher/students/{{$student->id}}/edit" class="btn btn-warning">Edit</a>
-                        <form action="/teacher/students/{{ $student->id }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger ms-2">Delete</button>
-                        </form>
                     </div>
                 </div>
             </div>
