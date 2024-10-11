@@ -112,6 +112,8 @@ Route::middleware(['auth', TeacherMiddleware::class])->prefix('teacher')->group(
     Route::get('/students/{student}', [TeacherStudentController::class, 'show'])->name('teacher.students.show')->can('view', 'student');
     Route::get('/students/{student}/edit', [TeacherStudentController::class, 'edit'])->name('teacher.students.edit')->can('update', 'student');
     Route::patch('/students/{student}', [TeacherStudentController::class, 'update'])->name('teacher.students.update')->can('update', 'student');
+    // TODO: fix the assign subjects to students page
+    Route::get('/students/assign', [TeacherStudentController::class, 'assignSubjectsView'])->name('teacher.students.assignView');
 
     // profile
     Route::get('/profile', [TeacherMainController::class, 'showProfilePage'])->name('teacher.profile');
