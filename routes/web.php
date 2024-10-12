@@ -14,7 +14,7 @@ use App\Http\Controllers\Teacher\TeacherStudentController;
 
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\StudentRegisterController;
-
+use App\Http\Controllers\TeacherAnnouncementController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\StudentMiddleware;
 use App\Http\Middleware\TeacherMiddleware;
@@ -112,9 +112,17 @@ Route::middleware(['auth', TeacherMiddleware::class])->prefix('teacher')->group(
     Route::get('/students/{student}', [TeacherStudentController::class, 'show'])->name('teacher.students.show')->can('view', 'student');
     Route::get('/students/{student}/edit', [TeacherStudentController::class, 'edit'])->name('teacher.students.edit')->can('update', 'student');
     Route::patch('/students/{student}', [TeacherStudentController::class, 'update'])->name('teacher.students.update')->can('update', 'student');
-
     Route::get('/students/{student}/assign', [TeacherStudentController::class, 'assignSubjectsView'])->name('teacher.students.assignView');
     Route::patch('/students/{student}/assign', [TeacherStudentController::class, 'assignSubjects'])->name('teacher.students.assign');
+
+    // announcements
+    Route::get('/announcements/create', [TeacherAnnouncementController::class, 'create'])->name('teacher.announcements.create');
+    Route::post('/announcements', [TeacherAnnouncementController::class, 'store'])->name('teacher.announcements.store');
+    Route::get('/announcements/show', [TeacherAnnouncementController::class, 'index'])->name('teacher.announcements.index');
+    Route::get('/announcements/{announcement}', [TeacherAnnouncementController::class, 'show'])->name('teacher.announcements.show');
+    Route::get('/announcements/{announcement}/edit', [TeacherAnnouncementController::class, 'edit'])->name('teacher.announcements.edit');
+    Route::patch('/announcements/{announcement}', [TeacherAnnouncementController::class, 'update'])->name('teacher.announcements.update');
+    Route::delete('/announcements/{announcement}', [TeacherAnnouncementController::class, 'destroy'])->name('teacher.announcements.destroy');
 
     // profile
     Route::get('/profile', [TeacherMainController::class, 'showProfilePage'])->name('teacher.profile');
