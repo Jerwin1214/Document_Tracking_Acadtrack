@@ -38,6 +38,7 @@
             <td>{{ $student->first_name }} {{ $student->last_name }}</td>
             <td>
                 <a href="/teacher/students/{{ $student->id }}" class="btn btn-primary btn-sm">View</a>
+                <a href="/teacher/students/{{ $student->id }}/assign" class="btn btn-info btn-sm">Assign</a>
                 <a href="/teacher/students/{{ $student->id }}/edit" class="btn btn-warning btn-sm">Edit</a>
             </td>
         </tr>

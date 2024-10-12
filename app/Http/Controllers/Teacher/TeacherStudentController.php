@@ -104,17 +104,11 @@ class TeacherStudentController extends Controller
         // Eager load the guardian to avoid extra queries
         $student->load('guardian');
 
-        // Get the class of the student (assuming a student is enrolled in one class at a time)
-        $class = $student->classes()->first(); // Adjust if students can belong to multiple classes
-
-        // Retrieve the subject stream ID from the class
-        $subjectStreamId = $class->subject_stream_id;
-
-        // Get all subjects for the student's subject stream
+        // Get the subjects that are specifically assigned to the student
         $subjects = DB::table('subjects')
-            ->join('subject_stream_subject', 'subjects.id', '=', 'subject_stream_subject.subject_id')
-            ->where('subject_stream_subject.subject_stream_id', $subjectStreamId)
-            ->select('subjects.*')
+            ->join('student_subjects', 'subjects.id', '=', 'student_subjects.subject_id')
+            ->where('student_subjects.student_id', $student->id)
+            ->select('subjects.code', 'subjects.name')
             ->get();
 
         return view('pages.teachers.students.show', [
@@ -179,8 +173,75 @@ class TeacherStudentController extends Controller
         return redirect('/teacher/students/show')->with('success', 'Student deleted successfully');
     }
 
-    public function assignSubjectsView()
+    public function assignSubjectsView(Student $student)
     {
-        return view('pages.teachers.students.assign-subjects');
+        // Get the class of the student (assuming a student is enrolled in one class at a time)
+        $class = $student->classes()->first();
+
+        // Retrieve the subject stream ID from the class
+        $subjectStreamId = $class->subject_stream_id;
+
+        // Get all subjects for the student's subject stream
+        $subjects = DB::table('subjects')
+            ->join('subject_stream_subject', 'subjects.id', '=', 'subject_stream_subject.subject_id')
+            ->where('subject_stream_subject.subject_stream_id', $subjectStreamId)
+            ->select('subjects.*')
+            ->get();
+
+        // Get IDs of subjects already assigned to the student
+        $assignedSubjectIds = DB::table('student_subjects')
+            ->where('student_id', $student->id)
+            ->pluck('subject_id')
+            ->toArray();
+
+        return view('pages.teachers.students.assign-subjects', [
+            'student' => $student,
+            'subjects' => $subjects,
+            'assignedSubjectIds' => $assignedSubjectIds, // Pass assigned subject IDs to the view
+        ]);
+    }
+
+    public function assignSubjects(Request $request, Student $student)
+    {
+        // validate the inputs
+        $request->validate([
+            'subjects' => ['required'],
+        ]);
+        // Retrieve the IDs of the subjects selected by the user in the form
+        $selectedSubjectIds = $request->input('subjects', []);
+
+        // Get the IDs of subjects already assigned to the student
+        $existingSubjectIds = DB::table('student_subjects')
+            ->where('student_id', $student->id)
+            ->pluck('subject_id')
+            ->toArray();
+
+        // Find new subjects to insert (selected subjects that aren’t in the existing subjects)
+        $subjectsToInsert = array_diff($selectedSubjectIds, $existingSubjectIds);
+
+        // Find subjects to delete (existing subjects that aren’t in the selected subjects)
+        $subjectsToDelete = array_diff($existingSubjectIds, $selectedSubjectIds);
+
+        // Start a database transaction to ensure data consistency
+        DB::transaction(function () use ($subjectsToInsert, $subjectsToDelete, $student) {
+            // Insert new subjects
+            foreach ($subjectsToInsert as $subjectId) {
+                DB::table('student_subjects')->insert([
+                    'student_id' => $student->id,
+                    'subject_id' => $subjectId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            // Delete removed subjects
+            DB::table('student_subjects')
+                ->where('student_id', $student->id)
+                ->whereIn('subject_id', $subjectsToDelete)
+                ->delete();
+        });
+
+        // Redirect back with a success message
+        return redirect('/teacher/students/show')->with('success', 'Subjects updated successfully!');
     }
 }

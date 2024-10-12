@@ -163,15 +163,31 @@ class ClassController extends Controller
 
     public function assignStudents(Request $request, Classes $class)
     {
-        //        dd($request->students);
-        foreach ($request->students as $student) {
+        // Assign students to the class
+        foreach ($request->students as $studentId) {
             DB::table('class_student')->insert([
                 'class_id' => $class->id,
-                'student_id' => $student,
+                'student_id' => $studentId,
                 'created_at' => now(),
             ]);
+
+            // Get the subjects assigned to the class's subject stream
+            $subjects = DB::table('subject_stream_subject')
+                ->where('subject_stream_id', $class->subject_stream_id)
+                ->pluck('subject_id'); // Retrieve only subject IDs
+
+            // Insert each subject for this student into student_subjects table
+            foreach ($subjects as $subjectId) {
+                DB::table('student_subjects')->insert([
+                    'subject_id' => $subjectId,
+                    'student_id' => $studentId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
-        // redirect to the show classes page with a success message
-        return redirect('/admin/class/show')->with('success', 'Students assigned to class successfully!');
+
+        // Redirect with a success message
+        return redirect('/admin/class/show')->with('success', 'Students and their subjects assigned to class successfully!');
     }
 }
