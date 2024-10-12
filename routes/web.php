@@ -11,10 +11,10 @@ use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Student\StudentStdController;
 use App\Http\Controllers\Teacher\TeacherMainController;
 use App\Http\Controllers\Teacher\TeacherStudentController;
+use App\Http\Controllers\Teacher\TeacherAnnouncementController;
 
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\StudentRegisterController;
-use App\Http\Controllers\TeacherAnnouncementController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\StudentMiddleware;
 use App\Http\Middleware\TeacherMiddleware;
@@ -106,7 +106,7 @@ Route::middleware(['auth', TeacherMiddleware::class])->prefix('teacher')->group(
     Route::get('/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
 
     // students section
-    Route::get('/students/add', [TeacherStudentController::class, 'create'])->name('teacher.students.create')->can('create', Student::class);
+    Route::get('/students/create', [TeacherStudentController::class, 'create'])->name('teacher.students.create')->can('create', Student::class);
     Route::post('/students', [TeacherStudentController::class, 'store'])->name('teacher.student.store')->can('create', Student::class);
     Route::get('/students/show', [TeacherStudentController::class, 'showAllStudents'])->name('teacher.students.index');
     Route::get('/students/{student}', [TeacherStudentController::class, 'show'])->name('teacher.students.show')->can('view', 'student');

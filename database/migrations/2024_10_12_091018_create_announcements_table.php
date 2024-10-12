@@ -20,14 +20,6 @@ return new class extends Migration
             $table->foreignId('class_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
-
-        Schema::table('student_announcement_status', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('announcement_id')->constrained()->onDelete('cascade');
-            $table->foreignId('student_id')->constrained()->onDelete('cascade');
-            $table->boolean('seen')->default(false);
-            $table->timestamps();
-        });
     }
 
     /**

@@ -12,6 +12,11 @@
                 <x-sub-nav-link href="/teacher/students/show">View</x-sub-nav-link>
             </x-nav-link>
 
+            <x-nav-link idNumber="2" link_name="Announcements" icon_class="fa-solid fa-bullhorn">
+                <x-sub-nav-link href="/teacher/announcements/create">Post</x-sub-nav-link>
+                <x-sub-nav-link href="/teacher/announcements/show">View</x-sub-nav-link>
+            </x-nav-link>
+
             <div class="sb-sidenav-menu-heading">Addons</div>
             <a class="nav-link" href="/teacher/profile">
                 <div class="sb-nav-link-icon"><i class="fa fa-user" aria-hidden="true"></i></div>
