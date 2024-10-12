@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AnnouncementPosted;
 use Illuminate\Http\Request;
 use App\Models\Announcement;
+use Illuminate\Support\Facades\Mail;
 
 class TeacherAnnouncementController extends Controller
 {
@@ -20,7 +22,35 @@ class TeacherAnnouncementController extends Controller
 
     public function store(Request $request)
     {
-        // TODO: Implement store() method
+        $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+        ]);
+
+        // dd(auth()->user()->teacher->classes->flatMap->students);
+
+        $anc = Announcement::create([
+            'title' => $request->title,
+            'content' => $request->description,
+            'user_id' => auth()->user()->id,
+            'class_id' => auth()->user()->teacher->classes()->first()->id, // Get the first class
+            'for' => 'students',
+            'created_at' => now(),
+        ]);
+
+        // Send mail to students
+        defer(function () use ($anc) { // Pass $anc to the deferred function
+            // Retrieve the class and eager load the students' user relationships
+            $class = auth()->user()->teacher->classes()->first();
+            $students = $class->students()->with('user')->get(); // Eagerly load the 'user' relationship
+
+            // Send mail to each student in the class
+            foreach ($students as $student) {
+                Mail::to($student->user->email)
+                    ->send(new AnnouncementPosted($anc));
+            }
+        });
+        return redirect('/teacher/announcements/show')->with('success', 'Announcement created successfully');
     }
 
     public function show(Announcement $announcement)

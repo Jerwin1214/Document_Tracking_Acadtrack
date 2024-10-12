@@ -2,7 +2,7 @@
 <!-- Slotted content -->
 @section('content')
 <h2>New Announcement</h2>
-<form action="/teacher/announcements/create" method="post" class="shadow-lg p-3 mb-5 mt-3 bg-body-tertiary rounded">
+<form action="/teacher/announcements/" method="post" class="shadow-lg p-3 mb-5 mt-3 bg-body-tertiary rounded">
     @csrf
     <div class="mb-3">
         <label for="title" class="form-label">Title</label>
