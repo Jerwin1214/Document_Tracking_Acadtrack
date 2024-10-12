@@ -90,7 +90,17 @@ class StudentController extends Controller
 
     public function show(Student $student)
     {
-        return view('pages.admin.student.show', ['student' => $student]);
+        // Eager load the guardian to avoid extra queries
+        $student->load('guardian');
+
+        // Get the subjects that are specifically assigned to the student
+        $subjects = DB::table('subjects')
+            ->join('student_subjects', 'subjects.id', '=', 'student_subjects.subject_id')
+            ->where('student_subjects.student_id', $student->id)
+            ->select('subjects.code', 'subjects.name')
+            ->get();
+
+        return view('pages.admin.student.show', ['student' => $student, 'subjects' => $subjects]);
     }
 
     public function edit(Student $student)
