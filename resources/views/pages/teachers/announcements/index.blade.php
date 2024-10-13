@@ -15,6 +15,8 @@
 @endif
 <!--  -->
 
+{{ $announcements }}
+
 <script>
     $(document).ready(function() {
         // set page title

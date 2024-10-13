@@ -12,7 +12,7 @@ class Teacher extends Model
 {
     use HasFactory;
 
-//    protected $guarded = [];
+    //    protected $guarded = [];
     protected $fillable = [
         'salutation',
         'initials',
@@ -49,5 +49,11 @@ class Teacher extends Model
     public function classes()
     {
         return $this->hasMany(Classes::class);
+    }
+
+    // for announcements
+    public function announcements()
+    {
+        return $this->hasMany(Announcement::class);
     }
 }

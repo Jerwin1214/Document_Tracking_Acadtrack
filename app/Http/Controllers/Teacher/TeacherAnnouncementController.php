@@ -12,7 +12,7 @@ class TeacherAnnouncementController extends Controller
 {
     public function index()
     {
-        return view('pages.teachers.announcements.index');
+        return view('pages.teachers.announcements.index', ['announcements' => auth()->user()->teacher->announcements]);
     }
 
     public function create()
@@ -32,7 +32,7 @@ class TeacherAnnouncementController extends Controller
         $anc = Announcement::create([
             'title' => $request->title,
             'content' => $request->description,
-            'user_id' => auth()->user()->id,
+            'teacher_id' => auth()->user()->teacher->id,
             'class_id' => auth()->user()->teacher->classes()->first()->id, // Get the first class
             'for' => 'students',
             'created_at' => now(),

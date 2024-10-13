@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('content');
             $table->string('for');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('teacher_id')->constrained()->onDelete('cascade');
             $table->foreignId('class_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
