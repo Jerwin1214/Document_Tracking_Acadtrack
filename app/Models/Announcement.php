@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\User;
 use App\Models\Classes;
+use App\Models\Teacher;
 
 class Announcement extends Model
 {
@@ -16,6 +17,7 @@ class Announcement extends Model
         'title',
         'content',
         'for',
+        'teacher_id',
         'user_id',
         'class_id',
     ];
@@ -30,8 +32,9 @@ class Announcement extends Model
         return $this->belongsTo(Classes::class);
     }
 
-    public function scopeForTeacher($query)
+    // to find the teacher who created the spesific announcement
+    public function teacher()
     {
-        return $query->where('for', 'teacher');
+        return $this->belongsTo(Teacher::class, 'teacher_id');
     }
 }

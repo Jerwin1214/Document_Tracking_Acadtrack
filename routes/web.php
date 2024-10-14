@@ -25,6 +25,14 @@ use Illuminate\Support\Facades\Route;
 
 // middlewares
 
+// testing route for check email body
+Route::get('test', function () {
+    return new App\Mail\AnnouncementPosted(
+        App\Models\Announcement::first()
+    );
+});
+
+
 // Auth and login routes
 Route::get('/', [SessionController::class, 'create'])->name('login');
 Route::post('/', [SessionController::class, 'store'])->name('login');

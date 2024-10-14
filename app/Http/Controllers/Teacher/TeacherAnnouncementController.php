@@ -28,11 +28,10 @@ class TeacherAnnouncementController extends Controller
         ]);
 
         // dd(auth()->user()->teacher->classes->flatMap->students);
-
         $anc = Announcement::create([
             'title' => $request->title,
             'content' => $request->description,
-            'teacher_id' => auth()->user()->teacher->id,
+            'teacher_id' => auth()->user()->teacher->id, // Directly access teacher id
             'class_id' => auth()->user()->teacher->classes()->first()->id, // Get the first class
             'for' => 'students',
             'created_at' => now(),
@@ -50,8 +49,10 @@ class TeacherAnnouncementController extends Controller
                     ->send(new AnnouncementPosted($anc));
             }
         });
+
         return redirect('/teacher/announcements/show')->with('success', 'Announcement created successfully');
     }
+
 
     public function show(Announcement $announcement)
     {

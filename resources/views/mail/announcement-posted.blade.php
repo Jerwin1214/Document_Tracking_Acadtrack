@@ -8,32 +8,7 @@
     <meta name="x-apple-disable-message-reformatting" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta content="telephone=no" name="format-detection" />
-    <title></title>
-    <!--[if (mso 16)]>
-      <style type="text/css">
-        a {
-          text-decoration: none;
-        }
-      </style>
-    <![endif]-->
-    <!--[if gte mso 9
-      ]><style>
-        sup {
-          font-size: 100% !important;
-        }
-      </style><!
-    [endif]-->
-    <!--[if gte mso 9]>
-      <noscript>
-        <xml>
-          <o:OfficeDocumentSettings>
-            <o:AllowPNG></o:AllowPNG>
-            <o:PixelsPerInch>96</o:PixelsPerInch>
-          </o:OfficeDocumentSettings>
-        </xml>
-      </noscript>
-    <![endif]-->
-    <!--[if !mso]><!-- -->
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
     <!--<![endif]-->
 
@@ -991,34 +966,8 @@ END CONFIG STYLES
                                                                                     <td align="left"
                                                                                         class="esd-block-text es-p40 es-m-p20r es-m-p20l">
                                                                                         <p>
-                                                                                            Hi
-                                                                                            <strong>Louisa
-                                                                                                Barber</strong>,<br /><br />What
-                                                                                            would you do
-                                                                                            with an extra 10 hours each
-                                                                                            week?<br /><br />I ask
-                                                                                            because
-                                                                                            clients like yourself have
-                                                                                            seen
-                                                                                            savings like these – if not
-                                                                                            more
-                                                                                            – after adding our software
-                                                                                            to
-                                                                                            their tech
-                                                                                            stacks.<br /><br />Just
-                                                                                            ask experts like Gary
-                                                                                            Vaynerchuk, Tim Ferriss, and
-                                                                                            Malcolm Gladwell,
-                                                                                            who&nbsp;we’re&nbsp;happy to
-                                                                                            count as satisfied
-                                                                                            customers.<br /><br />I’d
-                                                                                            love to set up a time to
-                                                                                            walk
-                                                                                            you through a personalized
-                                                                                            demo.
-                                                                                            Would you have some free
-                                                                                            time
-                                                                                            next week to connect?
+                                                                                            Hello Student,<br /><br />
+                                                                                            {{$announcement->content}}
                                                                                         </p>
                                                                                     </td>
                                                                                 </tr>
@@ -1059,7 +1008,7 @@ END CONFIG STYLES
                                                                         <table cellpadding="0" cellspacing="0"
                                                                             width="100%">
                                                                             <tbody>
-                                                                                <tr>
+                                                                                <!-- <tr>
                                                                                     <td align="left"
                                                                                         class="esd-block-image es-p40l es-m-p0l"
                                                                                         style="font-size: 0px">
@@ -1070,287 +1019,102 @@ END CONFIG STYLES
                                                                                                 style="display: block"
                                                                                                 width="100"
                                                                                                 title="Matthew Nichols" /></a>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td align="left"
-                                                                                        class="esd-block-text es-p20t es-p40r es-p40l es-m-p0r es-m-p0l">
-                                                                                        <p>
-                                                                                            Thanks,<br /><strong>Matthew
-                                                                                                Nichols</strong>
-                                                                                        </p>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
+                                                                                    </td> -->
                                                                 </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="esd-structure es-p40b es-p40r es-p20l es-m-p40l"
-                                                        align="left" esd-custom-block-id="823058">
-                                                        <!--[if mso]><table width="540" cellpadding="0" cellspacing="0"><tr><td width="46" valign="top"><![endif]-->
-                                                        <table cellpadding="0" cellspacing="0" class="es-left"
-                                                            align="left">
-                                                            <tbody>
-                                                                <tr class="es-mobile-hidden">
-                                                                    <td width="46" class="es-m-p20b esd-container-frame"
-                                                                        align="left">
-                                                                        <table cellpadding="0" cellspacing="0"
-                                                                            width="100%">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td align="center"
-                                                                                        class="esd-block-spacer"
-                                                                                        height="40"></td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                        <!--[if mso]></td><td width="10"></td><td width="484" valign="top"><![endif]-->
-                                                        <table cellpadding="0" cellspacing="0" class="es-right"
-                                                            align="right">
-                                                            <tbody>
                                                                 <tr>
-                                                                    <td width="484" align="left"
-                                                                        class="esd-container-frame">
-                                                                        <table cellpadding="0" cellspacing="0"
-                                                                            width="100%">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-menu"
-                                                                                        esd-tmp-menu-size="width|20"
-                                                                                        esd-tmp-menu-padding="10|5">
-                                                                                        <table cellpadding="0"
-                                                                                            cellspacing="0" width="100%"
-                                                                                            class="es-menu">
-                                                                                            <tbody>
-                                                                                                <tr
-                                                                                                    class="links-images-left">
-                                                                                                    <td align="left"
-                                                                                                        valign="top"
-                                                                                                        width="100%"
-                                                                                                        class="es-p10t es-p10b es-p5r"
-                                                                                                        style="
-                                                        padding-bottom: 5px;
-                                                      ">
-                                                                                                        <a target="_blank"
-                                                                                                            href="tel:+(000)123456789"><img
-                                                                                                                src="https://tlr.stripocdn.email/content/guids/CABINET_b5bfed0b11252243ebfb1c00df0e3977/images/envelope_1.png"
-                                                                                                                alt="+ (000) 123 456 789"
-                                                                                                                title="+ (000) 123 456 789"
-                                                                                                                align="absmiddle"
-                                                                                                                class="es-p15r"
-                                                                                                                width="20" />+
-                                                                                                            (000) 123
-                                                                                                            456 789</a>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td class="esd-block-menu"
-                                                                                        esd-tmp-menu-size="width|20"
-                                                                                        esd-tmp-menu-padding="0|5">
-                                                                                        <table cellpadding="0"
-                                                                                            cellspacing="0" width="100%"
-                                                                                            class="es-menu">
-                                                                                            <tbody>
-                                                                                                <tr
-                                                                                                    class="links-images-left">
-                                                                                                    <td align="left"
-                                                                                                        valign="top"
-                                                                                                        width="100%"
-                                                                                                        class="es-p10t es-p10b es-p5r"
-                                                                                                        style="
-                                                        padding-bottom: 5px;
-                                                        padding-top: 0px;
-                                                      ">
-                                                                                                        <a target="_blank"
-                                                                                                            href="https://"><img
-                                                                                                                src="https://tlr.stripocdn.email/content/guids/CABINET_b5bfed0b11252243ebfb1c00df0e3977/images/envelope.png"
-                                                                                                                alt="nicholos@email.com"
-                                                                                                                title="nicholos@email.com"
-                                                                                                                align="absmiddle"
-                                                                                                                class="es-p15r"
-                                                                                                                width="20" />nicholos@email.com</a>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
+                                                                    <td align="left"
+                                                                        class="esd-block-text es-p20t es-p40r es-p40l es-m-p0r es-m-p0l">
+                                                                        <p>
+                                                                            Thanks,<br />
+                                                                            <strong>{{ $announcement->teacher->initials }} {{ $announcement->teacher->first_name }} {{ $announcement->teacher->last_name }}</strong>
+                                                                        </p>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
-                                                        <!--[if mso]></td></tr></table><![endif]-->
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td class="esd-structure es-p40b es-p40r es-p20l es-m-p40l"
+                                        align="left" esd-custom-block-id="823058">
+                                        <!--[if mso]><table width="540" cellpadding="0" cellspacing="0"><tr><td width="46" valign="top"><![endif]-->
+                                        <table cellpadding="0" cellspacing="0" class="es-left"
+                                            align="left">
+                                            <tbody>
+                                                <tr class="es-mobile-hidden">
+                                                    <td width="46" class="es-m-p20b esd-container-frame"
+                                                        align="left">
+                                                        <table cellpadding="0" cellspacing="0"
+                                                            width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td align="center"
+                                                                        class="esd-block-spacer"
+                                                                        height="40"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <!--[if mso]></td><td width="10"></td><td width="484" valign="top"><![endif]-->
+                                        <table cellpadding="0" cellspacing="0" class="es-right"
+                                            align="right">
+                                            <tbody>
+                                                <tr>
+                                                    <td width="484" align="left"
+                                                        class="esd-container-frame">
+                                                        <table cellpadding="0" cellspacing="0"
+                                                            width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="esd-block-menu"
+                                                                        esd-tmp-menu-size="width|20"
+                                                                        esd-tmp-menu-padding="0|5">
+                                                                        <table cellpadding="0"
+                                                                            cellspacing="0" width="100%"
+                                                                            class="es-menu">
+                                                                            <tbody>
+                                                                                <tr
+                                                                                    class="links-images-left">
+                                                                                    <td align="left"
+                                                                                        valign="top"
+                                                                                        width="100%"
+                                                                                        class="es-p10t es-p10b es-p5r"
+                                                                                        style="
+                                                        padding-bottom: 5px;
+                                                        padding-top: 0px;
+                                                      ">
+                                                                                        <a target="_blank"
+                                                                                            href="https://"><img
+                                                                                                src="https://tlr.stripocdn.email/content/guids/CABINET_b5bfed0b11252243ebfb1c00df0e3977/images/envelope.png"
+                                                                                                alt="{{$announcement->teacher->user->email}}"
+                                                                                                title="{{$announcement->teacher->user->email}}"
+                                                                                                align="absmiddle"
+                                                                                                class="es-p15r"
+                                                                                                width="20" /> {{$announcement->teacher->user->email}} </a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <!--[if mso]></td></tr></table><![endif]-->
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
-                        <!-- <table
-                cellpadding="0"
-                cellspacing="0"
-                class="es-footer"
-                align="center"
-              >
-                <tbody>
-                  <tr>
-                    <td
-                      class="esd-stripe"
-                      align="center"
-                      esd-custom-block-id="793903"
-                    >
-                      <table
-                        class="es-footer-body"
-                        align="center"
-                        cellpadding="0"
-                        cellspacing="0"
-                        width="600"
-                        style="background-color: transparent"
-                        bgcolor="rgba(0, 0, 0, 0)"
-                      >
-                        <tbody>
-                          <tr>
-                            <td
-                              class="esd-structure es-p20t es-p20b es-p40r es-p40l"
-                              align="left"
-                              esd-custom-block-id="823060"
-                            >
-                              <table
-                                cellpadding="0"
-                                cellspacing="0"
-                                width="100%"
-                              >
-                                <tbody>
-                                  <tr>
-                                    <td
-                                      width="520"
-                                      class="esd-container-frame"
-                                      align="left"
-                                    >
-                                      <table
-                                        cellpadding="0"
-                                        cellspacing="0"
-                                        width="100%"
-                                      >
-                                        <tbody>
-                                          <tr>
-                                            <td
-                                              align="center"
-                                              class="esd-block-text es-m-txt-c"
-                                              esd-links-underline="underline"
-                                            >
-                                              <p>
-                                                6305 Stony Bank, Pelican City,
-                                                Montana, 59436,US <br />
-                                              </p>
-                                              <p>
-                                                <a
-                                                  target="_blank"
-                                                  style="
-                                                    text-decoration: underline;
-                                                  "
-                                                  >Unsubscribe</a
-                                                >
-                                              </p>
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table> -->
-                        <!-- <table
-                cellpadding="0"
-                cellspacing="0"
-                class="es-footer esd-footer-popover"
-                align="center"
-              >
-                <tbody>
-                  <tr>
-                    <td
-                      class="esd-stripe"
-                      align="center"
-                      esd-custom-block-id="793900"
-                    >
-                      <table
-                        bgcolor="#ffffff"
-                        class="es-footer-body"
-                        align="center"
-                        cellpadding="0"
-                        cellspacing="0"
-                        width="600"
-                      >
-                        <tbody>
-                          <tr>
-                            <td
-                              class="esd-structure es-p20t es-p20b es-p40r es-p40l"
-                              align="left"
-                            >
-                              <table
-                                cellpadding="0"
-                                cellspacing="0"
-                                width="100%"
-                              >
-                                <tbody>
-                                  <tr>
-                                    <td
-                                      width="520"
-                                      class="esd-container-frame"
-                                      align="left"
-                                    >
-                                      <table
-                                        cellpadding="0"
-                                        cellspacing="0"
-                                        width="100%"
-                                      >
-                                        <tbody>
-                                          <tr>
-                                            <td
-                                              align="center"
-                                              class="esd-empty-container"
-                                              style="display: none"
-                                            ></td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table> -->
                     </td>
                 </tr>
             </tbody>
