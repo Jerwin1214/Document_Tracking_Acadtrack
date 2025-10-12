@@ -1,44 +1,155 @@
 @extends('pages.students.student-content')
 
 @section('content')
-<h2>Profile</h2>
-<div class="shadow-lg p-3 mb-5 mt-3 bg-body-tertiary rounded">
-    <div class="container row">
-        <div class="col-md-4">
-            <div class="card text-center" style="width: 14rem;">
-                <div class="">
-                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" class="card-img-top" alt="Profile Image" style="border-radius: 50%;">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Admin</h5>
-                    <a href="/admin/settings" class="btn btn-outline-warning">Settings</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8">
-            <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" value="{{$student->first_name}} {{$student->last_name}}" name="name" id="name" class="form-control" readonly>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" value="{{auth()->user()->email}}" name="email" id="email" class="form-control" readonly>
-            </div>
-            <div class="mb-3">
-                <label for="date_created" class="form-label">Created at</label>
-                <input type="text" value="{{auth()->user()->created_at}}" name="date_created" id="date_created" class="form-control" readonly>
-            </div>
-            <div class="mb-3">
-                <label for="date_updated" class="form-label">Updated at</label>
-                <input type="text" value="{{auth()->user()->updated_at}}" name="date_updated" id="date_updated" class="form-control" readonly>
-            </div>
-        </div>
+<div class="container py-3">
+    {{-- Profile Header --}}
+<div class="bg-primary bg-gradient text-white rounded-4 p-3 mb-4 d-flex flex-column flex-md-row align-items-center gap-3">
+    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+         alt="avatar" class="rounded-circle border border-white" style="width: 100px; height: 100px;">
+    <div class="text-center text-md-start flex-grow-1">
+        <h3 class="fw-bold mb-1">{{ $student->first_name ?? 'Student' }} {{ $student->last_name ?? '' }}</h3>
+        {{-- Removed gender/age line --}}
+        <a href="/student/settings" class="btn btn-light btn-sm mt-1">Forget Password</a>
     </div>
 </div>
+
+
+    {{-- Profile Sections --}}
+    <div class="row g-3">
+        {{-- Personal Info --}}
+        <div class="col-12 col-md-6">
+            <div class="card shadow-sm rounded-4 p-3 h-100">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-person-circle me-2"></i>Personal Details</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            Full Name
+                            <span>{{ $student->first_name.' '.$student->middle_name.' '.$student->last_name ?? 'N/A' }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Gender
+                            <span>{{ $student->gender ?? 'N/A' }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Date of Birth
+                            <span>{{ $student->dob ? \Carbon\Carbon::parse($student->dob)->format('F j, Y') : 'N/A' }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Age
+                            <span>{{ $student->dob ? \Carbon\Carbon::parse($student->dob)->age : 'N/A' }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {{-- Account Info --}}
+        <div class="col-12 col-md-6">
+            <div class="card shadow-sm rounded-4 p-3 h-100">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-key-fill me-2"></i>Account Info</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            LRN
+                            <span>{{ $student->lrn ?? 'N/A' }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Student ID
+                            <span>{{ $student->student_id ?? 'N/A' }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Created At
+                            <span>{{ $student->created_at ? $student->created_at->format('F j, Y, g:i A') : 'N/A' }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Updated At
+                            <span>{{ $student->updated_at ? $student->updated_at->format('F j, Y, g:i A') : 'N/A' }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {{-- Academic Info --}}
+        <div class="col-12 col-md-6">
+            <div class="card shadow-sm rounded-4 p-3 h-100">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-journal-bookmark-fill me-2"></i>Academic Details</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            Department
+                            <span>{{ $student->class->department ?? 'N/A' }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Year Level
+                            <span>{{ $student->class->year_level ?? 'N/A' }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Section
+                            <span>{{ $student->class->section ?? 'N/A' }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Total Subjects
+                            <span class="badge bg-primary rounded-pill">{{ $student->subjects ? $student->subjects->count() : '0' }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {{-- Guardian Info --}}
+        @if($student->guardian)
+        <div class="col-12 col-md-6">
+            <div class="card shadow-sm rounded-4 p-3 h-100">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-people-fill me-2"></i>Guardian Details</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            Full Name
+                            <span>{{ $student->guardian->first_name.' '.$student->guardian->middle_initial.' '.$student->guardian->last_name ?? 'N/A' }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Phone
+                            <span>{{ $student->guardian->phone_number ?? 'N/A' }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Address
+                            <span>{{ $student->guardian->address ?? 'N/A' }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        @endif
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
-        // set page title
-        $(document).prop('title', 'Profile | Student Management System');
+        $(document).prop('title', '{{ $student->first_name ?? "Student" }} Profile | Student Management System');
     });
 </script>
+
+<style>
+/* Mobile first adjustments */
+@media (max-width: 991px) {
+    .card-body ul.list-group-item {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .bg-primary h3 {
+        font-size: 1.2rem;
+    }
+    .bg-primary p {
+        font-size: 0.8rem;
+    }
+    .bg-primary img {
+        width: 80px;
+        height: 80px;
+    }
+}
+</style>
 @endsection

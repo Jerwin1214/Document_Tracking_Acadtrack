@@ -3,57 +3,78 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Classes as SchoolClass;
 
 class AdminController extends Controller
 {
-    public function index()
-    {
-        $counts = DB::table('students')
-            ->selectRaw('(SELECT COUNT(*) FROM students INNER JOIN users ON (students.user_id=users.id) WHERE users.is_active=1) as students_count')
-            ->selectRaw('(SELECT COUNT(*) FROM teachers INNER JOIN users ON (teachers.user_id=users.id) WHERE users.is_active=1) as teachers_count')
-            ->selectRaw('(SELECT COUNT(*) FROM subjects) as subjects_count')
-            ->first();
+// ================= DASHBOARD
+public function index()
+{
+    // Basic counts
+    $counts = (object)[
+        'students_count' => Student::count(),
+        'teachers_count' => Teacher::count(),
+        'subjects_count' => Subject::count(),
+        'classes_count'  => SchoolClass::count(),
+        'admins_count'   => Admin::count(),
+    ];
 
-        return view('pages.admin.dashboard', compact('counts'));
+    // Student counts by department
+    $departmentCounts = [
+        'Kindergarten' => Student::where('department', 'Kindergarten')->count(),
+        'Elementary'   => Student::where('department', 'Elementary')->count(),
+        'Junior High'  => Student::where('department', 'Junior High')->count(),
+        'Senior High'  => Student::where('department', 'Senior High')->count(),
+    ];
+
+    // Student counts by grade level (Grades 1–12 + Kinder)
+    $gradeCounts = [];
+    for ($i = 1; $i <= 12; $i++) {
+        $gradeCounts['Grade ' . $i] = Student::where('year_level', $i)->count();
     }
+    $gradeCounts['Kindergarten'] = Student::where('department', 'Kindergarten')->count();
 
-    public function create()
-    {
-        // TODO: implement the create method
-    }
+    // Senior High: count by grade + strand
+    $seniorHighStrandCounts = [
+        'Grade 11 ABM'   => Student::where('department', 'Senior High')->where('year_level', 11)->where('strand', 'ABM')->count(),
+        'Grade 11 STEM'  => Student::where('department', 'Senior High')->where('year_level', 11)->where('strand', 'STEM')->count(),
+        'Grade 11 HUMSS' => Student::where('department', 'Senior High')->where('year_level', 11)->where('strand', 'HUMSS')->count(),
+        'Grade 11 GAS'   => Student::where('department', 'Senior High')->where('year_level', 11)->where('strand', 'GAS')->count(),
 
-    public function store(Request $request)
-    {
-        // TODO: implement the store method
-    }
+        'Grade 12 ABM'   => Student::where('department', 'Senior High')->where('year_level', 12)->where('strand', 'ABM')->count(),
+        'Grade 12 STEM'  => Student::where('department', 'Senior High')->where('year_level', 12)->where('strand', 'STEM')->count(),
+        'Grade 12 HUMSS' => Student::where('department', 'Senior High')->where('year_level', 12)->where('strand', 'HUMSS')->count(),
+        'Grade 12 GAS'   => Student::where('department', 'Senior High')->where('year_level', 12)->where('strand', 'GAS')->count(),
+    ];
 
-    public function show(Admin $admin)
-    {
-        // TODO: implement the show method
-    }
+    // Gender counts
+    $genderCounts = Student::select('gender', DB::raw('COUNT(*) as count'))
+        ->groupBy('gender')
+        ->pluck('count', 'gender')
+        ->toArray();
 
-    public function edit(Admin $admin)
-    {
-        // TODO: implement the edit method
-    }
+    $genderCounts = array_merge(['Male' => 0, 'Female' => 0], $genderCounts);
 
-    public function update(Admin $admin)
-    {
-        // TODO: implement the update method
-    }
+    return view('pages.admin.dashboard', compact(
+        'counts',
+        'departmentCounts',
+        'gradeCounts',
+        'seniorHighStrandCounts',
+        'genderCounts'
+    ));
+}
 
-    public function destroy(Admin $admin)
-    {
-        // TODO: implement the destroy method
-    }
 
+
+    // ================= PROFILE & SETTINGS
     public function showProfile()
     {
         return view('pages.admin.profile');
@@ -73,27 +94,22 @@ class AdminController extends Controller
         ]);
 
         $user = auth()->user();
-
-        // Flag to track if email changed
         $emailChanged = false;
 
-        // Check if email has changed
         if ($request->email != $user->email) {
-            $request->validate(['email' => ['unique:users,email']]);
-            $user->update(['email' => $request->email]);
+            $user->email = $request->email;
             $emailChanged = true;
         }
 
-        // Check if password change is requested
         if ($request->old_password && $request->password) {
-            if (!password_verify($request->old_password, $user->password)) {
+            if (!Hash::check($request->old_password, $user->password)) {
                 return back()->with('error', 'Old password is incorrect');
             }
-
-            $user->update(['password' => bcrypt($request->password)]);
+            $user->password = Hash::make($request->password);
         }
 
-        // If email changed, log the user out
+        $user->save();
+
         if ($emailChanged) {
             Auth::logout();
             $request->session()->invalidate();
@@ -101,9 +117,56 @@ class AdminController extends Controller
             return redirect('/')->with('success', 'Email and password changed. Please login again.');
         }
 
-        return redirect('/')->with('success', 'Password changed successfully');
+        return back()->with('success', 'Settings updated successfully.');
+    }
+// ================= Update profile
+public function updateProfile(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'password' => 'nullable|string|min:6|confirmed',
+    ]);
+
+    $user = auth()->user();
+    $user->name = $request->name;
+
+    if ($request->password) {
+        $user->password = Hash::make($request->password);
     }
 
+    $user->save();
+
+    return redirect()->back()->with('success', 'Profile updated successfully!');
+}
+// Show Change Password Form
+public function showPasswordForm()
+{
+    return view('pages.admin.change-password');
+}
+
+// Update Password
+public function updatePassword(Request $request)
+{
+    $request->validate([
+        'old_password' => 'required',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
+
+    $admin = auth()->user();
+
+    // Check if current password matches
+    if (!Hash::check($request->old_password, $admin->password)) {
+        return back()->withErrors(['old_password' => 'Current password is incorrect']);
+    }
+
+    // Update password
+    $admin->password = Hash::make($request->password);
+    $admin->save();
+
+    return back()->with('success', 'Password updated successfully');
+}
+
+    // ================= MESSAGES
     public function showMessages()
     {
         return view('pages.admin.messages.index');
@@ -113,4 +176,5 @@ class AdminController extends Controller
     {
         return view('pages.admin.messages.show');
     }
+
 }

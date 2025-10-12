@@ -7,6 +7,7 @@ use App\Models\Classes;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
@@ -15,8 +16,11 @@ class TeacherController extends Controller
 {
     public function index()
     {
-        // TODO: implement the index method
-        return view('pages.teachers.dashboard');
+        $teachers = Teacher::with(['user', 'subjects'])
+            ->latest()
+            ->paginate(20);
+
+        return view('pages.admin.teacher.index', compact('teachers'));
     }
 
     public function create()
@@ -26,104 +30,184 @@ class TeacherController extends Controller
 
     public function store(Request $request)
     {
-        // validate the teacher details
         $request->validate([
             'salutation' => ['required', 'string', 'max:5'],
-            'initials' => ['required', 'string', 'max:15'],
             'first_name' => ['required', 'string', 'max:30'],
+            'middle_name' => ['required', 'string', 'max:30'],
             'last_name' => ['required', 'string', 'max:50'],
-            'nic' => ['required', 'string', 'max:12'],
+            'gender' => ['required', 'string', 'in:Male,Female'],
             'dob' => ['required', 'date'],
-            'email' => ['required', 'string', 'email', 'max:255'],
+            'address' => ['required', 'string', 'max:255'],
+            'user_id' => ['required', 'string', 'max:255', 'unique:users,user_id'],
             'password' => ['required', 'string', 'min:5'],
         ]);
 
-        // store the teacher's credentials in users table
         $user = User::create([
-            'email' => $request->email,
+            'user_id' => $request->user_id,
             'password' => Hash::make($request->password),
-            'role_id' => 2,
+            'role_id' => 3, // Teacher role
             'created_at' => now(),
         ]);
 
-        // store the teacher's details in teachers table
         Teacher::create([
             'salutation' => $request->salutation,
-            'initials' => $request->initials,
             'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
-            'nic' => $request->nic,
+            'gender' => $request->gender,
             'dob' => $request->dob,
+            'address' => $request->address,
             'user_id' => $user->id,
             'created_at' => now(),
         ]);
 
-        // redirect to the teachers index page with a success message
-        return redirect('/admin/teachers/show')->with('success', 'Teacher added successfully');
+        return redirect()->route('admin.teachers.index')
+            ->with('success', 'Teacher added successfully');
     }
 
-    public function showAllTeachers()
+    public function showAllTeachers(Request $request)
     {
-        return view('pages.admin.teacher.index', [
-            'teachers' => Teacher::with(['user', 'subjects']) // eager load the user
-                ->select(['id', 'first_name', 'last_name', 'user_id'])
-                ->paginate(20)
-        ]);
+        $status = $request->query('status', 'active');
+
+        $teachers = Teacher::with(['user', 'subjects'])
+            ->where('status', $status)
+            ->select(['id', 'salutation', 'first_name', 'last_name', 'user_id'])
+            ->paginate(20);
+
+        return view('pages.admin.teacher.index', compact('teachers'));
+    }
+
+    public function showArchived()
+    {
+        $archivedTeachers = Teacher::with(['user', 'subjects'])
+            ->where('status', 'archived')
+            ->paginate(20);
+
+        return view('pages.admin.teacher.archived', compact('archivedTeachers'));
+    }
+
+    public function unarchive($id)
+    {
+        $teacher = Teacher::findOrFail($id);
+        $teacher->status = 'active';
+        $teacher->save();
+
+        return redirect()->route('admin.teachers.index')
+            ->with('success', 'Teacher unarchived successfully.');
     }
 
     public function show(Teacher $teacher)
     {
-        return view('pages.admin.teacher.show', ['teacher' => $teacher]);
+        return view('pages.admin.teacher.show', compact('teacher'));
     }
 
     public function edit(Teacher $teacher)
     {
         $subjects = Cache::remember('subjects_list', 60, function () {
-            return Subject::get();
+            return Subject::all();
         });
-        return view('pages.admin.teacher.edit', ['teacher' => $teacher, 'subjects' => $subjects]);
+
+        return view('pages.admin.teacher.edit', compact('teacher', 'subjects'));
     }
 
-    public function update(Request $request, Teacher $teacher)
+ public function update(Request $request, Teacher $teacher)
+{
+    $request->validate([
+        'salutation' => ['required', 'string', 'max:5'],
+        'first_name' => ['required', 'string', 'max:30'],
+        'middle_name' => ['required', 'string', 'max:30'],
+        'last_name' => ['required', 'string', 'max:50'],
+        'gender' => ['required', 'string', 'in:Male,Female'],
+        'dob' => ['required', 'date'],
+        'address' => ['required', 'string', 'max:255'],
+        'user_id' => [
+            'required',
+            'string',
+            'max:50',
+            \Illuminate\Validation\Rule::unique('users', 'user_id')->ignore($teacher->user->id ?? null),
+        ],
+    ]);
+
+    // Update teacher table
+    $teacher->update([
+        'salutation' => $request->salutation,
+        'first_name' => $request->first_name,
+        'middle_name' => $request->middle_name,
+        'last_name' => $request->last_name,
+        'gender' => $request->gender,
+        'dob' => $request->dob,
+        'address' => $request->address,
+    ]);
+
+    // Update the login user ID in the users table
+    if ($teacher->user) {
+        $teacher->user->update([
+            'user_id' => $request->user_id,
+        ]);
+    }
+
+    return redirect()->route('admin.teachers.edit', $teacher->id)
+                     ->with('success', 'Teacher information and login ID updated successfully');
+}
+
+
+    public function archive($id)
     {
-        // TODO: implement the update method
+        $teacher = Teacher::findOrFail($id);
+        $teacher->status = 'archived';
+        $teacher->save();
+
+        return redirect()->route('admin.teachers.index')
+            ->with('success', 'Teacher archived successfully.');
+    }
+
+    // Show assign class form
+    public function assignClassForm($id)
+    {
+        $teacher = Teacher::with('classes')->findOrFail($id);
+        $classes = Classes::all();
+
+        return view('pages.admin.teacher.assign-classes', compact('teacher', 'classes'));
+    }
+
+    // Handle assigning classes to teacher
+    public function assignClass(Request $request, $id)
+    {
+        $teacher = Teacher::findOrFail($id);
+
         $request->validate([
-            'salutation' => ['required', 'string', 'max:5'],
-            'initials' => ['required', 'string', 'max:15'],
-            'first_name' => ['required', 'string', 'max:30'],
-            'last_name' => ['required', 'string', 'max:50'],
-            'nic' => ['required', 'string', 'max:12'],
-            'dob' => ['required', 'date'],
+            'classes' => 'required|array',
+            'classes.*' => 'exists:classes,id',
         ]);
 
-        $teacher->update([
-            'salutation' => $request->salutation,
-            'initials' => $request->initials,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'nic' => $request->nic,
-            'dob' => $request->dob,
-        ]);
+        // Sync selected classes
+        $teacher->classes()->sync($request->classes);
 
-        return redirect('/admin/teachers/show')->with('success', 'Teacher updated successfully');
+        return redirect()->route('admin.teachers.show', $teacher->id)
+            ->with('success', 'Classes assigned successfully.');
     }
 
-    public function destroy(Teacher $teacher)
+    // ------------------------
+    // Show students for a subject
+    // ------------------------
+    public function subjectStudents($subjectId)
     {
-        $teacher->user()->delete();
-        return redirect('/admin/teachers/show')->with('success', 'Teacher deleted successfully');
+        $subject = Subject::find($subjectId);
+
+        if (!$subject) {
+            return redirect()->back()->with('error', 'Subject not found.');
+        }
+
+        // Fetch students based on year_level, section, and strand
+        $students = Student::where('year_level', $subject->year_level)
+                           ->where('section', $subject->section)
+                           ->when($subject->strand, function($query) use ($subject) {
+                               $query->where('strand', $subject->strand);
+                           })
+                           ->where('status', 'active')
+                           ->get();
+
+        return view('pages.teachers.subject-students', compact('subject', 'students'));
     }
 
-    public function assignClassView(Teacher $teacher)
-    {
-        // $classes = Cache::remember('classes_list', 60, function () {
-        //     return Classes::all();
-        // });
-        return redirect('/admin/teachers/show')->with('info', 'This feature is not implemented yet!');
-    }
-
-    public function assignClasses(Request $request, Teacher $teacher)
-    {
-        // TODO: implement the assignClasses method
-    }
 }

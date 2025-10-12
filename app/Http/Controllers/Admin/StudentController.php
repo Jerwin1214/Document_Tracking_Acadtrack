@@ -3,223 +3,265 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Guardian;
-use App\Models\Student;
-use App\Models\User;
+use App\Models\{Student, User, Classes, Teacher};
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+use App\Models\Enrollment;
 
 class StudentController extends Controller
 {
-    public function index()
-    {
-        return view('pages.students.dashboard');
-    }
+   public function index()
+{
+    // Fetch enrollments with student info (optional: eager load the student relation)
+    $enrollments = Enrollment::with('student') // assumes Enrollment model has student() relation
+                             ->orderBy('created_at', 'desc')
+                             ->paginate(10);
+
+    return view('pages.admin.student.index', compact('enrollments'));
+}
 
     public function create()
     {
-        return view('pages.admin.student.add');
+        $lastStudent = Student::orderBy('id', 'desc')->first();
+        $year = date('Y');
+        $number = $lastStudent ? intval(substr($lastStudent->student_id, 5)) + 1 : 1;
+        $nextStudentId = sprintf('%s-%04d', $year, $number);
+
+        return view('pages.admin.student.add', compact('nextStudentId'));
     }
 
     public function store(Request $request)
     {
-        // Validate user inputs
-        $request->validate([
-            'std_first_name' => ['required', 'string', 'max:30'],
-            'std_last_name' => ['required', 'string', 'max:50'],
-            'gender' => ['required', 'string', 'max:5'],
-            'std_nic' => ['nullable', 'string', 'max:12'], // Nullable to allow empty input
-            'dob' => ['required', 'date'],
-            'index' => ['nullable', 'string', 'max:20'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'], // Ensure email is unique
-            'password' => ['required', 'string', 'min:5'],
+        $validated = $request->validate([
+            'std_first_name' => 'required|string|max:255',
+            'std_middle_name' => 'nullable|string|max:255',
+            'std_last_name' => 'required|string|max:255',
+            'gender' => 'required|in:Male,Female',
+            'lrn' => ['required','digits:12','regex:/^[0-9]{12}$/','unique:students,lrn'],
+            'dob' => 'required|date',
+            'address' => 'required|string|max:255',
+            'password' => 'required|string|min:6',
 
-            'initials' => ['nullable', 'string', 'max:10'],
-            'g_first_name' => ['nullable', 'string', 'max:30'],
-            'g_last_name' => ['nullable', 'string', 'max:50'],
-            'g_nic' => ['nullable', 'string', 'max:12'],
-            'g_phone' => ['nullable', 'string', 'max:10'],
+            'guardian_first_name' => 'required|string|max:255',
+            'guardian_middle_name' => 'nullable|string|max:5',
+            'guardian_last_name' => 'required|string|max:255',
+            'guardian_contact' => 'required|string|max:20',
         ]);
 
-        // Use a transaction to ensure all data is stored correctly
-        DB::transaction(function () use ($request) {
-            // Create user
+        DB::beginTransaction();
+
+        try {
+            $year = now()->year;
+            $lastStudent = Student::whereYear('created_at', $year)->latest('id')->first();
+            $newNumber = $lastStudent && $lastStudent->student_id
+                ? str_pad(((int)substr($lastStudent->student_id, 5)) + 1, 4, '0', STR_PAD_LEFT)
+                : '0001';
+
+            $studentId = $year . '-' . $newNumber;
+            $age = Carbon::parse($validated['dob'])->age;
+
+            // 1️⃣ Create user account
             $user = User::create([
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'role_id' => 3, // Assuming role_id 3 is for students
-                'created_at' => now(),
+                'user_id' => $studentId,
+                'role_id' => 2,
+                'password' => bcrypt($validated['password']),
+                'email_verified_at' => now(),
+                'is_active' => 1,
             ]);
 
-            // Create guardian
-            $guardian = Guardian::create([
-                'initials' => $request->initials,
-                'first_name' => $request->g_first_name,
-                'last_name' => $request->g_last_name,
-                'nic' => $request->g_nic,
-                'phone_number' => $request->g_phone,
-                'created_at' => now(),
-            ]);
-
-            // Create student
-            Student::create([
-                'first_name' => $request->std_first_name,
-                'last_name' => $request->std_last_name,
-                'gender' => $request->gender,
-                'dob' => $request->dob,
-                'nic' => $request->std_nic ?? "",
-                'created_at' => now(),
+            // 2️⃣ Create student
+            $student = Student::create([
                 'user_id' => $user->id,
-                'guardian_id' => $guardian->id,
+                'student_id' => $studentId,
+                'first_name' => $validated['std_first_name'],
+                'middle_name' => $validated['std_middle_name'],
+                'last_name' => $validated['std_last_name'],
+                'gender' => $validated['gender'],
+                'lrn' => $validated['lrn'],
+                'dob' => $validated['dob'],
+                'age' => $age,
+                'address' => $validated['address'],
+                'status' => 'active',
+                'department' => $request->department ?? null,
+                'year_level' => $request->year_level ?? null,
+                'section' => $request->section ?? null,
+                'strand' => $request->strand ?? null,
+                'guardian_first_name' => $validated['guardian_first_name'],
+                'guardian_middle_name' => $validated['guardian_middle_name'],
+                'guardian_last_name' => $validated['guardian_last_name'],
+                'guardian_contact' => $validated['guardian_contact'],
             ]);
-        });
 
-        return redirect('/admin/students/show')->with('success', 'Student added successfully');
-    }
+            DB::commit();
 
+            return redirect()->back()->with('success', 'Student added successfully!');
 
-    public function showAllStudents()
-    {
-        return view('pages.admin.student.index', [
-            'students' => Student::select(['id', 'first_name', 'last_name'])->paginate(20)
-        ]);
-    }
-
-    public function show(Student $student)
-    {
-        // Eager load the guardian to avoid extra queries
-        $student->load('guardian');
-
-        // Get the subjects that are specifically assigned to the student
-        $subjects = DB::table('subjects')
-            ->join('student_subjects', 'subjects.id', '=', 'student_subjects.subject_id')
-            ->where('student_subjects.student_id', $student->id)
-            ->select('subjects.code', 'subjects.name')
-            ->get();
-
-        return view('pages.admin.student.show', ['student' => $student, 'subjects' => $subjects]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to add student: ' . $e->getMessage());
+        }
     }
 
     public function edit(Student $student)
     {
-        return view('pages.admin.student.edit', ['student' => $student]);
+        return view('pages.admin.student.edit', compact('student'));
     }
 
     public function update(Student $student, Request $request)
     {
-        $request->validate([
-            'std_first_name' => ['required', 'string', 'max:30'],
-            'std_last_name' => ['required', 'string', 'max:50'],
-            'gender' => ['required', 'string'],
-            'std_nic' => ['string', 'max:12'],
-            'dob' => ['required', 'date'],
-            'initials' => ['required', 'string', 'max:10'],
-            'g_first_name' => ['required', 'string', 'max:30'],
-            'g_last_name' => ['required', 'string', 'max:50'],
-            'g_nic' => ['required', 'string', 'max:12'],
-            'g_phone' => ['required', 'string', 'max:10'],
+        $validated = $request->validate([
+            'lrn' => ['required','digits:12', Rule::unique('students', 'lrn')->ignore($student->id)],
+            'std_first_name' => 'required|string|max:255',
+            'std_middle_name' => 'nullable|string|max:255',
+            'std_last_name' => 'required|string|max:255',
+            'gender' => 'required|in:Male,Female',
+            'dob' => 'required|date',
+            'address' => 'required|string|max:255',
+
+            'guardian_first_name' => 'required|string|max:255',
+            'guardian_middle_name' => 'nullable|string|max:5',
+            'guardian_last_name' => 'required|string|max:255',
+            'guardian_contact' => 'required|string|max:20',
         ]);
 
-        // update the guardian information
-        $student->guardian->update([
-            'initials' => $request->initials,
-            'first_name' => $request->g_first_name,
-            'last_name' => $request->g_last_name,
-            'nic' => $request->g_nic,
-            'phone_number' => $request->g_phone,
-            'updated_at' => now(),
-        ]);
-
-        // update the student information
         $student->update([
-            'first_name' => $request->std_first_name,
-            'last_name' => $request->std_last_name,
-            'gender' => $request->gender,
-            'dob' => $request->dob,
-            'nic' => $request->std_nic ?? "",
-            'updated_at' => now(),
+            'lrn' => $validated['lrn'],
+            'first_name' => $validated['std_first_name'],
+            'middle_name' => $validated['std_middle_name'],
+            'last_name' => $validated['std_last_name'],
+            'gender' => $validated['gender'],
+            'dob' => $validated['dob'],
+            'address' => $validated['address'],
+            'age' => Carbon::parse($validated['dob'])->age,
+            'guardian_first_name' => $validated['guardian_first_name'],
+            'guardian_middle_name' => $validated['guardian_middle_name'],
+            'guardian_last_name' => $validated['guardian_last_name'],
+            'guardian_contact' => $validated['guardian_contact'],
         ]);
 
-        return redirect('/admin/students/show')->with('success', 'Student updated successfully');
+        return redirect()->route('admin.students.edit', $student->id)
+                         ->with('success', 'Student updated successfully!');
     }
 
-    public function destroy(Student $student)
+    public function archive($id)
     {
-        $student->user()->delete();
-        return redirect('/admin/students/show')->with('success', 'Student deleted successfully');
+        $student = Student::findOrFail($id);
+        $student->status = 'archived';
+        $student->save();
+
+        return redirect()->route('admin.students.index')->with('success', 'Student archived successfully.');
+    }
+
+    public function unarchive($id)
+    {
+        $student = Student::findOrFail($id);
+        $student->status = 'active';
+        $student->save();
+
+        return redirect()->route('admin.students.index')->with('success', 'Student unarchived successfully.');
+    }
+
+    public function assignDepartment(Request $request)
+    {
+        $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'department' => 'required|string',
+            'year_level' => 'nullable|string',
+            'section' => 'nullable|string',
+            'strand' => 'nullable|string',
+        ]);
+
+        $student = Student::findOrFail($request->student_id);
+
+        $student->department = $request->department;
+        $student->year_level = $request->year_level ?? $student->year_level;
+        $student->section = $request->section ?? $student->section;
+        $student->strand = $request->strand ?? $student->strand;
+        $student->save();
+
+        // Automatic class link
+        $currentYear = date('Y') . '-' . (date('Y') + 1);
+        $class = Classes::where('department', $student->department)
+                        ->where('year_level', $student->year_level)
+                        ->where('section', $student->section)
+                        ->where('year', $currentYear)
+                        ->first();
+
+        if ($class) {
+            $student->classes()->sync([$class->id]);
+        } else {
+            Log::warning("No matching class found for Student ID {$student->id}");
+        }
+
+        return redirect()->back()->with('success', 'Student assigned successfully.');
     }
 
     public function uploadStudents(Request $request)
     {
-        // Validate the uploaded file
-        $request->validate([
-            'file' => 'required|file|mimes:xls,xlsx',
-        ]);
+        try {
+            $request->validate(['file' => 'required|mimes:xlsx,xls,csv']);
+            $file = $request->file('file');
+            $data = \Maatwebsite\Excel\Facades\Excel::toArray([], $file)[0];
 
-        $file = $request->file('file');
-        $spreadsheet = IOFactory::load($file->getRealPath());
-        $sheet = $spreadsheet->getActiveSheet();
+            foreach ($data as $index => $row) {
+                if ($index === 0) continue;
 
-        // Define possible headers for each field
-        $fieldMappings = [
-            'first_name' => ['first name', 'firstname', 'f name'],
-            'last_name' => ['last name', 'lastname', 'surname'],
-            'gender' => ['gender', 'sex'],
-            'nic' => ['nic', 'national id', 'id'],
-            'dob' => ['dob', 'date of birth', 'birthdate'],
-            'index_no' => ['index', 'index no.', 'index number'],
-        ];
+                $lrn = trim($row[10]);
+                if (empty($lrn)) continue;
+                if (Student::where('lrn', $lrn)->exists()) continue;
 
-        // Get the header row and map columns
-        $headerRow = [];
-        foreach ($sheet->getRowIterator(1, 1)->current()->getCellIterator() as $cell) {
-            $headerRow[] = strtolower(trim($cell->getValue()));
-        }
+                $user = User::create([
+                    'user_id' => $lrn,
+                    'password' => bcrypt('password'),
+                    'role_id' => 2,
+                    'email_verified_at' => now(),
+                    'is_active' => 1,
+                ]);
 
-        // Map headers to fields
-        $columnMap = [];
-        foreach ($fieldMappings as $dbField => $possibleHeaders) {
-            foreach ($possibleHeaders as $header) {
-                $columnIndex = array_search($header, $headerRow);
-                if ($columnIndex !== false) {
-                    $columnMap[$dbField] = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex + 1);
-                    break;
-                }
-            }
-        }
-
-        // Ensure required fields are mapped
-        $requiredFields = ['first_name', 'last_name', 'gender', 'nic', 'dob', 'index_no'];
-        foreach ($requiredFields as $field) {
-            if (!isset($columnMap[$field])) {
-                return redirect()->back()->withErrors("Missing required field: $field in the spreadsheet.");
-            }
-        }
-
-        // Process each row and insert into the database
-        foreach ($sheet->getRowIterator(2) as $row) {
-            $data = [];
-            $rowIndex = $row->getRowIndex();
-            foreach ($columnMap as $dbField => $columnLetter) {
-                $cellValue = $sheet->getCell($columnLetter . $rowIndex)->getValue();
-
-                // Convert Excel date serial number to proper date format for 'dob'
-                if ($dbField === 'dob' && is_numeric($cellValue)) {
-                    $data[$dbField] = Carbon::instance(Date::excelToDateTimeObject($cellValue))->format('Y-m-d');
-                } else {
-                    $data[$dbField] = $cellValue;
-                }
+                Student::create([
+                    'first_name' => $row[6],
+                    'middle_name' => $row[7],
+                    'last_name' => $row[5],
+                    'gender' => $row[15],
+                    'dob' => Date::excelToDateTimeObject($row[13])->format('Y-m-d'),
+                    'lrn' => $lrn,
+                    'address' => $row[24], // current_house_no or similar
+                    'user_id' => $user->id,
+                    'status' => 'active',
+                    'age' => Carbon::parse(Date::excelToDateTimeObject($row[13])->format('Y-m-d'))->age,
+                    'guardian_first_name' => $row[48],
+                    'guardian_middle_name' => $row[49],
+                    'guardian_last_name' => $row[47],
+                    'guardian_contact' => $row[50],
+                ]);
             }
 
-            // Hardcode and 'user_id'
-            $data['user_id'] = 1; // Hardcoded user_id value
-
-            // Save the student record
-            Student::create($data);
+            return back()->with('success', 'Students uploaded successfully!');
+        } catch (\Exception $e) {
+            Log::error('Bulk upload error: ' . $e->getMessage());
+            return back()->withErrors(['file' => 'Bulk upload failed. Check the file format and content.']);
         }
-        return redirect('/admin/students/show')->with('success', 'Students uploaded successfully');
+    }
+
+    public function myStudents()
+    {
+        $teacher = Auth::user()->teacher;
+
+        if (!$teacher) {
+            return redirect()->back()->withErrors(['error' => 'You are not assigned as a teacher.']);
+        }
+
+        $students = Student::whereHas('classes', function($query) use ($teacher) {
+            $query->whereIn('classes.id', $teacher->classes->pluck('id'));
+        })
+        ->with('classes')
+        ->paginate(10);
+
+        return view('pages.teachers.students.index', compact('students'));
     }
 }

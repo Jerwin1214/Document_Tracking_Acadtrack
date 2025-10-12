@@ -3,27 +3,54 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use \App\Models\User;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Admin extends Model
+class Admin extends Authenticatable
 {
-    use HasFactory;
-
-    protected $guarded = [];
+    use HasFactory, Notifiable;
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Mass assignable attributes
      */
-    protected function casts(): array
+    protected $fillable = [
+        'name',
+        'user_id',   // login ID
+        'password',
+        'role_id',   // links to user_roles table
+    ];
+
+    /**
+     * Hidden attributes (e.g., for arrays or JSON)
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Attribute casting
+     */
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
+    /**
+     * Automatically hash password when setting it
+     */
+    public function setPasswordAttribute($value)
     {
-        return [];
+        if ($value) {
+            $this->attributes['password'] = bcrypt($value);
+        }
     }
 
-    public function user()
+    /**
+     * Optional: relation to user_roles table
+     */
+    public function role()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(UserRole::class, 'role_id');
     }
 }

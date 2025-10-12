@@ -32,9 +32,10 @@
                         <div class="row g-0 h-100">
                             <!-- Image column -->
                             <div class="col-xl-6 d-none d-xl-block">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
-                                    alt="Sample photo" class="img-fluid h-100"
-                                    style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem; object-fit: cover;" />
+                                <img src="{{ asset('images/BGpicture.png') }}"
+     alt="My Background" class="img-fluid h-100"
+     style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem; object-fit: cover;" />
+
                             </div>
                             <!-- Form column -->
                             <div class="col-xl-6">

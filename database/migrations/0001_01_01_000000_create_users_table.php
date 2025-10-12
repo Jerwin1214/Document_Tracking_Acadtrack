@@ -11,29 +11,33 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // create a table named 'user_roles'
+        // ✅ Create user_roles table
         Schema::create('user_roles', function (Blueprint $table) {
             $table->id();
             $table->string('name');
         });
 
+        // ✅ Create users table
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique();
-            $table->foreignId('role_id')->constrained('user_roles');
+            $table->string('user_id')->unique(); // ← Store the LRN here
+            $table->string('email')->unique();   // ← This is used for login: lrn@student.com
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->unsignedTinyInteger('role_id'); // 1 = Admin, 2 = Student, etc.
+            $table->boolean('is_active')->default(1);
             $table->rememberToken();
-            $table->tinyInteger('is_active')->default(1);
             $table->timestamps();
-        });
+});
 
+        // ✅ Laravel expects password reset using email
         Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
+            $table->string('email')->primary(); // default Laravel behavior
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
 
+        // ✅ Sessions table
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->foreignId('user_id')->nullable()->index();
@@ -49,8 +53,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
+        Schema::dropIfExists('user_roles');
     }
 };

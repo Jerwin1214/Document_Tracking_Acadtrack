@@ -11,9 +11,9 @@ class StudentPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): void // change this to bool
+    public function viewAny(User $user): bool
     {
-        //
+        return in_array($user->role->name ?? '', ['Admin', 'Teacher', 'Student']);
     }
 
     /**
@@ -21,7 +21,7 @@ class StudentPolicy
      */
     public function view(User $user, Student $student): bool
     {
-        return $user->role->name === 'Admin' || $user->role->name === 'Teacher' || $user->role->name === 'Student';
+        return in_array($user->role->name ?? '', ['Admin', 'Teacher', 'Student']);
     }
 
     /**
@@ -29,15 +29,16 @@ class StudentPolicy
      */
     public function create(User $user): bool
     {
-        return $user->role->name === 'Admin' || $user->role->name === 'Teacher';
+        return in_array($user->role->name ?? '', ['Admin', 'Teacher']);
     }
 
     /**
      * Determine whether the user can update the model.
+     * For the settings page, the Student instance may not be passed.
      */
-    public function update(User $user, Student $student): bool
+    public function update(User $user, ?Student $student = null): bool
     {
-        return $user->role->name === 'Admin' || $user->role->name === 'Teacher' || $user->role->name === 'Student';
+        return in_array($user->role->name ?? '', ['Admin', 'Teacher', 'Student']);
     }
 
     /**
@@ -45,22 +46,22 @@ class StudentPolicy
      */
     public function delete(User $user, Student $student): bool
     {
-        return $user->role->name === 'Admin';
+        return ($user->role->name ?? '') === 'Admin';
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Student $student): void // change this to bool
+    public function restore(User $user, Student $student): bool
     {
-        //
+        return ($user->role->name ?? '') === 'Admin';
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Student $student): void // change this to bool
+    public function forceDelete(User $user, Student $student): bool
     {
-        //
+        return ($user->role->name ?? '') === 'Admin';
     }
 }

@@ -1,7 +1,7 @@
 @extends('pages.admin.admin-content')
 
 @section('content')
-<h2>All Subject Stream</h2>
+<h2>All Subject Strand</h2>
 
 <!-- Popup messages -->
 @if (session('success'))

@@ -1,44 +1,80 @@
 @extends('pages.admin.admin-content')
 
 @section('content')
-<h2>Profile</h2>
-<div class="shadow-lg p-3 mb-5 mt-3 bg-body-tertiary rounded">
-    <div class="container row">
-        <div class="col-md-4">
-            <div class="card text-center" style="width: 14rem;">
-                <div class="">
-                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" class="card-img-top" alt="Profile Image" style="border-radius: 50%;">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Admin</h5>
-                    <a href="/admin/settings" class="btn btn-outline-warning">Settings</a>
-                </div>
-            </div>
+<div class="container py-4">
+    <h2 class="fw-bold mb-4">👤 Admin Profile</h2>
+
+    <!-- Profile Card -->
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden mx-auto" style="max-width: 600px;">
+        <!-- Gradient Header -->
+        <div class="bg-gradient-primary text-white text-center py-5">
+            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                 alt="Profile Image"
+                 class="rounded-circle border border-3 border-white shadow"
+                 style="width:130px; height:130px; object-fit:cover;">
+            <h4 class="mt-3 mb-0">{{ auth()->user()?->name ?? 'Admin' }}</h4>
+            <p class="text-white-50 mb-0">System Administrator</p>
         </div>
-        <div class="col-md-8">
-            <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" value="{{\App\Models\Admin::first()->name}}" name="name" id="name" class="form-control" readonly>
+
+        <!-- Profile Info -->
+        <div class="card-body text-center p-4">
+            <div class="row mb-3">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <div class="p-3 bg-light rounded shadow-sm h-100 hover-card">
+                        <h6 class="text-muted mb-1">Created At</h6>
+                        <p class="fw-semibold mb-0">
+                            {{ auth()->user()?->created_at?->format('F d, Y h:i A') ?? 'N/A' }}
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded shadow-sm h-100 hover-card">
+                        <h6 class="text-muted mb-1">Last Updated</h6>
+                        <p class="fw-semibold mb-0">
+                            {{ auth()->user()?->updated_at?->format('F d, Y h:i A') ?? 'N/A' }}
+                        </p>
+                    </div>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" value="{{auth()->user()->email}}" name="email" id="email" class="form-control" readonly>
-            </div>
-            <div class="mb-3">
-                <label for="date_created" class="form-label">Created at</label>
-                <input type="text" value="{{auth()->user()->created_at}}" name="date_created" id="date_created" class="form-control" readonly>
-            </div>
-            <div class="mb-3">
-                <label for="date_updated" class="form-label">Updated at</label>
-                <input type="text" value="{{auth()->user()->updated_at}}" name="date_updated" id="date_updated" class="form-control" readonly>
-            </div>
+
+            <!-- Change Password Button -->
+            <a href="{{ route('admin.password') }}" class="btn btn-gradient-primary px-4 rounded-pill shadow-sm">
+                <i class="fas fa-lock me-2"></i> Change Password
+            </a>
         </div>
     </div>
 </div>
+
+{{-- ✅ Custom Styles --}}
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #007bff, #6f42c1);
+    }
+    .btn-gradient-primary {
+        background: linear-gradient(45deg, #007bff, #6f42c1);
+        border: none;
+        color: #fff;
+        transition: 0.3s ease;
+    }
+    .btn-gradient-primary:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+    .hover-card {
+        transition: all 0.3s ease;
+    }
+    .hover-card:hover {
+        background: #f8f9fa;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+</style>
+
+@push('scripts')
 <script>
     $(document).ready(function() {
-        // set page title
-        $(document).prop('title', 'Profile | Student Management System');
+        document.title = 'Admin Profile | Acadtrack System';
     });
 </script>
+@endpush
 @endsection

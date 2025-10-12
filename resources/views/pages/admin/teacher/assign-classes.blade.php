@@ -7,7 +7,7 @@
     @csrf
     <div class="mb-3">
         <label for="teacher" class="form-label">Teacher</label>
-        <input type="text" name="teacher" id="teacher" class="form-control" value="{{ $teacher->first_name }} {{ $teacher->first_name }}" readonly>
+        <input type="text" name="teacher" id="teacher" class="form-control" value="{{ $teacher->first_name }} {{ $teacher->last_name }}" readonly>
         <x-form-error name="teacher" />
     </div>
     <div class="mb-3">

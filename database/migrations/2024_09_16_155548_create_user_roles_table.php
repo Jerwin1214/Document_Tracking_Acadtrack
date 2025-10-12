@@ -6,32 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-
-
-        try {
-            //code...
-            // create a table named 'user_roles'
-            Schema::create('user_roles', function (Blueprint $table) {
-                $table->id();
-                $table->string('name');
-            });
-        } catch (\Exception $th) {
-            //throw $th;
-        }
+        Schema::create('user_roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps(); // This adds created_at and updated_at
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('user_roles');
     }
-    // 2024_09_16_172203_create_user_roles_table
-    // 2024_09_16_155548_create_students_table
 };

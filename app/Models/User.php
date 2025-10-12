@@ -2,78 +2,80 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use \App\Models\UserRole;
-use \App\Models\Teacher;
-use \App\Models\Student;
-use \App\Models\Announcement;
-use \App\Models\Classes;
+
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ * @property int $role_id
+ */
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
+        'user_id',
         'email',
         'password',
         'role_id',
+        'remember_token',
     ];
 
-    // protected $guared = [];
-
-    public function role()
-    {
-        return $this->belongsTo(UserRole::class);
-    }
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
+    protected $casts = [
+        'password' => 'hashed',
+    ];
+
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Relationship to Role model (optional).
+     * If you don’t have a Role model, you can safely delete this.
      */
-    protected function casts(): array
+    public function role()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(\App\Models\UserRole::class, 'role_id');
     }
 
-    public function teacher()
+    /**
+     * Convenience accessor for role as string.
+     * This allows you to call $user->role (string).
+     */
+    public function getRoleAttribute()
     {
-        return $this->hasOne(Teacher::class);
+        return match($this->role_id) {
+            1 => 'admin',
+            2 => 'student',
+            3 => 'teacher',
+            default => 'unknown',
+        };
     }
 
+    /**
+     * Relation: User → Teacher (one-to-one)
+     */
+
+
+public function teacher()
+{
+    return $this->hasOne(Teacher::class, 'user_id');
+}
+
+
+
+    /**
+     * Relation: User → Student (one-to-one)
+     * (Optional but recommended for symmetry)
+     */
     public function student()
     {
-        return $this->hasOne(Student::class);
-    }
-
-    public function announcements()
-    {
-        return $this->hasMany(Announcement::class);
-    }
-
-    public function classes()
-    {
-        return $this->belongsToMany(Classes::class);
+        return $this->hasOne(\App\Models\Student::class, 'user_id');
     }
 }

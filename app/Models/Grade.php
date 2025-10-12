@@ -5,24 +5,34 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Student;
-
 class Grade extends Model
 {
     use HasFactory;
 
-//    protected $guarded = [];
     protected $fillable = [
-        'name',
+        'student_id',
+        'subject_id',
+        'teacher_id',
+        'quarter',
+        'grade',
+        'remarks',
     ];
 
-    public function students()
+    // A grade belongs to one student
+    public function student()
     {
-        return $this->hasMany(Student::class);
+        return $this->belongsTo(Student::class);
     }
 
-    public function classes()
+    // A grade belongs to one subject
+    public function subject()
     {
-        return $this->hasMany(Classes::class);
+        return $this->belongsTo(Subject::class);
+    }
+
+    // A grade belongs to one teacher
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
     }
 }

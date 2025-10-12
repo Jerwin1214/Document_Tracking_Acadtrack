@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Classes;
+use App\Models\Teacher;
 use App\Models\Grade;
 use App\Models\Subject;
 use App\Models\SubjectStream;
-use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -17,134 +17,134 @@ class ClassController extends Controller
     public function index()
     {
         $classes = DB::table('classes')
-            ->leftJoin('class_student', 'classes.id', '=', 'class_student.class_id')
             ->leftJoin('teachers', 'classes.teacher_id', '=', 'teachers.id')
-            ->leftJoin('grades', 'classes.grade_id', '=', 'grades.id')
-            ->leftJoin('subject_streams', 'classes.subject_stream_id', '=', 'subject_streams.id')
             ->select(
                 'classes.id',
-                'classes.grade_id',
+                'classes.department',
+                'classes.year_level',
+                'classes.section',
                 'classes.teacher_id',
-                'classes.subject_stream_id',
-                'classes.name',
                 'classes.year',
+                'classes.subject_stream_id',
                 'teachers.first_name as teacher_first_name',
                 'teachers.last_name as teacher_last_name',
-                'grades.name as grade_name',
-                'subject_streams.stream_name as subject_stream_name',
-                DB::raw('COUNT(class_student.student_id) as students_count')
-            )
-            ->groupBy(
-                'classes.id',
-                'classes.grade_id',
-                'classes.teacher_id',
-                'classes.subject_stream_id',
-                'classes.name',
-                'classes.year',
-                'teachers.first_name',
-                'teachers.last_name',
-                'grades.name',
-                'subject_streams.stream_name'
+                DB::raw('(SELECT COUNT(*) FROM students
+                          WHERE students.department = classes.department
+                          AND students.year_level = classes.year_level
+                          AND (classes.subject_stream_id IS NULL OR students.strand = (SELECT stream_name FROM subject_streams WHERE id = classes.subject_stream_id))
+                          AND students.section = classes.section) as students_count')
             )
             ->paginate(20);
 
         return view('pages.admin.class.index', ['classes' => $classes]);
     }
 
-    public function create()
-    {
-        // Cache the grades for 10 minutes
-        $grades = Cache::remember('grades', 600, function () {
-            return Grade::select(['id', 'name'])->get();
-        });
+   public function create()
+{
+    // Fetch all teachers (no cache for now)
+    $teachers = Teacher::select(['id', 'salutation', 'first_name', 'last_name'])->get();
 
-        // Cache the teachers for 10 minutes
-        $teachers = Cache::remember('teachers', 600, function () {
-            return Teacher::select(['id', 'salutation', 'first_name', 'last_name'])->get();
-        });
+    // Fetch all streams for Senior High
+    $streams = SubjectStream::all();
 
-        // Cache the subjects for 10 minutes
-        $streams = SubjectStream::select(['id', 'stream_name'])->get();
+    return view('pages.admin.class.add', compact('teachers', 'streams'));
+}
 
-        return view('pages.admin.class.add', compact('teachers', 'grades', 'streams'));
+   public function store(Request $request)
+{
+    $request->validate([
+        'department' => 'required|string',
+        'year_level' => 'required|string',
+        'section' => 'required|string',
+        'teacher_id' => 'required|exists:teachers,id',
+        'year' => 'required|string',
+        'subject_stream_id' => 'nullable|exists:subject_streams,id',
+    ]);
+
+    // Build the class name dynamically
+    $className = $request->year_level . ' - ' . $request->section;
+
+    $class = new Classes();
+    $class->department = $request->department;
+    $class->year_level = $request->year_level;
+    $class->section = $request->section;
+    $class->name = $className;
+    $class->teacher_id = $request->teacher_id;
+    $class->year = $request->year;
+
+    // Only assign subject_stream_id if it's Senior High
+    if ($request->department === 'Senior High') {
+        $class->subject_stream_id = $request->subject_stream_id;
+    } else {
+        $class->subject_stream_id = null;
     }
 
-    public function store(Request $request)
-    {
-        // validate the request
-        $request->validate([
-            'grade' => ['required'],
-            'class_name' => ['required', 'string'],
-            'subject_stream' => ['required'],
-            'teacher' => ['required'],
-            'year' => ['required', 'numeric'],
-        ]);
+    $class->save();
 
-        // create the class
-        Classes::create([
-            'grade_id' => $request->grade,
-            'name' => $request->class_name,
-            'subject_stream_id' => $request->subject_stream,
-            'teacher_id' => $request->teacher,
-            'year' => $request->year,
-        ]);
-
-        // redirect to the all classes page
-        return redirect('/admin/class/show')->with('success', 'Class created successfully');
-    }
+    return redirect()->route('admin.classes.index')
+                     ->with('success', 'Class added successfully!');
+}
 
     public function show(Classes $class)
     {
-        return view('pages.admin.class.show', ['class' => $class]);
+        $class = Classes::with('teacher')->find($class->id);
+
+        $subjects = DB::table('subject_teacher')
+            ->join('subjects', 'subject_teacher.subject_id', '=', 'subjects.id')
+            ->where('subject_teacher.teacher_id', $class->teacher_id)
+            ->select('subjects.*')
+            ->get();
+
+        $studentsQuery = \App\Models\Student::with('guardian')
+            ->where('department', $class->department)
+            ->where('year_level', $class->year_level);
+
+        if ($class->subject_stream_id) {
+            $studentsQuery->where('strand', $class->subject_stream_id);
+        }
+
+        $students = $studentsQuery->get();
+
+        return view('pages.admin.class.show', compact('class', 'subjects', 'students'));
     }
 
-    public function edit(Classes $class)
+    public function edit($id)
     {
-        // Cache the grades for 10 minutes
-        $grades = Cache::remember('grades', 600, function () {
-            return Grade::select(['id', 'name'])->get();
-        });
+        $class = Classes::findOrFail($id);
+        $grades = Grade::all();
+        $subjects = Subject::all();
+        $teachers = Teacher::all();
+        $streams = SubjectStream::all();
 
-        // Cache the teachers for 10 minutes
-        $teachers = Cache::remember('teachers', 600, function () {
-            return Teacher::select(['id', 'salutation', 'first_name', 'last_name'])->get();
-        });
-
-        // Cache the subjects for 10 minutes
-        $subjects = Cache::remember('subjects', 600, function () {
-            return Subject::select(['id', 'name'])->get();
-        });
-        return view('pages.admin.class.edit', ['class' => $class, 'grades' => $grades, 'subjects' => $subjects, 'teachers' => $teachers]);
+        return view('pages.admin.class.edit', compact('class', 'grades', 'subjects', 'teachers', 'streams'));
     }
 
     public function update(Request $request, Classes $class)
     {
-        // validate the user input
         $request->validate([
-            'grade' => ['required'],
-            'class_name' => ['required', 'string'],
-            'subject' => ['required'],
-            'teacher' => ['required'],
-            'year' => ['required', 'numeric'],
+            'department' => 'required|string',
+            'year_level' => 'required|string',
+            'section' => 'required|string',
+            'teacher_id' => 'required|integer',
+            'year' => 'required|string',
         ]);
 
         $class->update([
-            'grade_id' => $request->grade,
-            'name' => $request->class_name,
-            'subject_id' => $request->subject,
-            'teacher_id' => $request->teacher,
+            'department' => $request->department,
+            'year_level' => $request->year_level,
+            'section' => $request->section,
+            'teacher_id' => $request->teacher_id,
             'year' => $request->year,
+            'subject_stream_id' => $request->subject_stream_id ?? null,
         ]);
 
-        // redirect to the show classes page with a success message
-        return redirect('/admin/class/show')->with('success', 'Class details updated successfully!');
+        return redirect()->route('admin.classes.index')->with('success', 'Class updated successfully!');
     }
 
     public function destroy(Classes $class)
     {
-        // TODO: implement the destroy method
         $class->delete();
-        return redirect('/admin/class/show')->with('success', 'Class deleted successfully');
+        return redirect()->route('admin.classes.index')->with('success', 'Class deleted successfully!');
     }
 
     public function assignStudentsView(Classes $class)
@@ -163,7 +163,6 @@ class ClassController extends Controller
 
     public function assignStudents(Request $request, Classes $class)
     {
-        // Assign students to the class
         foreach ($request->students as $studentId) {
             DB::table('class_student')->insert([
                 'class_id' => $class->id,
@@ -171,23 +170,14 @@ class ClassController extends Controller
                 'created_at' => now(),
             ]);
 
-            // Get the subjects assigned to the class's subject stream
-            $subjects = DB::table('subject_stream_subject')
-                ->where('subject_stream_id', $class->subject_stream_id)
-                ->pluck('subject_id'); // Retrieve only subject IDs
-
-            // Insert each subject for this student into student_subjects table
-            foreach ($subjects as $subjectId) {
-                DB::table('student_subjects')->insert([
-                    'subject_id' => $subjectId,
-                    'student_id' => $studentId,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
+            DB::table('students')->where('id', $studentId)->update([
+                'department' => $class->department,
+                'year_level' => $class->year_level,
+                'section' => $class->section,
+                'strand' => $class->subject_stream_id,
+            ]);
         }
 
-        // Redirect with a success message
-        return redirect('/admin/class/show')->with('success', 'Students and their subjects assigned to class successfully!');
+        return redirect()->route('admin.classes.index')->with('success', 'Students assigned successfully!');
     }
 }

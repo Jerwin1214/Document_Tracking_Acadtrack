@@ -15,13 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
 
-        DB::table('user_roles')->insert([
-            ['name' => 'Admin'],
-            ['name' => 'Teacher'],
-            ['name' => 'Student'],
-        ]);
+
+        // Call role seeder only
+        $this->call([
+        UserRolesSeeder::class,
+    ]);
+
 
         DB::table('users')->insert([
             [
@@ -43,6 +43,11 @@ class DatabaseSeeder extends Seeder
                 'created_at' => now(),
             ],
         ]);
+
+        $this->call([
+    AdminSeeder::class,
+]);
+
 
         // for test admin
         DB::table('admins')->insert([
@@ -67,6 +72,7 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
+$this->call(SectionSeeder::class);
 
         // for test guardian
         DB::table('guardians')->insert([

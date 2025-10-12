@@ -4,45 +4,86 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Student;
-use App\Models\Teacher;
-use App\Models\Subject;
-
 class Classes extends Model
 {
-
+    // Table name
     protected $table = 'classes';
 
-//    protected $guarded = [];
+    // Allow mass assignment
     protected $fillable = [
-        'grade_id',
-        'teacher_id',
-        'subject_stream_id',
         'name',
+        'year_level',
+        'section',
+        'department',
+        'subject_stream_id',
         'year',
+        'teacher_id', // keep if you want an adviser assigned directly
     ];
 
-    // for students
+    /**
+     * Many-to-Many: Class ↔ Students (via pivot class_student)
+     */
     public function students()
     {
         return $this->belongsToMany(Student::class, 'class_student', 'class_id', 'student_id');
     }
 
-    // for teachers
-    public function teachers()
+    /**
+     * One-to-One / Many-to-One: Class Adviser
+     */
+    public function adviser()
     {
-        return $this->belongsTo(Teacher::class);
+        return $this->belongsTo(Teacher::class, 'teacher_id');
     }
 
-    // for subject
-    public function subject()
+    /**
+     * Many-to-Many: Class ↔ Subject Teachers
+     */
+    public function teacher()
+{
+    return $this->belongsTo(Teacher::class, 'teacher_id');
+}
+
+
+    /**
+     * Many-to-Many: Class ↔ Subjects
+     */
+    public function subjects()
     {
-        return $this->belongsTo(Subject::class);
+        return $this->belongsToMany(Subject::class, 'class_subject', 'class_id', 'subject_id')
+                    ->withTimestamps();
     }
 
-    // for grades
+    /**
+     * One-to-Many: Class ↔ Grades
+     */
     public function grades()
     {
-        return $this->belongsTo(Grade::class);
+        return $this->hasMany(Grade::class, 'class_id');
+    }
+
+    /**
+     * Many-to-One: Class ↔ Subject Stream (e.g., ABM, STEM)
+     */
+    public function subjectStream()
+    {
+        return $this->belongsTo(SubjectStream::class, 'subject_stream_id');
+    }
+
+    /**
+     * Scope: Filter classes by teacher and year
+     */
+    public function scopeForTeacher($query, $teacherId, $year)
+    {
+        return $query->where('teacher_id', $teacherId)
+                     ->where('year', $year);
+    }
+
+    /**
+     * Accessor: Full class name
+     */
+    public function getFullNameAttribute()
+    {
+        return "{$this->department} {$this->year_level} - {$this->section}";
     }
 }

@@ -1,6 +1,6 @@
 <x-private-layout>
     <!-- Navbar -->
-    <x-navbar role="{{ auth()->user()->role->name }}">
+    <x-navbar role="{{ auth()->user()->role }}">
         <div class="nav">
             <a class="nav-link" href="/student/dashboard">
                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
@@ -14,7 +14,7 @@
             </a>
             <a class="nav-link getPopup" href="/student/settings">
                 <div class="sb-nav-link-icon"><i class="fa-solid fa-gear"></i></div>
-                Settings
+                Forget Password
             </a>
             <a class="nav-link getPopup" href="/logout">
                 <div class="sb-nav-link-icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></div>
@@ -22,14 +22,13 @@
             </a>
         </div>
     </x-navbar>
+
     <x-nav-top></x-nav-top>
+
     <div id="layoutSidenav_content">
         <div class="container-fluid">
             <!-- Slotted content -->
             @yield('content')
-            <!--  -->
         </div>
     </div>
-    <!--  -->
-
 </x-private-layout>

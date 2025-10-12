@@ -13,11 +13,13 @@ class TeacherMiddleware
      *
      * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
-    public function handle(Request $request, Closure $next): Response
-    {
-        if (!auth()->check() && auth()->user()->role->name == 'Teacher') {
-            abort(401, 'Unauthorized Access');
-        }
+    public function handle($request, Closure $next)
+{
+    if (auth()->check() && auth()->user()->role_id == 3) {
         return $next($request);
     }
+
+    return redirect('/login')->with('error', 'Unauthorized access.');
+}
+
 }

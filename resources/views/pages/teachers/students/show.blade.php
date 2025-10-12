@@ -1,141 +1,113 @@
 @extends('pages.teachers.teacher-content')
 
 @section('content')
-<!-- Slotted content -->
-<h2>{{$student->first_name}}'s Profile</h2>
 <div class="container py-5">
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="card mb-3">
-                <div class="card-body text-center">
-                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-                        alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
-                    <h5 class="my-2">{{$student->first_name}} {{$student->last_name}}</h5>
-                    <div class="d-flex justify-content-center mb-2">
-                        <a href="/teacher/students/{{$student->id}}/edit" class="btn btn-warning">Edit</a>
-                    </div>
-                </div>
+
+    {{-- Page Header --}}
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">👩‍🎓 {{ $student->first_name }} {{ $student->last_name }}'s Profile</h2>
+        <p class="text-muted">Overview of the student and guardian details</p>
+    </div>
+
+    <div class="row g-4">
+        {{-- Profile Card --}}
+        <div class="col-lg-4 col-md-5">
+            <div class="card shadow-lg border-0 text-center p-4 rounded-4 glass-card">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                     alt="avatar" class="rounded-circle img-fluid mb-3" style="width: 150px;">
+                <h5 class="fw-bold">{{ $student->first_name }} {{ $student->last_name }}</h5>
+                <span class="badge bg-primary mt-2">{{ $student->gender }}</span>
             </div>
         </div>
-        <div class="col-lg-8">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p class="mb-0">Full Name</p>
-                        </div>
-                        <div class="col-sm-9">
-                            <p class="text-muted mb-0">{{$student->first_name}} {{$student->last_name}}</p>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p class="mb-0">Gender</p>
-                        </div>
-                        <div class="col-sm-9">
-                            <p class="text-muted mb-0"> {{$student->gender}} </p>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p class="mb-0">Email</p>
-                        </div>
-                        <div class="col-sm-9">
-                            <p class="text-muted mb-0"> {{$student->user->email}} </p>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p class="mb-0">DOB</p>
-                        </div>
-                        <div class="col-sm-9">
-                            <p class="text-muted mb-0"> {{$student->dob}} </p>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p class="mb-0">NIC</p>
-                        </div>
-                        <div class="col-sm-9">
-                            <p class="text-muted mb-0"> {{$student->nic}} </p>
-                        </div>
-                    </div>
+
+        {{-- Student Details --}}
+        <div class="col-lg-8 col-md-7">
+            <div class="card shadow-lg border-0 p-4 rounded-4 glass-card">
+                <h5 class="fw-bold mb-3"><i class="fas fa-user-graduate me-2"></i>Student Details</h5>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold"><i class="fas fa-id-card me-1"></i>Full Name</div>
+                    <div class="col-sm-8 text-muted">{{ $student->first_name }} {{ $student->middle_name ?? '' }} {{ $student->last_name }}</div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            @if($student->guardian)
-            <div class="col-md-4">
-                <div class="card mb-4 mb-md-0">
-                    <div class="card-body">
-                        <p class="mb-4">Guardian Details</p>
-                        <div class="row mt-2">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Full Name</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0"> {{$student->guardian->initials}} {{$student->guardian->first_name}} {{$student->guardian->last_name}}</p>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Phone No.</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0"> {{$student->guardian->phone_number}} </p>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-sm-3">
-                                <p class="mb-0">NIC</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0"> {{$student->guardian->nic}} </p>
-                            </div>
-                        </div>
-                    </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold"><i class="fas fa-venus-mars me-1"></i>Gender</div>
+                    <div class="col-sm-8 text-muted">{{ $student->gender }}</div>
                 </div>
-            </div>
-            @endif
-            <div class="col-lg-8">
-                <div class="card mb-4 mb-md-0">
-                    <div class="card-body">
-                        <p class="mb-4">Assigned Subjects</p>
-                        <table class="table table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Code</th>
-                                    <th>Name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($subjects as $subject)
-                                <tr>
-                                    <td>{{$loop->iteration}}</td>
-                                    <td>{{$subject->code}}</td>
-                                    <td>{{$subject->name}}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold"><i class="fas fa-birthday-cake me-1"></i>Age</div>
+                    <div class="col-sm-8 text-muted">{{ \Carbon\Carbon::parse($student->dob)->age }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold"><i class="fas fa-calendar-alt me-1"></i>DOB</div>
+                    <div class="col-sm-8 text-muted">{{ \Carbon\Carbon::parse($student->dob)->format('F j, Y') }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold"><i class="fas fa-key me-1"></i>LRN</div>
+                    <div class="col-sm-8 text-muted">{{ $student->lrn }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold"><i class="fas fa-id-badge me-1"></i>Student ID</div>
+                    <div class="col-sm-8 text-muted">{{ $student->student_id }}</div>
                 </div>
             </div>
         </div>
     </div>
+
+    {{-- Guardian Details --}}
+    @if ($student->guardian)
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 p-4 rounded-4 glass-card">
+                <h5 class="fw-bold mb-3"><i class="fas fa-user-tie me-2"></i>Guardian Details</h5>
+                <div class="row mb-2">
+                    <div class="col-sm-4 fw-bold"><i class="fas fa-id-card me-1"></i>Full Name</div>
+                    <div class="col-sm-8 text-muted">{{ $student->guardian->first_name }} {{ $student->guardian->middle_initial ?? '' }} {{ $student->guardian->last_name }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 fw-bold"><i class="fas fa-phone-alt me-1"></i>Phone No.</div>
+                    <div class="col-sm-8 text-muted">{{ $student->guardian->phone_number }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 fw-bold"><i class="fas fa-home me-1"></i>Address</div>
+                    <div class="col-sm-8 text-muted">{{ $student->guardian->address }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
 </div>
-<!--  -->
 
 <script>
-    $(document).ready(function() {
-        // set page title
-        $(document).prop('title', 'Student Profile | Student Management System');
-    });
+    document.title = "Student Profile | Student Management System";
 </script>
 
+<style>
+    /* Glass Card Effect */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(12px);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+
+    /* Responsive Adjustments */
+    @media (max-width: 767px) {
+        .card img {
+            width: 120px;
+        }
+        .fw-bold {
+            font-size: 0.95rem;
+        }
+        .text-muted {
+            font-size: 0.9rem;
+        }
+        h2 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
 @endsection
