@@ -29,7 +29,6 @@ class Kernel extends HttpKernel
     // ✅ Make sure this section exists exactly like this
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
-        'teacher' => \App\Http\Middleware\TeacherMiddleware::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'student' => \App\Http\Middleware\StudentMiddleware::class,
     ];

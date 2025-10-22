@@ -1,0 +1,8 @@
+<!-- <IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect all non-existent files and folders to index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
+</IfModule> -->

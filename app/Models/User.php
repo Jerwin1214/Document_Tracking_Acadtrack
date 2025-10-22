@@ -58,22 +58,6 @@ class User extends Authenticatable
         };
     }
 
-    /**
-     * Relation: User → Teacher (one-to-one)
-     */
-
-
-public function teacher()
-{
-    return $this->hasOne(Teacher::class, 'user_id');
-}
-
-
-
-    /**
-     * Relation: User → Student (one-to-one)
-     * (Optional but recommended for symmetry)
-     */
     public function student()
     {
         return $this->hasOne(\App\Models\Student::class, 'user_id');

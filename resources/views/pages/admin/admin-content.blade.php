@@ -38,7 +38,11 @@
                 <x-sub-nav-link href="/admin/class/create">Add</x-sub-nav-link>
                 <x-sub-nav-link href="/admin/class/show">View</x-sub-nav-link>
             </x-nav-link> --}}
-
+            {{-- ✅ New: Promotion History Logs --}}
+            <a class="nav-link" href="{{ route('admin.promotion-history.index') }}">
+                <div class="sb-nav-link-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+            History logs
+            </a>
 
             <a class="nav-link" href="/admin/profile">
                 <div class="sb-nav-link-icon"><i class="fa fa-user" aria-hidden="true"></i></div>

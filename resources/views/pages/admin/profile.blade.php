@@ -37,13 +37,66 @@
                 </div>
             </div>
 
+            <!-- ✅ Display Email -->
+            <div class="mb-3 text-start">
+                <label class="form-label fw-semibold">Email Address</label>
+                <div class="input-group">
+                    <input type="text" class="form-control text-center" value="{{ auth()->user()?->email ?? 'No Email Added' }}" readonly>
+                    <button type="button" class="btn btn-gradient-primary" data-bs-toggle="modal" data-bs-target="#updateEmailModal">
+                        <i class="fas fa-edit me-1"></i> Update
+                    </button>
+                </div>
+            </div>
+
             <!-- Change Password Button -->
-            <a href="{{ route('admin.password') }}" class="btn btn-gradient-primary px-4 rounded-pill shadow-sm">
+            <a href="{{ route('admin.password') }}" class="btn btn-outline-secondary w-100 rounded-pill mt-3">
                 <i class="fas fa-lock me-2"></i> Change Password
             </a>
         </div>
     </div>
 </div>
+
+<!-- ✅ Update Email Modal -->
+<div class="modal fade" id="updateEmailModal" tabindex="-1" aria-labelledby="updateEmailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header bg-gradient-primary text-white rounded-top-4">
+                <h5 class="modal-title fw-bold" id="updateEmailModalLabel"><i class="fas fa-envelope me-2"></i> Update Email</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('admin.profile.updateEmail') }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-semibold">New Email Address</label>
+                        <input type="email" name="email" id="email" class="form-control text-center" value="{{ old('email', auth()->user()?->email) }}" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-gradient-primary rounded-pill"><i class="fas fa-save me-2"></i> Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- ✅ SweetAlert2 Script --}}
+@if(session('success'))
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: '{{ session('success') }}',
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        position: 'top-end'
+    });
+</script>
+@endif
 
 {{-- ✅ Custom Styles --}}
 <style>

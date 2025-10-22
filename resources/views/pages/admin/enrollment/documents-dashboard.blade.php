@@ -3,6 +3,11 @@
 @section('content')
 
 <div class=".dashboard-wrapper" style="background-color:#2f3542; color:#f1f2f6;padding:20px 15px;min-height:100vh;">
+<div class="d-flex justify-content-end mb-3">
+    <a href="{{ route('admin.dashboard.printReport') }}" target="_blank" class="btn btn-danger">
+        <i class="fas fa-file-pdf"></i> PDF Report
+    </a>
+</div>
 
     {{-- ✅ Summary Cards --}}
     <div class="row g-4 mb-5 justify-content-start">
@@ -25,9 +30,9 @@
                         <i class="fas fa-check-circle fa-lg"></i>
                     </div>
                     <h3 class="fw-bold mb-0">
-                        {{ $enrollments->flatMap(fn($e) => $e->studentDocuments)->where('status','Complete')->count() }}
+                        {{ $enrollments->flatMap(fn($e) => $e->studentDocuments)->where('status','Submitted')->count() }}
                     </h3>
-                    <p class="mb-0">Documents Completed</p>
+                    <p class="mb-0">Documents Submitted</p>
                 </div>
             </div>
         </div>
@@ -81,97 +86,110 @@
         </div>
     </div>
 
-    {{-- ✅ Charts Section --}}
-    <div class="row g-4">
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 bg-dark">
-                <div class="card-body">
-                    <h5 class="fw-bold mb-3 text-white">Document Completion</h5>
-                    <div style="height:250px;">
-                        <canvas id="statusPieChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 bg-dark">
-                <div class="card-body">
-                    <h5 class="fw-bold mb-3 text-white">Documents per Type</h5>
-                    <div style="height:250px;">
-                        <canvas id="documentsBarChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 bg-dark">
-                <div class="card-body">
-                    <h5 class="fw-bold mb-3 text-white">Pending Duration</h5>
-                    <div style="height:250px;">
-                        <canvas id="pendingDurationChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 bg-dark">
-                <div class="card-body">
-                    <h5 class="fw-bold mb-3 text-white">Submission Trend (Monthly by Document)</h5>
-                    <div style="height:250px;">
-                        <canvas id="submissionTrendChart"></canvas>
-                    </div>
+ {{-- ✅ Charts Section --}}
+<div class="row g-4">
+    <div class="col-lg-3 col-md-6">
+        <div class="card shadow-sm border-0 bg-dark">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3 text-white">Document Completion</h5>
+                <div class="chart-container">
+                    <canvas id="statusPieChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- % of Students Submitted & Document Uploads Row --}}
-    <div class="row mt-4 g-4">
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 bg-dark">
-                <div class="card-body">
-                    <h5 class="fw-bold mb-3 text-white">% of Students Submitted Each Document</h5>
-                    <div style="height:300px;">
-                        <canvas id="submissionPercentageChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 bg-dark">
-                <div class="card-body">
-                    <h5 class="fw-bold mb-3 text-white">Document Uploads</h5>
-                    <div style="height:300px;">
-                        <canvas id="uploadsChart"></canvas>
-                    </div>
-                    <div class="mt-2 d-flex justify-content-end">
-                        <button class="btn btn-sm btn-primary me-1" id="monthlyBtn">Monthly</button>
-                        <button class="btn btn-sm btn-secondary" id="yearlyBtn">Yearly</button>
-                    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card shadow-sm border-0 bg-dark">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3 text-white">Documents per Type</h5>
+                <div class="chart-container">
+                    <canvas id="documentsBarChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- Overall Completion Rate --}}
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card shadow-sm border-0 bg-dark">
-                <div class="card-body text-center">
-                    <h5 class="fw-bold mb-3 text-white">Overall Document Completion Rate</h5>
-                    @php
-                        $totalDocs = $enrollments->flatMap(fn($e) => $e->studentDocuments)->count();
-                        $completedDocs = $enrollments->flatMap(fn($e) => $e->studentDocuments)->where('status','Complete')->count();
-                        $completionRate = $totalDocs ? round(($completedDocs/$totalDocs)*100,2) : 0;
-                    @endphp
-                    <h2 class="fw-bold text-success">{{ $completionRate }}%</h2>
-                    <div class="progress mx-auto" style="height:20px; max-width:500px; background-color:#57606f;">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ $completionRate }}%" aria-valuenow="{{ $completionRate }}" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card shadow-sm border-0 bg-dark">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3 text-white">Pending Duration</h5>
+                <div class="chart-container">
+                    <canvas id="pendingDurationChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <div class="card shadow-sm border-0 bg-dark">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3 text-white">Submission Trend</h5>
+                <div class="chart-container">
+                    <canvas id="submissionTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- % of Students Submitted & Document Uploads Row --}}
+<div class="row mt-4 g-4">
+    <div class="col-lg-6 col-md-12">
+        <div class="card shadow-sm border-0 bg-dark">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3 text-white">Percentage of Students Submitted Each Document</h5>
+                <div class="chart-container">
+                    <canvas id="submissionPercentageChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-md-12">
+        <div class="card shadow-sm border-0 bg-dark">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3 text-white">Document Uploads</h5>
+                <div class="chart-container">
+                    <canvas id="uploadsChart"></canvas>
+                </div>
+                <div class="mt-2 d-flex justify-content-end flex-wrap gap-1">
+                    <button class="btn btn-sm btn-primary" id="monthlyBtn">Monthly</button>
+                    <button class="btn btn-sm btn-secondary" id="yearlyBtn">Yearly</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Overall Completion Rate --}}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow-sm border-0 bg-dark">
+            <div class="card-body text-center">
+                <h5 class="fw-bold mb-3 text-white">Overall Document Completion Rate</h5>
+                @php
+                    $totalDocs = $enrollments->flatMap(fn($e) => $e->studentDocuments)->count();
+                    $completedDocs = $enrollments->flatMap(fn($e) => $e->studentDocuments)->where('status','Submitted')->count();
+                    $completionRate = $totalDocs ? round(($completedDocs/$totalDocs)*100,2) : 0;
+                @endphp
+                <h2 class="fw-bold text-success">{{ $completionRate }}%</h2>
+                <div class="progress mx-auto" style="height:25px; max-width:500px; background-color:#57606f;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ $completionRate }}%" aria-valuenow="{{ $completionRate }}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Student Population by Grade Chart --}}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow-sm border-0 bg-dark">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3 text-white">Student Population by Grade Level</h5>
+                <div class="chart-container">
+                    <canvas id="studentsByGradeChart"></canvas>
                 </div>
             </div>
         </div>
@@ -190,6 +208,15 @@
 .bg-info { background-color: #3742fa !important; }
 .bg-secondary { background-color: #57606f !important; }
 .card { background-color: #2f3542 !important; color: #f1f2f6 !important; }
+chart-container {
+    position: relative;
+    width: 100%;
+    min-height: 350px; /* ensures charts are readable */
+}
+@media (max-width: 768px) {
+    .chart-container { min-height: 300px; }
+}
+
 </style>
 
 {{-- ✅ Scripts --}}
@@ -197,8 +224,9 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
+
     const statusCounts = {
-        'Complete': @json($enrollments->flatMap(fn($e) => $e->studentDocuments)->where('status','Complete')->count()),
+        'Submitted': @json($enrollments->flatMap(fn($e) => $e->studentDocuments)->where('status','Submitted')->count()),
         'Pending': @json($enrollments->flatMap(fn($e) => $e->studentDocuments)->where('status','Pending')->count()),
         'Pending >1 Year': @json($enrollments->flatMap(fn($e) => $e->studentDocuments)->filter(fn($d) => $d->status==='Pending' && $d->created_at->diffInDays(now())>365)->count())
     };
@@ -208,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function () {
             @php
                 $docName = str_ireplace(['photocopy original card','Photocopy Original Card'],'Card',$doc->name);
             @endphp
-            '{{ $docName }}': @json($enrollments->filter(fn($e)=>optional($e->studentDocuments->firstWhere('document_id',$doc->id))?->status==='Complete')->count()),
+            '{{ $docName }}': @json($enrollments->filter(fn($e)=>optional($e->studentDocuments->firstWhere('document_id',$doc->id))?->status==='Submitted')->count()),
         @endforeach
     };
 
@@ -226,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
             @php
                 $docName = str_ireplace(['photocopy original card','Photocopy Original Card'],'Card',$doc->name);
             @endphp
-            '{{ $docName }}': @json($enrollments->count() ? round($enrollments->filter(fn($e)=>optional($e->studentDocuments->firstWhere('document_id',$doc->id))?->status==='Complete')->count()/$enrollments->count()*100,2) : 0),
+            '{{ $docName }}': @json($enrollments->count() ? round($enrollments->filter(fn($e)=>optional($e->studentDocuments->firstWhere('document_id',$doc->id))?->status==='Submitted')->count()/$enrollments->count()*100,2) : 0),
         @endforeach
     };
 
@@ -235,7 +263,67 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const docColors = ['#1e90ff','#ff4757','#2ed573','#ffa502','#3742fa','#e84393','#00cec9'];
 
-    // Submission Trend Chart
+    // ✅ Submission Percentage Chart (with hover tooltip update)
+    new Chart(document.getElementById('submissionPercentageChart').getContext('2d'), {
+        type:'bar',
+        data:{
+            labels:Object.keys(submissionPercentage),
+            datasets:[{
+                label:'Percentage of Students Submitted Each Document',
+                data:Object.values(submissionPercentage),
+                backgroundColor:'#3742fa',
+                borderRadius:5
+            }]
+        },
+        options:{
+            responsive:true,
+            plugins:{
+                legend:{ display:false },
+                tooltip:{
+                    callbacks:{
+                        label:function(context){
+                            return `Students Submitted: ${context.parsed.y}% `;
+                        }
+                    }
+                }
+            },
+            scales:{
+                y:{ beginAtZero:true, ticks:{ color:'#f1f2f6', callback:value=>value+"%" } },
+                x:{ ticks:{ color:'#f1f2f6' } }
+            }
+        }
+    });
+ // ✅ Student Population by Grade Chart
+    const studentsByGrade = @json($studentsByGrade);
+    const grades = Object.keys(studentsByGrade);
+    const gradeCounts = Object.values(studentsByGrade);
+    const ctxGrade = document.getElementById('studentsByGradeChart').getContext('2d');
+
+    new Chart(ctxGrade, {
+        type: 'bar',
+        data: {
+            labels: grades,
+            datasets: [{
+                label: 'Number of Students',
+                data: gradeCounts,
+                backgroundColor: '#1e90ff',
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: function(context){ return context.parsed.y + ' Students'; } } }
+            },
+            scales: {
+                y: { beginAtZero: true, ticks: { color:'#f1f2f6' } },
+                x: { ticks: { color:'#f1f2f6' } }
+            }
+        }
+    });
+
+
     const submissionTrendCtx = document.getElementById('submissionTrendChart').getContext('2d');
     const submissionTrendLabels = @json($submissionTrendLabels ?? []);
     const submissionTrendDataSets = [];
@@ -256,39 +344,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
     new Chart(submissionTrendCtx, {
         type:'line',
-        data: { labels: submissionTrendLabels, datasets: submissionTrendDataSets },
-        options: { responsive:true, plugins:{ legend:{ labels:{ color:'#f1f2f6' } } }, scales:{ y:{ beginAtZero:true, ticks:{ color:'#f1f2f6' } }, x:{ ticks:{ color:'#f1f2f6' } } } }
+        data:{ labels: submissionTrendLabels, datasets: submissionTrendDataSets },
+        options:{ responsive:true, plugins:{ legend:{ labels:{ color:'#f1f2f6' } } }, scales:{ y:{ beginAtZero:true, ticks:{ color:'#f1f2f6' } }, x:{ ticks:{ color:'#f1f2f6' } } } }
     });
 
-    // Status Pie Chart
     new Chart(document.getElementById('statusPieChart').getContext('2d'), {
         type:'doughnut',
         data:{ labels:Object.keys(statusCounts), datasets:[{ data:Object.values(statusCounts), backgroundColor:['#2ed573','#ffa502','#ff6b81'] }] },
         options:{ responsive:true, plugins:{ legend:{ position:'bottom', labels:{ color:'#f1f2f6' } } } }
     });
 
-    // Documents per Type Bar
     new Chart(document.getElementById('documentsBarChart').getContext('2d'), {
         type:'bar',
         data:{ labels:Object.keys(documentsCounts), datasets:[{ label:'Completed Documents', data:Object.values(documentsCounts), backgroundColor:'#1e90ff', borderRadius:5 }] },
         options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, ticks:{ color:'#f1f2f6' } }, x:{ ticks:{ color:'#f1f2f6' } } } }
     });
 
-    // Pending Duration Chart
     new Chart(document.getElementById('pendingDurationChart').getContext('2d'), {
         type:'line',
         data:{ labels:Object.keys(pendingDurationCounts), datasets:[{ label:'Pending Documents', data:Object.values(pendingDurationCounts), borderColor:'#ffa502', backgroundColor:'rgba(255,165,2,0.2)', fill:true, tension:0.3, pointRadius:5 }] },
         options:{ responsive:true, plugins:{ legend:{ labels:{ color:'#f1f2f6' } } }, scales:{ y:{ beginAtZero:true, ticks:{ color:'#f1f2f6' } }, x:{ ticks:{ color:'#f1f2f6' } } } }
     });
 
-    // Submission Percentage Chart
-    new Chart(document.getElementById('submissionPercentageChart').getContext('2d'), {
-        type:'bar',
-        data:{ labels:Object.keys(submissionPercentage), datasets:[{ label:'% Students Submitted', data:Object.values(submissionPercentage), backgroundColor:'#3742fa', borderRadius:5 }] },
-        options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, ticks:{ color:'#f1f2f6', callback: function(value){return value+"%"} } }, x:{ ticks:{ color:'#f1f2f6' } } } }
-    });
-
-    // Monthly / Yearly Uploads Chart
     const uploadsChartCtx = document.getElementById('uploadsChart').getContext('2d');
     let uploadsChart = new Chart(uploadsChartCtx, {
         type:'line',

@@ -15,7 +15,7 @@ class Enrollment extends Model
 
     protected $fillable = [
         'school_year',
-        'grade_level_to_enroll',
+        'grade_level', // ✅ added this column for year level
         'with_lrn',
         'returning',
         'last_name',
@@ -29,12 +29,15 @@ class Enrollment extends Model
         'place_of_birth',
         'sex',
         'mother_tongue',
-        'is_ip',
-        'ip_specify',
-        'is_4ps_beneficiary',
-        'household_id_no',
-        'is_pwd',
-        'disability_type',
+
+        // ✅ Updated additional learner details as text
+        'indigenous_people',      // previously is_ip / ip_specify
+        'fourps_beneficiary',     // previously is_4ps_beneficiary / household_id_no
+        'learner_with_disability', // previously is_pwd / disability_type
+
+        'household_id_no',        // optional, can keep if needed
+        'disability_type',        // optional, can keep if needed
+
         'current_house_no',
         'current_street',
         'current_barangay',
@@ -71,6 +74,7 @@ class Enrollment extends Model
         'updated_at' => 'datetime',
     ];
 
+
     // ✅ Computed age attribute
     public function getAgeAttribute()
     {
@@ -100,5 +104,4 @@ class Enrollment extends Model
     {
         return $this->studentDocuments();
     }
-
 }

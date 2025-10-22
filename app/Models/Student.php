@@ -122,10 +122,7 @@ class Student extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function guardian()
-    {
-        return $this->belongsTo(Guardian::class);
-    }
+
 
     public function class()
     {
@@ -137,51 +134,6 @@ class Student extends Model
         return $this->belongsToMany(Classes::class, 'class_student', 'student_id', 'class_id');
     }
 
-    public function subjects()
-    {
-        return $this->belongsToMany(Subject::class, 'grades')
-                    ->withPivot('quarter', 'grade', 'remarks', 'teacher_id');
-    }
-
-    public function grades()
-    {
-        return $this->hasMany(Grade::class);
-    }
-
-    public function subjectStream()
-    {
-        return $this->belongsTo(SubjectStream::class);
-    }
-
-    // 🔗 NEW: Many-to-Many relationship with teachers
-    public function teachers()
-    {
-        return $this->belongsToMany(Teacher::class, 'student_teacher', 'student_id', 'teacher_id')
-                    ->withTimestamps();
-    }
-
-    // ================================
-    // 🔗 NEW: Grade table relationships
-    // ================================
-    public function kinderGrades()
-    {
-        return $this->hasMany(KindergartenGrade::class, 'student_id');
-    }
-
-    public function elementaryGrades()
-    {
-        return $this->hasMany(ElementaryGrade::class, 'student_id');
-    }
-
-    public function juniorHighGrades()
-    {
-        return $this->hasMany(JuniorHighGrade::class, 'student_id');
-    }
-
-    public function seniorHighGrades()
-    {
-        return $this->hasMany(SeniorHighGrade::class, 'student_id');
-    }
 
     // ================================
     // 🔗 Accessors

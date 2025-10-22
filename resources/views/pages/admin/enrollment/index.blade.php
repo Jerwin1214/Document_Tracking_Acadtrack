@@ -28,7 +28,8 @@
             {{-- ✅ Document Checklist Button --}}
             <a href="{{ route('admin.documents.checklist') }}"
                class="btn btn-outline-secondary btn-sm shadow-sm d-flex align-items-center gap-1"
-               data-bs-toggle="tooltip" title="Document Checklist">
+               style="width:38px; height:38px; display:flex; align-items:center; justify-content:center;"
+       data-bs-toggle="tooltip" title="Document Checklist">
                <i class="fa-solid fa-folder-open"></i>
             </a>
 
@@ -53,6 +54,24 @@
             </div>
         </div>
     </div>
+{{-- Grade Level Filter --}}
+<div class="dropdown">
+    <button class="btn btn-outline-secondary btn-sm dropdown-toggle shadow-sm" type="button"
+            id="gradeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        {{ $selectedGrade ?? 'All Grades' }}
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="gradeDropdown">
+        <li><a class="dropdown-item" href="{{ route('admin.enrollment.index', ['status' => $status, 'grade' => 'all']) }}">All Grades</a></li>
+        @foreach($grades as $grade)
+            <li>
+                <a class="dropdown-item" href="{{ route('admin.enrollment.index', ['status' => $status, 'grade' => $grade]) }}">
+                    {{ $grade }}
+                </a>
+            </li>
+        @endforeach
+    </ul>
+</div>
+
 
     {{-- ✅ Enrollments Table --}}
     <div class="card border-0 shadow-sm rounded-3">
@@ -80,7 +99,7 @@
                         @foreach($enrollments as $enrollment)
                             @php
                                 $requiredCount = count($allDocuments);
-                                $uploadedCount = $enrollment->studentDocuments->count();
+                                $uploadedCount = $enrollment->studentDocuments->where('status', 'Submitted')->count();
                                 $allComplete = ($uploadedCount >= $requiredCount);
                             @endphp
                             <tr>
@@ -138,101 +157,106 @@
                                         @endif
                                     </div>
 
-                                    {{-- ✅ Documents Modal --}}
-                                    <div class="modal fade" id="documentsModal{{ $enrollment->id }}" tabindex="-1" aria-labelledby="documentsModalLabel{{ $enrollment->id }}" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered modal-xl">
-                                            <div class="modal-content rounded-4 shadow-lg border-0">
-                                                <div class="modal-header bg-primary text-white rounded-top-4">
-                                                    <h5 class="modal-title" id="documentsModalLabel{{ $enrollment->id }}">
-                                                        <i class="fa-solid fa-file-lines me-2"></i> Completed Documents - {{ $enrollment->first_name }} {{ $enrollment->last_name }}
-                                                    </h5>
-                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+{{-- ✅ Documents Modal --}}
+<div class="modal fade" id="documentsModal{{ $enrollment->id }}" tabindex="-1" aria-labelledby="documentsModalLabel{{ $enrollment->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content rounded-4 shadow-lg border-0">
+            <div class="modal-header bg-primary text-white rounded-top-4">
+                <h5 class="modal-title" id="documentsModalLabel{{ $enrollment->id }}">
+                    <i class="fa-solid fa-file-lines me-2"></i> Documents - {{ $enrollment->first_name }} {{ $enrollment->last_name }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                <div class="row g-4">
+
+                    {{-- Left: Submitted Documents --}}
+                    <div class="col-md-6">
+                        <h6 class="text-secondary mb-3">Submitted Documents</h6>
+                        @php
+                            $submittedDocuments = $enrollment->studentDocuments->where('status', 'Submitted');
+                        @endphp
+                        @if($submittedDocuments->count() > 0)
+                            <ul class="list-group list-group-flush">
+                                @foreach($submittedDocuments as $doc)
+                                    @php
+                                        $fileUrl = $doc->file_path ? asset('storage/student_documents/' . basename($doc->file_path)) : null;
+                                    @endphp
+                                    <li class="list-group-item d-flex justify-content-between align-items-center hover-shadow rounded-3 mb-2 p-3">
+                                        <div class="d-flex flex-column w-100">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div>
+                                                    <i class="fa-solid fa-file-lines me-2 text-primary"></i>
+                                                    {{ $doc->document->name ?? 'Unknown Document' }}
                                                 </div>
-
-                                                <div class="modal-body p-4">
-                                                    <div class="row g-4">
-                                                        {{-- Left: Completed Documents --}}
-                                                        <div class="col-md-6">
-                                                            <h6 class="text-secondary mb-3">Completed Documents</h6>
-                                                            @php
-                                                                $completedDocs = $enrollment->studentDocuments->filter(fn($doc) => ($doc->status ?? '') === 'Complete');
-                                                            @endphp
-                                                            @if($completedDocs->count() > 0)
-                                                                <ul class="list-group list-group-flush">
-                                                                    @foreach($completedDocs as $studentDocument)
-                                                                        @php
-                                                                            $fileUrl = asset('storage/student_documents/' . basename($studentDocument->file_path));
-                                                                        @endphp
-                                                                        <li class="list-group-item d-flex justify-content-between align-items-center hover-shadow rounded-3 mb-2 p-3">
-                                                                            <div>
-                                                                                <i class="fa-solid fa-file-lines me-2 text-primary"></i>
-                                                                                <a href="#" class="uploaded-file-link" data-file-url="{{ $fileUrl }}">
-                                                                                    {{ $studentDocument->document->name ?? 'Unknown Document' }}
-                                                                                </a>
-                                                                            </div>
-                                                                            <span class="badge bg-success rounded-pill">
-                                                                                <i class="fa-solid fa-check me-1"></i> Complete
-                                                                            </span>
-                                                                        </li>
-                                                                    @endforeach
-                                                                </ul>
-                                                            @else
-                                                                <div class="text-center text-muted py-5 border rounded-3">
-                                                                    <i class="fa-solid fa-folder-open fa-2x mb-2"></i>
-                                                                    <div>No completed documents uploaded for this student.</div>
-                                                                </div>
-                                                            @endif
-                                                        </div>
-
-                                                        {{-- Right: Upload New Document --}}
-                                                        <div class="col-md-6">
-                                                            <h6 class="text-secondary mb-3">Upload New Document</h6>
-                                                            <form action="{{ route('admin.enrollment.uploadDocument', $enrollment->id) }}"
-                                                                  method="POST" enctype="multipart/form-data"
-                                                                  id="uploadDocumentForm{{ $enrollment->id }}">
-                                                                @csrf
-                                                                <div class="mb-3">
-                                                                    <label for="document_file_{{ $enrollment->id }}" class="form-label">Choose File</label>
-                                                                    <input class="form-control form-control-sm rounded-3"
-                                                                           type="file"
-                                                                           name="document_file"
-                                                                           id="document_file_{{ $enrollment->id }}"
-                                                                           required
-                                                                           accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-                                                                    <div class="mt-2" id="previewContainer{{ $enrollment->id }}"></div>
-                                                                    @error('document_file')
-                                                                        <span class="text-danger small">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
-
-                                                                <div class="mb-3">
-                                                                    <label for="document_id_{{ $enrollment->id }}" class="form-label">Document Type</label>
-                                                                    <select class="form-select form-select-sm rounded-3" name="document_id" id="document_id_{{ $enrollment->id }}" required>
-                                                                        <option value="" selected disabled>Select Document</option>
-                                                                        @foreach($allDocuments as $doc)
-                                                                            <option value="{{ $doc->id }}">{{ $doc->name }}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                    @error('document_id')
-                                                                        <span class="text-danger small">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
-
-                                                                <button type="submit" class="btn btn-gradient-primary btn-sm w-100">
-                                                                    <i class="fa-solid fa-upload me-1"></i> Upload
-                                                                </button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="modal-footer border-0 pt-0">
-                                                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-3" data-bs-dismiss="modal">Close</button>
-                                                </div>
+                                                <span class="badge bg-success">{{ $doc->status }}</span>
+                                            </div>
+                                            <div class="mt-2">
+                                                @if($fileUrl)
+                                                    <a href="{{ $fileUrl }}" target="_blank" class="btn btn-outline-primary btn-sm">View</a>
+                                                @else
+                                                    <span class="text-muted">File not available</span>
+                                                @endif
                                             </div>
                                         </div>
-                                    </div>
-                                    {{-- ✅ End Documents Modal --}}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <div class="text-center text-muted py-5 border rounded-3">
+                                <i class="fa-solid fa-folder-open fa-2x mb-2"></i>
+                                <div>No submitted documents yet for this student.</div>
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Right: Upload New Document(s) --}}
+                    <div class="col-md-6">
+                        <h6 class="text-secondary mb-3">Upload New Document(s)</h6>
+                        <form action="{{ route('admin.enrollment.uploadDocument', $enrollment->id) }}" method="POST" enctype="multipart/form-data" id="uploadDocumentForm{{ $enrollment->id }}">
+                            @csrf
+                            <div id="document-container-{{ $enrollment->id }}">
+                                <div class="document-row mb-3 d-flex gap-2 align-items-start">
+                                    <input class="form-control form-control-sm rounded-3"
+                                           type="file"
+                                           name="document_file[]"
+                                           accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                           required>
+                                    <select class="form-select form-select-sm rounded-3 document-select" name="document_id[]" required>
+                                        <option value="" selected disabled>Select Document</option>
+                                        @foreach($allDocuments as $doc)
+                                            <option value="{{ $doc->id }}">{{ $doc->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <button type="button" class="btn btn-danger btn-sm remove-row" title="Remove">&times;</button>
+                                </div>
+                            </div>
+
+                            <button type="button" id="add-document-{{ $enrollment->id }}" class="btn btn-secondary btn-sm mb-3 w-100">
+                                <i class="fa-solid fa-plus me-1"></i> Add Another Document
+                            </button>
+
+                            <button type="submit" class="btn btn-gradient-primary btn-sm w-100">
+                                <i class="fa-solid fa-upload me-1"></i> Upload Document(s)
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary btn-sm rounded-3" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- ✅ End Documents Modal --}}
+
+
+
+
                                 </td>
                             </tr>
                         @endforeach
@@ -301,10 +325,8 @@ $(document).ready(function() {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-        new bootstrap.Tooltip(tooltipTriggerEl)
-    });
+    // Initialize tooltips
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
 
     // Archive / Restore buttons
     document.querySelectorAll('.archive-btn').forEach(btn => {
@@ -319,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Yes, archive it!',
                 cancelButtonText: 'Cancel'
-            }).then((result) => { if (result.isConfirmed) form.submit(); });
+            }).then(result => { if (result.isConfirmed) form.submit(); });
         });
     });
 
@@ -335,72 +357,129 @@ document.addEventListener('DOMContentLoaded', function () {
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: 'Yes, restore it!',
                 cancelButtonText: 'Cancel'
-            }).then((result) => { if (result.isConfirmed) form.submit(); });
+            }).then(result => { if (result.isConfirmed) form.submit(); });
         });
     });
 
-    // File upload previews
-    document.querySelectorAll('form[id^="uploadDocumentForm"]').forEach(form => {
-        const fileInput = form.querySelector('input[type="file"]');
-        const previewContainer = form.querySelector('div[id^="previewContainer"]');
-
+    // File preview function
+    function attachFilePreview(fileInput, previewContainer) {
         fileInput.addEventListener('change', function() {
-            previewContainer.innerHTML = '';
             const file = this.files[0];
             if (!file) return;
 
             const fileExt = file.name.split('.').pop().toLowerCase();
             let iconClass = 'fa-file-lines';
 
-            const previewDiv = document.createElement('div');
-            previewDiv.classList.add('file-preview');
-            previewContainer.appendChild(previewDiv);
+            // Remove previous preview for this input
+            const existingPreview = fileInput.nextElementSibling;
+            if (existingPreview && existingPreview.classList.contains('file-preview')) existingPreview.remove();
+
+            const fileDiv = document.createElement('div');
+            fileDiv.classList.add('file-preview', 'd-flex', 'align-items-center', 'gap-2', 'mb-2');
+            previewContainer.appendChild(fileDiv);
 
             if (['jpg','jpeg','png','gif'].includes(fileExt)) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    previewDiv.innerHTML = `<div style="display:flex; align-items:center;">
-                                                <img src="${e.target.result}" style="width:50px; height:50px; object-fit:cover; border-radius:4px; margin-right:8px;">
-                                                <div>${file.name}</div>
-                                            </div>
-                                            <button type="button" title="Remove">&times;</button>`;
-                    previewDiv.querySelector('button').addEventListener('click', function() {
+                    fileDiv.innerHTML = `
+                        <img src="${e.target.result}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">
+                        <span>${file.name}</span>
+                        <button type="button" class="btn btn-sm btn-outline-danger">&times;</button>
+                    `;
+                    fileDiv.querySelector('button').addEventListener('click', function() {
                         fileInput.value = '';
-                        previewContainer.innerHTML = '';
+                        fileDiv.remove();
                     });
                 };
                 reader.readAsDataURL(file);
-            } else if (['pdf'].includes(fileExt)) iconClass = 'fa-file-pdf';
-            else if (['doc','docx'].includes(fileExt)) iconClass = 'fa-file-word';
+            } else {
+                if (['pdf'].includes(fileExt)) iconClass = 'fa-file-pdf';
+                else if (['doc','docx'].includes(fileExt)) iconClass = 'fa-file-word';
 
-            if (!['jpg','jpeg','png','gif'].includes(fileExt)) {
-                previewDiv.innerHTML = `<div><i class="fa-solid ${iconClass}"></i> ${file.name}</div>
-                                        <button type="button" title="Remove">&times;</button>`;
-                previewDiv.querySelector('button').addEventListener('click', function() {
+                fileDiv.innerHTML = `
+                    <i class="fa-solid ${iconClass}"></i>
+                    <span>${file.name}</span>
+                    <button type="button" class="btn btn-sm btn-outline-danger">&times;</button>
+                `;
+                fileDiv.querySelector('button').addEventListener('click', function() {
                     fileInput.value = '';
-                    previewContainer.innerHTML = '';
+                    fileDiv.remove();
                 });
             }
+        });
+    }
 
-            form.addEventListener('submit', function(e) {
-                if (!fileInput.files.length) {
-                    e.preventDefault();
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'No File Selected',
-                        text: 'Please choose a file to upload before submitting.',
-                    });
+    // Attach preview to existing file inputs
+    document.querySelectorAll('.document-row input[type="file"]').forEach(fileInput => {
+        const enrollmentId = fileInput.closest('form').id.replace('uploadDocumentForm','');
+        const previewContainer = document.getElementById(`previewContainer${enrollmentId}`);
+        attachFilePreview(fileInput, previewContainer);
+    });
+
+    // Show/Hide "Other" input
+    document.querySelectorAll('.document-select').forEach(select => {
+        select.addEventListener('change', function() {
+            const otherInputDiv = document.getElementById(this.dataset.otherInput);
+            if (this.value.toLowerCase() === 'other') {
+                otherInputDiv.classList.remove('d-none');
+                otherInputDiv.querySelector('input').required = true;
+            } else {
+                otherInputDiv.classList.add('d-none');
+                otherInputDiv.querySelector('input').required = false;
+            }
+        });
+    });
+
+    // Dynamic add/remove document rows
+    document.querySelectorAll('[id^="add-document-"]').forEach(btn => {
+        const enrollmentId = btn.id.split('-')[2];
+        const container = document.getElementById(`document-container-${enrollmentId}`);
+        const previewContainer = document.getElementById(`previewContainer${enrollmentId}`);
+
+        btn.addEventListener('click', function() {
+            const row = document.createElement('div');
+            row.classList.add('document-row','mb-3','d-flex','gap-2','align-items-start');
+            row.innerHTML = `
+                <input class="form-control form-control-sm rounded-3" type="file" name="document_file[]" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+                <select class="form-select form-select-sm rounded-3 document-select" name="document_id[]" required>
+                    <option value="" selected disabled>Select Document</option>
+                    @foreach($allDocuments as $doc)
+                        <option value="{{ $doc->id }}">{{ $doc->name }}</option>
+                    @endforeach
+                </select>
+                <button type="button" class="btn btn-danger btn-sm remove-row" title="Remove">&times;</button>
+            `;
+            container.appendChild(row);
+
+            // Remove row
+            row.querySelector('.remove-row').addEventListener('click', () => row.remove());
+
+            // Attach preview to new file input
+            const fileInput = row.querySelector('input[type="file"]');
+            attachFilePreview(fileInput, previewContainer);
+
+            // Attach change event for "Other" select if needed
+            const selectInput = row.querySelector('.document-select');
+            selectInput.addEventListener('change', function() {
+                const otherInputDiv = document.getElementById(this.dataset.otherInput);
+                if (this.value.toLowerCase() === 'other') {
+                    otherInputDiv.classList.remove('d-none');
+                    otherInputDiv.querySelector('input').required = true;
+                } else if (otherInputDiv) {
+                    otherInputDiv.classList.add('d-none');
+                    otherInputDiv.querySelector('input').required = false;
                 }
             });
         });
     });
 
-    // Uploaded documents click preview
+    // Uploaded documents preview on click
     document.querySelectorAll('.uploaded-file-link').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const fileUrl = this.dataset.fileUrl;
             let content = '';
+
             if(fileUrl.match(/\.(jpg|jpeg|png|gif)$/i)) {
                 content = `<img src="${fileUrl}" style="width:100%; max-height:90vh; object-fit:contain;" />`;
             } else if(fileUrl.endsWith('.pdf')) {
@@ -408,6 +487,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 content = `<div style="text-align:center; font-size:1rem;">Preview not available for this file type.<br><a href="${fileUrl}" target="_blank">Download file</a></div>`;
             }
+
             Swal.fire({
                 html: content,
                 width: '90%',
@@ -420,4 +500,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+
 @endsection

@@ -31,6 +31,26 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-3">
+    <label class="form-label fw-bold">Grade Level to Enroll</label>
+    <select name="grade_level" class="form-select" required>
+        <option value="" disabled selected>Select Grade Level</option>
+        <option value="Kindergarten" {{ old('grade_level', $enrollment->grade_level ?? '') == 'Kindergarten' ? 'selected' : '' }}>Kindergarten</option>
+        <option value="Grade 1" {{ old('grade_level', $enrollment->grade_level ?? '') == 'Grade 1' ? 'selected' : '' }}>Grade 1</option>
+        <option value="Grade 2" {{ old('grade_level', $enrollment->grade_level ?? '') == 'Grade 2' ? 'selected' : '' }}>Grade 2</option>
+        <option value="Grade 3" {{ old('grade_level', $enrollment->grade_level ?? '') == 'Grade 3' ? 'selected' : '' }}>Grade 3</option>
+        <option value="Grade 4" {{ old('grade_level', $enrollment->grade_level ?? '') == 'Grade 4' ? 'selected' : '' }}>Grade 4</option>
+        <option value="Grade 5" {{ old('grade_level', $enrollment->grade_level ?? '') == 'Grade 5' ? 'selected' : '' }}>Grade 5</option>
+        <option value="Grade 6" {{ old('grade_level', $enrollment->grade_level ?? '') == 'Grade 6' ? 'selected' : '' }}>Grade 6</option>
+        <option value="Grade 7" {{ old('grade_level', $enrollment->grade_level ?? '') == 'Grade 7' ? 'selected' : '' }}>Grade 7</option>
+        <option value="Grade 8" {{ old('grade_level', $enrollment->grade_level ?? '') == 'Grade 8' ? 'selected' : '' }}>Grade 8</option>
+        <option value="Grade 9" {{ old('grade_level', $enrollment->grade_level ?? '') == 'Grade 9' ? 'selected' : '' }}>Grade 9</option>
+        <option value="Grade 10" {{ old('grade_level', $enrollment->grade_level ?? '') == 'Grade 10' ? 'selected' : '' }}>Grade 10</option>
+        <option value="Grade 11" {{ old('grade_level', $enrollment->grade_level ?? '') == 'Grade 11' ? 'selected' : '' }}>Grade 11</option>
+        <option value="Grade 12" {{ old('grade_level', $enrollment->grade_level ?? '') == 'Grade 12' ? 'selected' : '' }}>Grade 12</option>
+    </select>
+</div>
+
 
         {{-- LEARNER INFO --}}
         <div class="card border-0 shadow-sm rounded-3 mb-3">
@@ -96,27 +116,33 @@
             </div>
         </div>
 
-        {{-- ADDITIONAL INFO --}}
-        <div class="card border-0 shadow-sm rounded-3 mb-3">
-            <div class="card-header bg-light fw-bold">Additional Learner Details</div>
-            <div class="card-body row g-3">
-                <div class="col-md-4">
-                    <label class="form-label">Belonging to Indigenous Peoples?</label>
-                    <input type="text" name="ip_specify" class="form-control"
-                           value="{{ old('ip_specify', $enrollment->ip_specify ?? '') }}" placeholder="If yes, specify">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">4Ps Beneficiary?</label>
-                    <input type="text" name="household_id_no" class="form-control"
-                           value="{{ old('household_id_no', $enrollment->household_id_no ?? '') }}" placeholder="If yes, enter ID number">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Learner with Disability?</label>
-                    <input type="text" name="disability_type" class="form-control"
-                           value="{{ old('disability_type', $enrollment->disability_type ?? '') }}" placeholder="If yes, specify type">
-                </div>
-            </div>
+  {{-- ADDITIONAL INFO --}}
+<div class="card border-0 shadow-sm rounded-3 mb-3">
+    <div class="card-header bg-light fw-bold">Additional Learner Details</div>
+    <div class="card-body row g-3">
+        <div class="col-md-4">
+            <label class="form-label">Indigenous People</label>
+            <input type="text" name="indigenous_people" class="form-control"
+                   value="{{ old('indigenous_people', $enrollment->indigenous_people ?? '') }}"
+                   placeholder="Specify if applicable">
         </div>
+
+        <div class="col-md-4">
+            <label class="form-label">4Ps Beneficiary</label>
+            <input type="text" name="fourps_beneficiary" class="form-control"
+                   value="{{ old('fourps_beneficiary', $enrollment->fourps_beneficiary ?? '') }}"
+                   placeholder="Specify if applicable">
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Learner with Disability</label>
+            <input type="text" name="learner_with_disability" class="form-control"
+                   value="{{ old('learner_with_disability', $enrollment->learner_with_disability ?? '') }}"
+                   placeholder="Specify type if applicable">
+        </div>
+    </div>
+</div>
+
 
         {{-- ADDRESS --}}
         <div class="card border-0 shadow-sm rounded-3 mb-3">
@@ -160,7 +186,7 @@
                         <input type="text" name="father_middle_name" class="form-control" value="{{ old('father_middle_name', $enrollment->father_middle_name ?? '') }}" placeholder="Middle Name">
                         <input type="text" name="father_last_name" class="form-control" value="{{ old('father_last_name', $enrollment->father_last_name ?? '') }}" placeholder="Last Name">
                     </div>
-                    <input type="text" name="father_contact" class="form-control mt-2" value="{{ old('father_contact', $enrollment->father_contact ?? '') }}" placeholder="Contact Number">
+                    <input type="text" name="father_contact" class="form-control mt-2" value="{{ old('father_contact', $enrollment->father_contact ?? '') }}" placeholder="Contact Number" maxlength="11">
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Mother’s Maiden Name</label>
@@ -169,7 +195,7 @@
                         <input type="text" name="mother_middle_name" class="form-control" value="{{ old('mother_middle_name', $enrollment->mother_middle_name ?? '') }}" placeholder="Middle Name">
                         <input type="text" name="mother_last_name" class="form-control" value="{{ old('mother_last_name', $enrollment->mother_last_name ?? '') }}" placeholder="Last Name">
                     </div>
-                    <input type="text" name="mother_contact" class="form-control mt-2" value="{{ old('mother_contact', $enrollment->mother_contact ?? '') }}" placeholder="Contact Number">
+                    <input type="text" name="mother_contact" class="form-control mt-2" value="{{ old('mother_contact', $enrollment->mother_contact ?? '') }}" placeholder="Contact Number" maxlength="11">
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Legal Guardian</label>
@@ -178,7 +204,7 @@
                         <input type="text" name="guardian_middle_name" class="form-control" value="{{ old('guardian_middle_name', $enrollment->guardian_middle_name ?? '') }}" placeholder="Middle Name">
                         <input type="text" name="guardian_last_name" class="form-control" value="{{ old('guardian_last_name', $enrollment->guardian_last_name ?? '') }}" placeholder="Last Name">
                     </div>
-                    <input type="text" name="guardian_contact" class="form-control mt-2" value="{{ old('guardian_contact', $enrollment->guardian_contact ?? '') }}" placeholder="Contact Number">
+                    <input type="text" name="guardian_contact" class="form-control mt-2" value="{{ old('guardian_contact', $enrollment->guardian_contact ?? '') }}" placeholder="Contact Number" maxlength="11">
                 </div>
             </div>
         </div>
@@ -199,7 +225,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('enrollmentForm');
 
-    // Contact number validation
+    // ✅ Contact number validation (11 digits only)
     form.addEventListener('submit', function(e) {
         const contactFields = ['father_contact', 'mother_contact', 'guardian_contact'];
         for (let field of contactFields) {

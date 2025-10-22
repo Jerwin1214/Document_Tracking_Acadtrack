@@ -15,64 +15,6 @@ use App\Models\Classes as SchoolClass;
 
 class AdminController extends Controller
 {
-// ================= DASHBOARD
-public function index()
-{
-    // Basic counts
-    $counts = (object)[
-        'students_count' => Student::count(),
-        'teachers_count' => Teacher::count(),
-        'subjects_count' => Subject::count(),
-        'classes_count'  => SchoolClass::count(),
-        'admins_count'   => Admin::count(),
-    ];
-
-    // Student counts by department
-    $departmentCounts = [
-        'Kindergarten' => Student::where('department', 'Kindergarten')->count(),
-        'Elementary'   => Student::where('department', 'Elementary')->count(),
-        'Junior High'  => Student::where('department', 'Junior High')->count(),
-        'Senior High'  => Student::where('department', 'Senior High')->count(),
-    ];
-
-    // Student counts by grade level (Grades 1–12 + Kinder)
-    $gradeCounts = [];
-    for ($i = 1; $i <= 12; $i++) {
-        $gradeCounts['Grade ' . $i] = Student::where('year_level', $i)->count();
-    }
-    $gradeCounts['Kindergarten'] = Student::where('department', 'Kindergarten')->count();
-
-    // Senior High: count by grade + strand
-    $seniorHighStrandCounts = [
-        'Grade 11 ABM'   => Student::where('department', 'Senior High')->where('year_level', 11)->where('strand', 'ABM')->count(),
-        'Grade 11 STEM'  => Student::where('department', 'Senior High')->where('year_level', 11)->where('strand', 'STEM')->count(),
-        'Grade 11 HUMSS' => Student::where('department', 'Senior High')->where('year_level', 11)->where('strand', 'HUMSS')->count(),
-        'Grade 11 GAS'   => Student::where('department', 'Senior High')->where('year_level', 11)->where('strand', 'GAS')->count(),
-
-        'Grade 12 ABM'   => Student::where('department', 'Senior High')->where('year_level', 12)->where('strand', 'ABM')->count(),
-        'Grade 12 STEM'  => Student::where('department', 'Senior High')->where('year_level', 12)->where('strand', 'STEM')->count(),
-        'Grade 12 HUMSS' => Student::where('department', 'Senior High')->where('year_level', 12)->where('strand', 'HUMSS')->count(),
-        'Grade 12 GAS'   => Student::where('department', 'Senior High')->where('year_level', 12)->where('strand', 'GAS')->count(),
-    ];
-
-    // Gender counts
-    $genderCounts = Student::select('gender', DB::raw('COUNT(*) as count'))
-        ->groupBy('gender')
-        ->pluck('count', 'gender')
-        ->toArray();
-
-    $genderCounts = array_merge(['Male' => 0, 'Female' => 0], $genderCounts);
-
-    return view('pages.admin.dashboard', compact(
-        'counts',
-        'departmentCounts',
-        'gradeCounts',
-        'seniorHighStrandCounts',
-        'genderCounts'
-    ));
-}
-
-
 
     // ================= PROFILE & SETTINGS
     public function showProfile()
@@ -166,15 +108,19 @@ public function updatePassword(Request $request)
     return back()->with('success', 'Password updated successfully');
 }
 
-    // ================= MESSAGES
-    public function showMessages()
-    {
-        return view('pages.admin.messages.index');
-    }
+public function updateEmail(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email|unique:users,email,' . auth()->id(),
+    ]);
 
-    public function showMessage()
-    {
-        return view('pages.admin.messages.show');
-    }
+    $user = auth()->user();
+    $user->email = $request->email;
+    $user->save();
+
+    return back()->with('success', '✅ Email updated successfully!');
+}
+
+
 
 }

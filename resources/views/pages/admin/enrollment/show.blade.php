@@ -18,18 +18,24 @@
              alt="Acadtrack Logo"
              class="logo-img rounded-circle">
     </div>
-
-    {{-- School Year & LRN --}}
-    <div class="row mb-3">
-        <div class="col-md-3">
-            <label class="fw-bold">School Year</label>
-            <div class="border p-2 rounded">{{ $enrollment->school_year }}</div>
-        </div>
-        <div class="col-md-3">
-            <label class="fw-bold">Learner Reference No. (LRN)</label>
-            <div class="border p-2 rounded">{{ $enrollment->lrn ?? '-' }}</div>
-        </div>
+{{-- School Year, Grade Level & LRN --}}
+<div class="row mb-3">
+    <div class="col-md-3">
+        <label class="fw-bold">School Year</label>
+        <div class="border p-2 rounded">{{ $enrollment->school_year }}</div>
     </div>
+
+    <div class="col-md-3">
+        <label class="fw-bold">Grade Level</label>
+        <div class="border p-2 rounded">{{ $enrollment->grade_level ?? '-' }}</div>
+    </div>
+
+    <div class="col-md-3">
+        <label class="fw-bold">Learner Reference No. (LRN)</label>
+        <div class="border p-2 rounded">{{ $enrollment->lrn ?? '-' }}</div>
+    </div>
+</div>
+
 
     {{-- Learner Information --}}
     <div class="border p-3 mb-3 rounded-3 shadow-sm">
@@ -72,38 +78,37 @@
                 <label class="form-label">Mother Tongue</label>
                 <div class="border p-2 rounded">{{ $enrollment->mother_tongue ?? '-' }}</div>
             </div>
+{{-- ADDITIONAL INFO --}}
+<div class="card border-0 shadow-sm rounded-3 mb-3">
+    <div class="card-header bg-light fw-bold">Additional Learner Details</div>
+    <div class="card-body row g-3">
 
-            {{-- Indigenous Peoples --}}
-            <div class="col-md-4 mt-2">
-                <label class="form-label">Indigenous Peoples?</label>
-                @if($enrollment->is_ip)
-                    <div class="border p-2 rounded">Specify: {{ $enrollment->ip_specify ?? '-' }}</div>
-                @else
-                    <div class="border p-2 rounded">-</div>
-                @endif
-            </div>
-
-            {{-- 4Ps Beneficiary --}}
-            <div class="col-md-4 mt-2">
-                <label class="form-label">4Ps Beneficiary?</label>
-                @if($enrollment->is_4ps_beneficiary)
-                    <div class="border p-2 rounded">ID No.: {{ $enrollment->household_id_no ?? '-' }}</div>
-                @else
-                    <div class="border p-2 rounded">-</div>
-                @endif
-            </div>
-
-            {{-- Learner with Disability --}}
-            <div class="col-md-4 mt-2">
-                <label class="form-label">Learner with Disability?</label>
-                @if($enrollment->is_pwd)
-                    <div class="border p-2 rounded">Type: {{ $enrollment->disability_type ?? '-' }}</div>
-                @else
-                    <div class="border p-2 rounded">-</div>
-                @endif
+        {{-- Indigenous Peoples --}}
+        <div class="col-md-4 mt-2">
+            <label class="form-label">Indigenous Peoples?</label>
+            <div class="border p-2 rounded">
+                {{ $enrollment->indigenous_people ?? '-' }}
             </div>
         </div>
+
+        {{-- 4Ps Beneficiary --}}
+        <div class="col-md-4 mt-2">
+            <label class="form-label">4Ps Beneficiary?</label>
+            <div class="border p-2 rounded">
+                {{ $enrollment->fourps_beneficiary ?? '-' }}
+            </div>
+        </div>
+
+        {{-- Learner with Disability --}}
+        <div class="col-md-4 mt-2">
+            <label class="form-label">Learner with Disability?</label>
+            <div class="border p-2 rounded">
+                {{ $enrollment->learner_with_disability ?? '-' }}
+            </div>
+        </div>
+
     </div>
+</div>
 
     {{-- Address Section --}}
     <div class="border p-3 mb-3 rounded-3 shadow-sm">

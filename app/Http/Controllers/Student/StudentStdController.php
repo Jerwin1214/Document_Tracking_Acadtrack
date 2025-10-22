@@ -16,32 +16,7 @@ class StudentStdController extends Controller
     /**
      * Student dashboard
      */
-    public function dashboard(): View|Factory|Application
-    {
-        $student = Student::with(['class', 'subjects'])
-            ->where('user_id', auth()->id())
-            ->first();
 
-        $totalSubjects = $student && $student->subjects ? $student->subjects->count() : 0;
-
-        $announcements = \App\Models\Announcement::latest()->take(5)->get();
-
-        $quotes = [
-            "Education is the most powerful weapon you can use to change the world.",
-            "Success doesn’t come to you, you go to it.",
-            "Your limitation—it’s only your imagination.",
-            "Great things never come from comfort zones.",
-            "Dream it. Wish it. Do it.",
-        ];
-        $quote = $quotes[array_rand($quotes)];
-
-        return view('pages.students.dashboard', compact(
-            'student',
-            'totalSubjects',
-            'announcements',
-            'quote'
-        ));
-    }
 
     /**
      * Show the student profile page

@@ -15,16 +15,37 @@
         @csrf
         @method('PATCH')
 
-        {{-- SCHOOL INFO --}}
-        <div class="card border-0 shadow-sm rounded-3 mb-3">
-            <div class="card-body row g-3">
-                <div class="col-md-3">
-                    <label class="form-label fw-bold">School Year</label>
-                    <input type="text" name="school_year" class="form-control" placeholder="2025-2026"
-                           value="{{ old('school_year', $enrollment->school_year) }}" required>
-                </div>
-            </div>
+{{-- SCHOOL INFO --}}
+<div class="card border-0 shadow-sm rounded-3 mb-3">
+    <div class="card-body row g-3">
+        <div class="col-md-3">
+            <label class="form-label fw-bold">School Year</label>
+            <input type="text" name="school_year" class="form-control" placeholder="2025-2026"
+                   value="{{ old('school_year', $enrollment->school_year) }}" required>
         </div>
+
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Grade Level</label>
+            <select name="grade_level" class="form-select" required>
+                <option value="">-- Select Grade Level --</option>
+                <option value="Kindergarten" {{ old('grade_level', $enrollment->grade_level) == 'Kindergarten' ? 'selected' : '' }}>Kindergarten</option>
+                <option value="Grade 1" {{ old('grade_level', $enrollment->grade_level) == 'Grade 1' ? 'selected' : '' }}>Grade 1</option>
+                <option value="Grade 2" {{ old('grade_level', $enrollment->grade_level) == 'Grade 2' ? 'selected' : '' }}>Grade 2</option>
+                <option value="Grade 3" {{ old('grade_level', $enrollment->grade_level) == 'Grade 3' ? 'selected' : '' }}>Grade 3</option>
+                <option value="Grade 4" {{ old('grade_level', $enrollment->grade_level) == 'Grade 4' ? 'selected' : '' }}>Grade 4</option>
+                <option value="Grade 5" {{ old('grade_level', $enrollment->grade_level) == 'Grade 5' ? 'selected' : '' }}>Grade 5</option>
+                <option value="Grade 6" {{ old('grade_level', $enrollment->grade_level) == 'Grade 6' ? 'selected' : '' }}>Grade 6</option>
+                <option value="Grade 7" {{ old('grade_level', $enrollment->grade_level) == 'Grade 7' ? 'selected' : '' }}>Grade 7</option>
+                <option value="Grade 8" {{ old('grade_level', $enrollment->grade_level) == 'Grade 8' ? 'selected' : '' }}>Grade 8</option>
+                <option value="Grade 9" {{ old('grade_level', $enrollment->grade_level) == 'Grade 9' ? 'selected' : '' }}>Grade 9</option>
+                <option value="Grade 10" {{ old('grade_level', $enrollment->grade_level) == 'Grade 10' ? 'selected' : '' }}>Grade 10</option>
+                <option value="Grade 11" {{ old('grade_level', $enrollment->grade_level) == 'Grade 11' ? 'selected' : '' }}>Grade 11</option>
+                <option value="Grade 12" {{ old('grade_level', $enrollment->grade_level) == 'Grade 12' ? 'selected' : '' }}>Grade 12</option>
+            </select>
+        </div>
+    </div>
+</div>
+
 
         {{-- LEARNER INFO --}}
         <div class="card border-0 shadow-sm rounded-3 mb-3">
@@ -90,29 +111,31 @@
             </div>
         </div>
 
-        {{-- ADDITIONAL LEARNER DETAILS --}}
-        <div class="card border-0 shadow-sm rounded-3 mb-3">
-            <div class="card-header bg-light fw-bold">Additional Learner Details</div>
-            <div class="card-body row g-3">
-                <div class="col-md-4">
-                    <label class="form-label">Belonging to Indigenous Peoples?</label>
-                    <input type="text" name="ip_specify" class="form-control"
-                           placeholder="If yes, specify" value="{{ old('ip_specify', $enrollment->ip_specify) }}">
-                </div>
-
-                <div class="col-md-4">
-                    <label class="form-label">4Ps Beneficiary?</label>
-                    <input type="text" name="household_id_no" class="form-control"
-                           placeholder="If yes, enter ID number" value="{{ old('household_id_no', $enrollment->household_id_no) }}">
-                </div>
-
-                <div class="col-md-4">
-                    <label class="form-label">Learner with Disability?</label>
-                    <input type="text" name="disability_type" class="form-control"
-                           placeholder="If yes, specify type" value="{{ old('disability_type', $enrollment->disability_type) }}">
-                </div>
-            </div>
+      {{-- ADDITIONAL LEARNER DETAILS --}}
+<div class="card border-0 shadow-sm rounded-3 mb-3">
+    <div class="card-header bg-light fw-bold">Additional Learner Details</div>
+    <div class="card-body row g-3">
+        <div class="col-md-4">
+            <label class="form-label">Belonging to Indigenous Peoples?</label>
+            <input type="text" name="indigenous_people" class="form-control"
+                   placeholder="If yes, specify" value="{{ old('indigenous_people', $enrollment->indigenous_people ?? '') }}">
         </div>
+
+        <div class="col-md-4">
+            <label class="form-label">4Ps Beneficiary?</label>
+            <input type="text" name="fourps_beneficiary" class="form-control"
+                   placeholder="If yes, enter ID number" value="{{ old('fourps_beneficiary', $enrollment->fourps_beneficiary ?? '') }}">
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Learner with Disability?</label>
+            <input type="text" name="learner_with_disability" class="form-control"
+                   placeholder="If yes, specify type" value="{{ old('learner_with_disability', $enrollment->learner_with_disability ?? '') }}">
+        </div>
+    </div>
+</div>
+
+
 
         {{-- ADDRESS --}}
         <div class="card border-0 shadow-sm rounded-3 mb-3">
