@@ -13,9 +13,11 @@ class DocumentSeeder extends Seeder
         $docs = [
             '2x2 Picture',
             'PSA',
-            'Photocopy and Original Card',
+            'Original Card',
             'Baptismal Certificate',
-            'Good Moral'
+            'Good Moral',
+            'Form 137'
+
         ];
 
         foreach($docs as $doc){

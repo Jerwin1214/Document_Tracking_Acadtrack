@@ -14,22 +14,31 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Check if admin already exists
-        $existing = DB::table('users')->where('role_id', 1)->first();
-        if ($existing) {
-            $this->command->info('Admin user already exists. Skipping.');
-            return;
+        $admins = [
+            [
+                'user_id'    => 'admin001',
+                'password'   => Hash::make('Admin@123'),
+                'role_id'    => 1,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'user_id'    => 'testinglaravel001',
+                'password'   => Hash::make('csulalloproject'),
+                'role_id'    => 1,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+        ];
+
+        foreach ($admins as $admin) {
+            $existing = DB::table('users')->where('user_id', $admin['user_id'])->first();
+            if ($existing) {
+                $this->command->info("Admin user {$admin['user_id']} already exists. Skipping.");
+                continue;
+            }
+            DB::table('users')->insert($admin);
+            $this->command->info("✅ Admin user created: user_id = {$admin['user_id']}");
         }
-
-        // Insert admin user
-        DB::table('users')->insert([
-            'user_id' => 'admin001', // This is what you will use to log in
-            'password' => Hash::make('Admin@123'), // Default password
-            'role_id' => 1, // 1 = admin
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
-
-        $this->command->info('Admin user created: user_id = admin001, password = Admin@123');
     }
 }
