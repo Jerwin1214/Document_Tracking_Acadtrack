@@ -1,4 +1,7 @@
 <IfModule mod_rewrite.c>
+    # Allow Apache to follow symbolic links (needed for public/storage)
+    Options +FollowSymLinks -MultiViews -Indexes
+
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
