@@ -18,7 +18,6 @@ class AdminSeeder extends Seeder
             [
                 'name'        => 'Admin001',
                 'email'       => 'erwinarellano53@gmail.com',
-                'password'    => Hash::make('Admin@123'),
                 'user_role_id'=> 1, // Admin role
                 'created_at'  => Carbon::now(),
                 'updated_at'  => Carbon::now(),
@@ -26,7 +25,6 @@ class AdminSeeder extends Seeder
             [
                 'name'        => 'Testing Laravel',
                 'email'       => 'testinglaravel001@gmail.com',
-                'password'    => Hash::make('csulalloproject'),
                 'user_role_id'=> 1, // Admin role
                 'created_at'  => Carbon::now(),
                 'updated_at'  => Carbon::now(),
