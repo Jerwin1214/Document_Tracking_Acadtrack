@@ -1,3 +1,5 @@
-<nav class="sb-sidenav-menu-nested nav">
-    <a class="nav-link" {{$attributes}}>{{$slot}}</a>
-</nav>
+@props(['href' => '#'])
+
+<a {{ $attributes->merge(['href' => $href, 'class' => 'nav-link']) }}>
+    {{ $slot }}
+</a>
