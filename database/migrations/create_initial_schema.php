@@ -18,16 +18,16 @@ return new class extends Migration
             $table->timestamps(0);
         });
 
-        // admins
-Schema::create('users', function (Blueprint $table) {
-    $table->id();
-    $table->string('user_id')->unique(); // for login
-    $table->string('password');
-    $table->unsignedBigInteger('role_id'); // 1 = admin
-    $table->string('name')->nullable(); // optional
-    $table->rememberToken();
-    $table->timestamps();
-});
+//         // admins
+// Schema::create('users', function (Blueprint $table) {
+//     $table->id();
+//     $table->string('user_id')->unique(); // for login
+//     $table->string('password');
+//     $table->unsignedBigInteger('role_id'); // 1 = admin
+//     $table->string('name')->nullable(); // optional
+//     $table->rememberToken();
+//     $table->timestamps();
+// });
 
 
         // admin_activity_logs
