@@ -9,7 +9,16 @@
     </a>
 
     <!-- Sidebar Toggle-->
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle">
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-3 me-lg-0" id="sidebarToggle">
         <i class="fas fa-bars"></i>
     </button>
+
+    <!-- Optional: Right-side items -->
+    <ul class="navbar-nav ms-auto me-3">
+        <li class="nav-item">
+            <span class="navbar-text text-white">
+                {{ auth()->user()->name ?? 'Admin' }}
+            </span>
+        </li>
+    </ul>
 </nav>
