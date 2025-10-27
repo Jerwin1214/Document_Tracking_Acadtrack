@@ -19,6 +19,7 @@
     overflow-y: auto;
     padding-top: 20px;
     transition: all 0.3s ease;
+    z-index: 1020;
 }
 
 /* Sidebar menu links */
@@ -126,6 +127,7 @@
     #layoutSidenav_nav .sb-sidenav {
         top: 56px;
         height: calc(100% - 56px);
+        margin-left: -220px; /* collapsed by default on mobile */
     }
     #layoutSidenav_content {
         margin-left: 0;
