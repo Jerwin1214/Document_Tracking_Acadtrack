@@ -6,13 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-/**
- * @property int $id
- * @property string $name
- * @property string $email
- * @property string $password
- * @property int $role_id
- */
+
 
 class User extends Authenticatable
 {
@@ -41,7 +35,7 @@ class User extends Authenticatable
      */
     public function role()
     {
-        return $this->belongsTo(\App\Models\UserRole::class, 'role_id');
+        return $this->belongsTo(UserRole::class, 'role_id');
     }
 
     /**
@@ -56,10 +50,5 @@ class User extends Authenticatable
             3 => 'teacher',
             default => 'unknown',
         };
-    }
-
-    public function student()
-    {
-        return $this->hasOne(\App\Models\Student::class, 'user_id');
     }
 }
