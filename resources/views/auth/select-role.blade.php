@@ -105,7 +105,7 @@
   <div class="header">
     <img src="{{ asset('logo.jpg') }}" alt="Lyceum Logo">
     <div>
-      <h1>ACADTRACK DIGITAL TRACKING SYSTEM</h1>
+      <h1>ACADTRACK DIGITAL DOCUMENT TRACKING SYSTEM</h1>
       <p>Lyceum of Lal-lo</p>
     </div>
   </div>
