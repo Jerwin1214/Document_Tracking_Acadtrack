@@ -72,63 +72,6 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
-$this->call(SectionSeeder::class);
 
-        // for test guardian
-        DB::table('guardians')->insert([
-            [
-                'initials' => 'T.',
-                'first_name' => 'Test',
-                'last_name' => 'Guardian',
-                'nic' => '123456789V',
-                'phone_number' => '0712345678',
-                'created_at' => now(),
-            ],
-        ]);
-
-        // for test student
-        DB::table('students')->insert([
-            [
-                'user_id' => User::find(3)->id,
-                'first_name' => 'Test',
-                'last_name' => 'Student',
-                'gender' => 'Male',
-                'nic' => '987654321V',
-                'dob' => '2000-01-01',
-                'guardian_id' => Guardian::first()->id,
-                'created_at' => now(),
-            ]
-        ]);
-
-        // for grade table
-        DB::table('grades')->insert([
-            ['name' => 'Grade 1', 'created_at' => now()],
-            ['name' => 'Grade 2', 'created_at' => now()],
-            ['name' => 'Grade 3', 'created_at' => now()],
-            ['name' => 'Grade 4', 'created_at' => now()],
-            ['name' => 'Grade 5', 'created_at' => now()],
-            ['name' => 'Grade 6', 'created_at' => now()],
-            ['name' => 'Grade 7', 'created_at' => now()],
-            ['name' => 'Grade 8', 'created_at' => now()],
-            ['name' => 'Grade 9', 'created_at' => now()],
-            ['name' => 'Grade 10', 'created_at' => now()],
-            ['name' => 'Grade 11', 'created_at' => now()],
-            ['name' => 'After O/L', 'created_at' => now()],
-            ['name' => 'Grade 12', 'created_at' => now()],
-            ['name' => 'Grade 13', 'created_at' => now()],
-            ['name' => 'After A/L', 'created_at' => now()],
-        ]);
-
-        // for subject_streams table
-        DB::table('subject_streams')->insert([
-            ['stream_name' => 'Physical Science', 'created_at' => now()],
-            ['stream_name' => 'Biological Science', 'created_at' => now()],
-            ['stream_name' => 'Engineering Technology', 'created_at' => now()],
-            ['stream_name' => 'Bio System Technology', 'created_at' => now()],
-            ['stream_name' => 'Commerce', 'created_at' => now()],
-            ['stream_name' => 'Arts', 'created_at' => now()],
-            ['stream_name' => 'Common', 'created_at' => now()],
-            ['stream_name' => 'Other', 'created_at' => now()],
-        ]);
-    }
+}
 }
