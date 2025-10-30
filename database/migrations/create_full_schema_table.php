@@ -11,11 +11,11 @@ return new class extends Migration
         // USER ROLES
         Schema::create('user_roles', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique(); // e.g. Admin, Teacher, Student
+            $table->string('name')->unique(); // Admin, Teacher, Student
             $table->timestamps();
         });
 
-        // USERS TABLE
+        // USERS
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // ADMINS TABLE
+        // ADMINS
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -46,46 +46,24 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // TEACHERS TABLE
-        Schema::create('teachers', function (Blueprint $table) {
+        // ACTIVITY LOGS
+        Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
-            $table->string('salutation')->nullable();
-            $table->string('first_name');
-            $table->string('middle_name')->nullable();
-            $table->string('last_name');
-            $table->enum('gender', ['Male', 'Female'])->nullable();
-            $table->date('dob')->nullable();
-            $table->string('address')->nullable();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('role_id')->nullable()->constrained('user_roles')->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->string('action');
+            $table->string('model');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
 
-        // STUDENTS TABLE
-        Schema::create('students', function (Blueprint $table) {
+        // CLASSES
+        Schema::create('classes', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('middle_name')->nullable();
-            $table->string('last_name');
-            $table->enum('gender', ['Male', 'Female'])->nullable();
-            $table->date('dob')->nullable();
-            $table->string('address')->nullable();
-            $table->string('lrn', 12)->unique();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('role_id')->nullable()->constrained('user_roles')->nullOnDelete();
-            $table->enum('status', ['active', 'archived'])->default('active');
-            $table->timestamps();
-        });
-
-        // GUARDIANS TABLE
-        Schema::create('guardians', function (Blueprint $table) {
-            $table->id();
-            $table->string('first_name');
-            $table->string('middle_initial')->nullable();
-            $table->string('last_name');
-            $table->string('address')->nullable();
-            $table->string('phone')->nullable();
-            $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
+            $table->string('department')->nullable();
+            $table->string('year_level')->nullable();
+            $table->string('section')->nullable();
+            $table->string('name');
+            $table->string('year');
             $table->timestamps();
         });
 
@@ -99,7 +77,7 @@ return new class extends Migration
         // STUDENT DOCUMENTS
         Schema::create('student_documents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
+            $table->string('student_name')->nullable();
             $table->foreignId('document_id')->constrained('documents')->cascadeOnDelete();
             $table->string('file_path')->nullable();
             $table->enum('status', ['Pending', 'Submitted'])->default('Pending');
@@ -114,73 +92,36 @@ return new class extends Migration
             $table->string('grade_level')->nullable();
             $table->boolean('with_lrn')->default(false);
             $table->boolean('returning')->default(false);
-            $table->string('last_name')->nullable();
             $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('middle_name')->nullable();
-            $table->string('extension_name')->nullable();
-            $table->string('psa_birth_cert_no')->nullable();
-            $table->string('lrn')->nullable();
             $table->date('birthdate')->nullable();
             $table->string('place_of_birth')->nullable();
             $table->enum('sex', ['Male', 'Female'])->nullable();
             $table->integer('age')->nullable();
-            $table->string('mother_tongue')->nullable();
-            $table->string('ip_specify')->nullable();
-            $table->string('current_barangay')->nullable();
-            $table->string('current_city')->nullable();
-            $table->string('current_province')->nullable();
-            $table->string('current_country')->nullable();
-            $table->string('guardian_first_name')->nullable();
-            $table->string('guardian_last_name')->nullable();
-            $table->string('guardian_contact')->nullable();
-            $table->foreignId('student_id')->nullable()->constrained('students')->nullOnDelete();
             $table->timestamps();
         });
 
-        // CLASSES
-        Schema::create('classes', function (Blueprint $table) {
-            $table->id();
-            $table->string('department')->nullable();
-            $table->string('year_level')->nullable();
-            $table->string('section')->nullable();
-            $table->foreignId('teacher_id')->constrained('teachers')->cascadeOnDelete();
-            $table->string('name');
-            $table->string('year');
-            $table->timestamps();
+        // PASSWORD RESET (Laravel 8 legacy)
+        Schema::create('password_resets', function (Blueprint $table) {
+            $table->string('email')->index();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
         });
 
-        // CLASS-STUDENT (Pivot)
-        Schema::create('class_student', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('class_id')->constrained('classes')->cascadeOnDelete();
-            $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
-            $table->timestamps();
+        // PASSWORD RESET TOKENS (Laravel 10+)
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
         });
 
-        // SUBJECTS
-        Schema::create('subjects', function (Blueprint $table) {
+        // PROMOTION HISTORIES
+        Schema::create('promotion_histories', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('code')->nullable();
-            $table->string('department')->nullable();
-            $table->timestamps();
-        });
-
-        // CLASS-SUBJECT (Pivot)
-        Schema::create('class_subject', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('class_id')->constrained('classes')->cascadeOnDelete();
-            $table->foreignId('subject_id')->constrained('subjects')->cascadeOnDelete();
-            $table->timestamps();
-        });
-
-        // ACTIVITY LOGS
-        Schema::create('activity_logs', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->string('action');
-            $table->string('model');
-            $table->text('description')->nullable();
+            $table->string('student_name');
+            $table->string('previous_grade');
+            $table->string('promoted_to');
             $table->timestamps();
         });
 
@@ -196,23 +137,31 @@ return new class extends Migration
             $table->string('owner');
             $table->integer('expiration');
         });
+
+        // SESSIONS
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
+        });
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('sessions');
         Schema::dropIfExists('cache_locks');
         Schema::dropIfExists('cache');
-        Schema::dropIfExists('activity_logs');
-        Schema::dropIfExists('class_subject');
-        Schema::dropIfExists('subjects');
-        Schema::dropIfExists('class_student');
-        Schema::dropIfExists('classes');
+        Schema::dropIfExists('promotion_histories');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('password_resets');
         Schema::dropIfExists('enrollments');
         Schema::dropIfExists('student_documents');
         Schema::dropIfExists('documents');
-        Schema::dropIfExists('guardians');
-        Schema::dropIfExists('students');
-        Schema::dropIfExists('teachers');
+        Schema::dropIfExists('classes');
+        Schema::dropIfExists('activity_logs');
         Schema::dropIfExists('admin_activity_logs');
         Schema::dropIfExists('admins');
         Schema::dropIfExists('users');
