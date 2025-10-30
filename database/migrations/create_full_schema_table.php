@@ -8,13 +8,20 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // USERS TABLE (core for relationships)
+        // USER ROLES
+        Schema::create('user_roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique(); // e.g. Admin, Teacher, Student
+            $table->timestamps();
+        });
+
+        // USERS TABLE
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('role', ['admin', 'teacher', 'student'])->default('student');
+            $table->foreignId('role_id')->nullable()->constrained('user_roles')->nullOnDelete();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -24,7 +31,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('role')->default('admin');
+            $table->foreignId('role_id')->nullable()->constrained('user_roles')->nullOnDelete();
             $table->timestamps();
         });
 
@@ -50,6 +57,7 @@ return new class extends Migration
             $table->date('dob')->nullable();
             $table->string('address')->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('role_id')->nullable()->constrained('user_roles')->nullOnDelete();
             $table->timestamps();
         });
 
@@ -64,6 +72,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('lrn', 12)->unique();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('role_id')->nullable()->constrained('user_roles')->nullOnDelete();
             $table->enum('status', ['active', 'archived'])->default('active');
             $table->timestamps();
         });
@@ -80,14 +89,14 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // DOCUMENTS MASTER LIST
+        // DOCUMENTS
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();
         });
 
-        // STUDENT DOCUMENTS (many-to-many)
+        // STUDENT DOCUMENTS
         Schema::create('student_documents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
@@ -97,7 +106,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // ENROLLMENTS TABLE
+        // ENROLLMENTS
         Schema::create('enrollments', function (Blueprint $table) {
             $table->id();
             $table->enum('status', ['active', 'archived'])->default('active');
@@ -124,10 +133,11 @@ return new class extends Migration
             $table->string('guardian_first_name')->nullable();
             $table->string('guardian_last_name')->nullable();
             $table->string('guardian_contact')->nullable();
+            $table->foreignId('student_id')->nullable()->constrained('students')->nullOnDelete();
             $table->timestamps();
         });
 
-        // CLASSES TABLE
+        // CLASSES
         Schema::create('classes', function (Blueprint $table) {
             $table->id();
             $table->string('department')->nullable();
@@ -139,7 +149,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // CLASS_STUDENT (pivot)
+        // CLASS-STUDENT (Pivot)
         Schema::create('class_student', function (Blueprint $table) {
             $table->id();
             $table->foreignId('class_id')->constrained('classes')->cascadeOnDelete();
@@ -147,7 +157,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // SUBJECTS TABLE
+        // SUBJECTS
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -156,7 +166,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // CLASS_SUBJECT (pivot)
+        // CLASS-SUBJECT (Pivot)
         Schema::create('class_subject', function (Blueprint $table) {
             $table->id();
             $table->foreignId('class_id')->constrained('classes')->cascadeOnDelete();
@@ -164,7 +174,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // ACTIVITY LOGS (generic system-wide)
+        // ACTIVITY LOGS
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
@@ -174,7 +184,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // CACHE & LOCKS
+        // CACHE TABLES
         Schema::create('cache', function (Blueprint $table) {
             $table->string('key')->primary();
             $table->mediumText('value');
@@ -206,5 +216,6 @@ return new class extends Migration
         Schema::dropIfExists('admin_activity_logs');
         Schema::dropIfExists('admins');
         Schema::dropIfExists('users');
+        Schema::dropIfExists('user_roles');
     }
 };
