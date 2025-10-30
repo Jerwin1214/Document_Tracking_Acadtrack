@@ -62,7 +62,7 @@
     <x-nav-top></x-nav-top>
 
     <div id="layoutSidenav_content">
-        <div class="container-fluid mt-2">
+        <div class="container-fluid">
             <!-- Slotted content -->
             @yield('content')
             <!--  -->
