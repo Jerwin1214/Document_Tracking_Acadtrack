@@ -8,15 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('admins', function (Blueprint $table) {
-            $table->string('email')->unique()->after('name');
+        Schema::create('user_roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps(); // This adds created_at and updated_at
         });
     }
 
     public function down(): void
     {
-        Schema::table('admins', function (Blueprint $table) {
-            $table->dropColumn('email');
-        });
+        Schema::dropIfExists('user_roles');
     }
 };
