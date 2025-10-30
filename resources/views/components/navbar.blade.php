@@ -1,16 +1,14 @@
-@props(['role'=>""])
+@props(['role' => ''])
 
-<div id="layoutSidenav">
-    <div id="layoutSidenav_nav">
-        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-            <div class="sb-sidenav-menu">
-                {{$slot}}
-            </div>
-            <div class="sb-sidenav-footer">
-                <div class="small">Logged in as:</div>
-                <b title='Your Role'>
-                    {{ $role }}
-                </b>
-            </div>
-        </nav>
-    </div>
+<div id="layoutSidenav_nav">
+    <nav class="sb-sidenav sb-sidenav-dark">
+        <div class="sb-sidenav-menu">
+            {{ $slot }}
+        </div>
+
+        <div class="sb-sidenav-footer">
+            <div class="small">Logged in as:</div>
+            <strong title="Your Role">{{ $role }}</strong>
+        </div>
+    </nav>
+</div>
