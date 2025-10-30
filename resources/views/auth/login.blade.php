@@ -96,15 +96,15 @@
 
         <div class="input-group">
             <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-            <input type="text" name="user_id"
-                   class="form-control @error('user_id') is-invalid @enderror"
-                   placeholder="User ID"
-                   required
-                   @if($role === 'student')
-                        pattern="^\d{4}-\d{4}$"
-                        title="Format: YYYY-NNNN"
-                   @endif
-            >
+
+            @if ($role === 'student')
+                <input type="text" name="user_id" class="form-control @error('user_id') is-invalid @enderror"
+                       placeholder="User ID (Format: YYYY-NNNN)" required pattern="^\d{4}-\d{4}$" maxlength="9"
+                       oninput="this.value = this.value.replace(/[^0-9-]/g, '').slice(0, 9);">
+            @else
+                <input type="text" name="user_id" class="form-control @error('user_id') is-invalid @enderror"
+                       placeholder="User ID" required>
+            @endif
         </div>
         @error('user_id')
         <div class="text-danger text-start small mb-2">{{ $message }}</div>
@@ -112,11 +112,8 @@
 
         <div class="input-group">
             <span class="input-group-text"><i class="fas fa-lock"></i></span>
-            <input type="password" name="password"
-                   class="form-control @error('password') is-invalid @enderror"
-                   placeholder="Password"
-                   required
-            >
+            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
+                   placeholder="Password" required>
         </div>
         @error('password')
         <div class="text-danger text-start small mb-2">{{ $message }}</div>
@@ -127,7 +124,10 @@
         @endif
 
         <button type="submit" class="btn btn-login mt-3">LOG IN</button>
-        <a href="{{ route('forgotPassword.form') }}" class="forgot-link">Forgot password?</a>
+
+        <!-- ✅ Forgot Password Link -->
+       <a href="{{ route('forgotPassword.form') }}" class="forgot-link">Forgot password?</a>
+
     </form>
 </div>
 
