@@ -31,57 +31,61 @@ class SessionController extends Controller
         return redirect()->route('login');
     }
 
-    public function store(Request $request)
-    {
-        $role = session('user_role');
+ public function store(Request $request)
+{
+    $role = session('user_role');
 
-        $rules = [
-            'user_id' => ['required'],
-            'password' => ['required'],
-        ];
-
-        if ($role === 'student') {
-            $rules['user_id'][] = 'regex:/^\d{4}-\d{4}$/';
-        }
-
-        $credentials = $request->validate($rules);
-
-        // Attempt login using user_id and password on users table
-        if (!Auth::attempt([
-            'user_id' => $credentials['user_id'],
-            'password' => $credentials['password'],
-        ])) {
-            throw ValidationException::withMessages([
-                'user_id' => 'Invalid User ID or Password',
-            ]);
-        }
-
-        $request->session()->regenerate();
-
-        $user = auth()->user();
-
-        // Correct role mapping based on your roles table
-        $roleMap = [
-            'admin' => 1,
-            'student' => 2,
-            'teacher' => 3,
-        ];
-
-        // Check role matches session (cast to int for safety)
-        if ((int)$user->role_id !== $roleMap[$role]) {
-            Auth::logout();
-            return back()->withErrors([
-                'user_id' => "You are not authorized to log in as " . ucfirst($role) . ".",
-            ]);
-        }
-
-        return match ($role) {
-               'admin' => redirect()->route('admin.documents.dashboard')->with('greeting', 'Welcome back, Admin!'),
-            'teacher' => redirect()->route('teacher.dashboard')->with('greeting', 'Welcome back, Teacher!'),
-            'student' => redirect()->route('student.dashboard')->with('greeting', 'Welcome back, Student!'),
-            default => redirect('/')->withErrors(['role' => 'User does not have a valid role.']),
-        };
+    if (!$role) {
+        return redirect()->route('select.role')->withErrors(['role' => 'Please select a role first.']);
     }
+
+    // Validation rules
+    $rules = [
+        'user_id' => ['required', 'string'],
+        'password' => ['required', 'string'],
+    ];
+
+    $credentials = $request->validate($rules);
+
+    // Attempt login using user_id and password
+    if (!Auth::attempt([
+        'user_id' => $credentials['user_id'],
+        'password' => $credentials['password'],
+    ])) {
+        throw ValidationException::withMessages([
+            'user_id' => 'Invalid User ID or Password',
+        ]);
+    }
+
+    // Regenerate session to prevent fixation
+    $request->session()->regenerate();
+
+    $user = auth()->user();
+
+    // Correct role mapping based on your roles table
+    $roleMap = [
+        'admin' => 1,
+        'teacher' => 2,
+        'student' => 3,
+    ];
+
+    // Check role matches session
+    if ((int)$user->role_id !== $roleMap[$role]) {
+        Auth::logout();
+        return back()->withErrors([
+            'user_id' => "You are not authorized to log in as " . ucfirst($role) . ".",
+        ]);
+    }
+
+    // Redirect based on role
+    return match ($role) {
+        'admin' => redirect()->route('admin.documents.dashboard')->with('greeting', 'Welcome back, Admin!'),
+        'teacher' => redirect()->route('teacher.dashboard')->with('greeting', 'Welcome back, Teacher!'),
+        'student' => redirect()->route('student.dashboard')->with('greeting', 'Welcome back, Student!'),
+        default => redirect('/')->withErrors(['role' => 'User does not have a valid role.']),
+    };
+}
+
 
     public function destroy()
     {
