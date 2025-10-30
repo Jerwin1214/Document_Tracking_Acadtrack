@@ -15,16 +15,18 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // USERS
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->foreignId('role_id')->nullable()->constrained('user_roles')->nullOnDelete();
-            $table->rememberToken();
-            $table->timestamps();
-        });
+// USERS
+Schema::create('users', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('email')->unique();
+    $table->string('password');
+    $table->foreignId('role_id')->nullable()->constrained('user_roles')->nullOnDelete();
+    $table->rememberToken();
+    $table->timestamp('email_verified_at')->nullable(); // ✅ Add this line
+    $table->timestamps();
+});
+
 
         // ADMINS
         Schema::create('admins', function (Blueprint $table) {
