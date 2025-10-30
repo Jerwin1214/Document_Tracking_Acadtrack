@@ -8,51 +8,42 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminUserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Check if users already exist
-        if (DB::table('users')->whereIn('role_id', [1,2,3])->exists()) {
-            $this->command->info('Admin, Teacher, or Student users already exist. Skipping.');
+        // Check if admin already exists
+        if (DB::table('users')->where('role_id', 1)->exists()) {
+            $this->command->info('Admin user already exists. Skipping.');
             return;
         }
 
         DB::table('users')->insert([
             [
-                'name' => 'Admin User',
+                'user_id' => 'admin001',        // login ID
                 'email' => 'test@admin.com',
-                'user_id' => 'admin001', // login ID
                 'password' => Hash::make('123456'),
                 'role_id' => 1,
-                'is_active' => 1,
                 'email_verified_at' => now(),
-                'remember_token' => null,
+                'is_active' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Teacher User',
+                'user_id' => 'teacher001',      // login ID
                 'email' => 'test@teacher.com',
-                'user_id' => 'teacher001', // login ID
                 'password' => Hash::make('123456'),
                 'role_id' => 2,
-                'is_active' => 1,
                 'email_verified_at' => now(),
-                'remember_token' => null,
+                'is_active' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Student User',
+                'user_id' => '2025-0001',       // YYYY-NNNN format
                 'email' => 'test@student.com',
-                'user_id' => '2025-0001', // YYYY-NNNN format
                 'password' => Hash::make('123456'),
                 'role_id' => 3,
-                'is_active' => 1,
                 'email_verified_at' => now(),
-                'remember_token' => null,
+                'is_active' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
