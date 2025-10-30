@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-
-
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -30,8 +28,15 @@ class User extends Authenticatable
     ];
 
     /**
+     * Tell Laravel to use `user_id` for authentication instead of email.
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'user_id';
+    }
+
+    /**
      * Relationship to Role model (optional).
-     * If you don’t have a Role model, you can safely delete this.
      */
     public function role()
     {
@@ -40,7 +45,6 @@ class User extends Authenticatable
 
     /**
      * Convenience accessor for role as string.
-     * This allows you to call $user->role (string).
      */
     public function getRoleAttribute()
     {
