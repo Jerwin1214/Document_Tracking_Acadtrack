@@ -43,40 +43,41 @@ class UserRolesSeeder extends Seeder
         DB::table('users')->delete();
 
         // --- 4️⃣ Insert default users for each role ---
-        DB::table('users')->insert([
-            [
-                'name' => 'Admin User',
-                'user_id' => 'admin001',
-                'email' => 'test@admin.com',
-                'password' => Hash::make('password'),
-                'role_id' => 1,
-                'email_verified_at' => Carbon::now(),
-                'remember_token' => null,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'name' => 'Student User',
-                'user_id' => 'student001',
-                'email' => 'test@student.com',
-                'password' => Hash::make('password'),
-                'role_id' => 2,
-                'email_verified_at' => Carbon::now(),
-                'remember_token' => null,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'name' => 'Teacher User',
-                'user_id' => 'teacher001',
-                'email' => 'test@teacher.com',
-                'password' => Hash::make('password'),
-                'role_id' => 3,
-                'email_verified_at' => Carbon::now(),
-                'remember_token' => null,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-        ]);
+       DB::table('users')->insert([
+    [
+        'user_id' => 'admin001',
+        'email' => 'test@admin.com',
+        'password' => Hash::make('password'),
+        'role_id' => 1,
+        'is_active' => 1,
+        'email_verified_at' => Carbon::now(),
+        'remember_token' => null,
+        'created_at' => Carbon::now(),
+        'updated_at' => Carbon::now(),
+    ],
+    [
+        'user_id' => 'student001',
+        'email' => 'test@student.com',
+        'password' => Hash::make('password'),
+        'role_id' => 2,
+        'is_active' => 1,
+        'email_verified_at' => Carbon::now(),
+        'remember_token' => null,
+        'created_at' => Carbon::now(),
+        'updated_at' => Carbon::now(),
+    ],
+    [
+        'user_id' => 'teacher001',
+        'email' => 'test@teacher.com',
+        'password' => Hash::make('password'),
+        'role_id' => 3,
+        'is_active' => 1,
+        'email_verified_at' => Carbon::now(),
+        'remember_token' => null,
+        'created_at' => Carbon::now(),
+        'updated_at' => Carbon::now(),
+    ],
+]);
+
     }
 }
