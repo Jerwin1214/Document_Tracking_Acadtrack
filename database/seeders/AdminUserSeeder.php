@@ -5,50 +5,31 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class AdminUserSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
         // Check if admin already exists
-        if (DB::table('users')->where('role_id', 1)->exists()) {
+        $existing = DB::table('users')->where('role_id', 1)->first();
+        if ($existing) {
             $this->command->info('Admin user already exists. Skipping.');
             return;
         }
 
+        // Insert admin user
         DB::table('users')->insert([
-            [
-                'user_id' => 'admin001',        // login ID
-                'email' => 'test@admin.com',
-                'password' => Hash::make('123456'),
-                'role_id' => 1,
-                'is_active' => 1,
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'user_id' => 'teacher001',      // login ID
-                'email' => 'test@teacher.com',
-                'password' => Hash::make('123456'),
-                'role_id' => 2,
-                'is_active' => 1,
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'user_id' => '2025-0001',       // YYYY-NNNN format
-                'email' => 'test@student.com',
-                'password' => Hash::make('123456'),
-                'role_id' => 3,
-                'is_active' => 1,
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+            'user_id' => 'admin001', // This is what you will use to log in
+            'password' => Hash::make('Admin@123'), // Default password
+            'role_id' => 1, // 1 = admin
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
 
-        $this->command->info('Admin, Teacher, and Student users created successfully.');
+        $this->command->info('Admin user created: user_id = admin001, password = Admin@123');
     }
 }
