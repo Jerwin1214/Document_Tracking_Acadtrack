@@ -22,13 +22,33 @@ class AdminUserSeeder extends Seeder
         }
 
         // Insert admin user
-        DB::table('users')->insert([
-            'user_id' => 'admin001', // This is what you will use to log in
-            'password' => Hash::make('Admin@123'), // Default password
-            'role_id' => 1, // 1 = admin
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
+DB::table('users')->insert([
+    [
+        'name' => 'Admin Test',
+        'email' => 'test@admin.com',
+        'password' => Hash::make('123456'),
+        'role_id' => 1,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ],
+    [
+        'name' => 'Teacher Test',
+        'email' => 'test@teacher.com',
+        'password' => Hash::make('123456'),
+        'role_id' => 2,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ],
+    [
+        'name' => 'Student Test',
+        'email' => 'test@student.com',
+        'password' => Hash::make('123456'),
+        'role_id' => 3,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ],
+]);
+
 
         $this->command->info('Admin user created: user_id = admin001, password = Admin@123');
     }
