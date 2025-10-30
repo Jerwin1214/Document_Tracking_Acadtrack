@@ -9,18 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-public function up(): void
-{
-    Schema::table('student_documents', function (Blueprint $table) {
-        $table->timestamp('submitted_at')->nullable()->after('some_existing_column');
-    });
-}
+    public function up(): void
+    {
+        Schema::table('student_documents', function (Blueprint $table) {
+            // Add submitted_at safely at the end of the table
+            $table->timestamp('submitted_at')->nullable();
+        });
+    }
 
-public function down(): void
-{
-    Schema::table('student_documents', function (Blueprint $table) {
-        $table->dropColumn('submitted_at');
-    });
-}
-
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('student_documents', function (Blueprint $table) {
+            $table->dropColumn('submitted_at');
+        });
+    }
 };
