@@ -8,9 +8,6 @@ use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {
-    /**
-     * Show login form based on selected role.
-     */
     public function create()
     {
         $role = session('user_role');
@@ -24,9 +21,6 @@ class SessionController extends Controller
         return view('auth.login', compact('role'));
     }
 
-    /**
-     * Select user role before login.
-     */
     public function selectRole($role)
     {
         $validRoles = ['admin', 'teacher', 'student'];
@@ -40,9 +34,6 @@ class SessionController extends Controller
         return redirect()->route('login');
     }
 
-    /**
-     * Handle login attempt.
-     */
     public function store(Request $request)
     {
         $role = session('user_role');
@@ -59,44 +50,35 @@ class SessionController extends Controller
             'password' => ['required', 'string'],
         ];
 
-        // Only enforce YYYY-NNNN format for students
-        if ($role === 'student') {
-            $rules['user_id'][] = 'regex:/^\d{4}-\d{4}$/';
-        }
-
         $credentials = $request->validate($rules);
 
         // Attempt login using user_id and password
-        if (!Auth::attempt([
-            'user_id' => $credentials['user_id'],
-            'password' => $credentials['password'],
-        ])) {
+        if (!Auth::attempt($credentials)) {
             throw ValidationException::withMessages([
                 'user_id' => 'Invalid User ID or Password',
             ]);
         }
 
-        // Regenerate session to prevent fixation
         $request->session()->regenerate();
 
         $user = auth()->user();
 
-        // Role ID mapping: adjust according to your `user_roles` table
+        // Correct role mapping according to your seeded users
         $roleMap = [
             'admin' => 1,
-            'teacher' => 2,
-            'student' => 3,
+            'student' => 2,
+            'teacher' => 3,
         ];
 
-        // Check if user's role matches the selected login role
-        if (!isset($roleMap[$role]) || (int)$user->role_id !== $roleMap[$role]) {
+        // Check if user's role matches selected login role
+        if ((int)$user->role_id !== $roleMap[$role]) {
             Auth::logout();
             return back()->withErrors([
                 'user_id' => "You are not authorized to log in as " . ucfirst($role) . ".",
             ]);
         }
 
-        // Redirect to dashboard based on role
+        // Redirect to dashboard
         return match ($role) {
             'admin' => redirect()->route('admin.documents.dashboard')
                                    ->with('greeting', 'Welcome back, Admin!'),
@@ -108,9 +90,6 @@ class SessionController extends Controller
         };
     }
 
-    /**
-     * Log out user.
-     */
     public function destroy()
     {
         Auth::logout();
