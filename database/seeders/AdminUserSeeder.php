@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
 
 class AdminUserSeeder extends Seeder
 {
@@ -15,41 +14,44 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         // Check if admin already exists
-        $existing = DB::table('users')->where('role_id', 1)->first();
-        if ($existing) {
+        if (DB::table('users')->where('role_id', 1)->exists()) {
             $this->command->info('Admin user already exists. Skipping.');
             return;
         }
 
-        // Insert admin user
-DB::table('users')->insert([
-    [
-        'name' => 'Admin Test',
-        'email' => 'test@admin.com',
-        'password' => Hash::make('123456'),
-        'role_id' => 1,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ],
-    [
-        'name' => 'Teacher Test',
-        'email' => 'test@teacher.com',
-        'password' => Hash::make('123456'),
-        'role_id' => 2,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ],
-    [
-        'name' => 'Student Test',
-        'email' => 'test@student.com',
-        'password' => Hash::make('123456'),
-        'role_id' => 3,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ],
-]);
+        DB::table('users')->insert([
+            [
+                'name' => 'Admin User',
+                'email' => 'test@admin.com',
+                'user_id' => 'admin001', // login ID
+                'password' => Hash::make('123456'),
+                'role_id' => 1,
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Teacher User',
+                'email' => 'test@teacher.com',
+                'user_id' => 'teacher001', // login ID
+                'password' => Hash::make('123456'),
+                'role_id' => 2,
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Student User',
+                'email' => 'test@student.com',
+                'user_id' => '2025-0001', // YYYY-NNNN format
+                'password' => Hash::make('123456'),
+                'role_id' => 3,
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
 
-
-        $this->command->info('Admin user created: user_id = admin001, password = Admin@123');
+        $this->command->info('Admin, Teacher, and Student users created successfully.');
     }
 }
