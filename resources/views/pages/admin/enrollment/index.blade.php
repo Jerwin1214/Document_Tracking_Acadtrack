@@ -19,17 +19,17 @@
     @endif
 
     {{-- ✅ Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <h2 class="fw-bold text-primary mb-0">
             <i class="fa-solid fa-user-graduate me-2"></i> Students
         </h2>
 
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
             {{-- ✅ Document Checklist Button --}}
             <a href="{{ route('admin.documents.checklist') }}"
                class="btn btn-outline-secondary btn-sm shadow-sm d-flex align-items-center gap-1"
                style="width:38px; height:38px; display:flex; align-items:center; justify-content:center;"
-       data-bs-toggle="tooltip" title="Document Checklist">
+               data-bs-toggle="tooltip" title="Document Checklist">
                <i class="fa-solid fa-folder-open"></i>
             </a>
 
@@ -54,24 +54,24 @@
             </div>
         </div>
     </div>
-{{-- Grade Level Filter --}}
-<div class="dropdown">
-    <button class="btn btn-outline-secondary btn-sm dropdown-toggle shadow-sm" type="button"
-            id="gradeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-        {{ $selectedGrade ?? 'All Grades' }}
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="gradeDropdown">
-        <li><a class="dropdown-item" href="{{ route('admin.enrollment.index', ['status' => $status, 'grade' => 'all']) }}">All Grades</a></li>
-        @foreach($grades as $grade)
-            <li>
-                <a class="dropdown-item" href="{{ route('admin.enrollment.index', ['status' => $status, 'grade' => $grade]) }}">
-                    {{ $grade }}
-                </a>
-            </li>
-        @endforeach
-    </ul>
-</div>
 
+    {{-- ✅ Grade Level Filter --}}
+    <div class="dropdown mb-3">
+        <button class="btn btn-outline-secondary btn-sm dropdown-toggle shadow-sm" type="button"
+                id="gradeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ $selectedGrade ?? 'All Grades' }}
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="gradeDropdown">
+            <li><a class="dropdown-item" href="{{ route('admin.enrollment.index', ['status' => $status, 'grade' => 'all']) }}">All Grades</a></li>
+            @foreach($grades as $grade)
+                <li>
+                    <a class="dropdown-item" href="{{ route('admin.enrollment.index', ['status' => $status, 'grade' => $grade]) }}">
+                        {{ $grade }}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    </div>
 
     {{-- ✅ Enrollments Table --}}
     <div class="card border-0 shadow-sm rounded-3">
@@ -115,7 +115,7 @@
                                 <td>{{ $enrollment->guardian_first_name }} {{ $enrollment->guardian_middle_name }} {{ $enrollment->guardian_last_name }}</td>
                                 <td>{{ $enrollment->guardian_contact }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex justify-content-center gap-2">
+                                    <div class="d-flex justify-content-center gap-2 flex-wrap">
                                         <a href="{{ route('admin.enrollment.show', $enrollment->id) }}"
                                            class="btn btn-outline-info btn-sm rounded-circle"
                                            data-bs-toggle="tooltip" title="View">
@@ -157,106 +157,100 @@
                                         @endif
                                     </div>
 
-{{-- ✅ Documents Modal --}}
-<div class="modal fade" id="documentsModal{{ $enrollment->id }}" tabindex="-1" aria-labelledby="documentsModalLabel{{ $enrollment->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content rounded-4 shadow-lg border-0">
-            <div class="modal-header bg-primary text-white rounded-top-4">
-                <h5 class="modal-title" id="documentsModalLabel{{ $enrollment->id }}">
-                    <i class="fa-solid fa-file-lines me-2"></i> Documents - {{ $enrollment->first_name }} {{ $enrollment->last_name }}
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body p-4">
-                <div class="row g-4">
-
-                    {{-- Left: Submitted Documents --}}
-                    <div class="col-md-6">
-                        <h6 class="text-secondary mb-3">Submitted Documents</h6>
-                        @php
-                            $submittedDocuments = $enrollment->studentDocuments->where('status', 'Submitted');
-                        @endphp
-                        @if($submittedDocuments->count() > 0)
-                            <ul class="list-group list-group-flush">
-                                @foreach($submittedDocuments as $doc)
-                                    @php
-                                        $fileUrl = $doc->file_path ? asset('storage/student_documents/' . basename($doc->file_path)) : null;
-                                    @endphp
-                                    <li class="list-group-item d-flex justify-content-between align-items-center hover-shadow rounded-3 mb-2 p-3">
-                                        <div class="d-flex flex-column w-100">
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <div>
-                                                    <i class="fa-solid fa-file-lines me-2 text-primary"></i>
-                                                    {{ $doc->document->name ?? 'Unknown Document' }}
+                                    {{-- ✅ Documents Modal --}}
+                                    <div class="modal fade" id="documentsModal{{ $enrollment->id }}" tabindex="-1" aria-labelledby="documentsModalLabel{{ $enrollment->id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
+                                            <div class="modal-content rounded-4 shadow-lg border-0">
+                                                <div class="modal-header bg-primary text-white rounded-top-4">
+                                                    <h5 class="modal-title" id="documentsModalLabel{{ $enrollment->id }}">
+                                                        <i class="fa-solid fa-file-lines me-2"></i> Documents - {{ $enrollment->first_name }} {{ $enrollment->last_name }}
+                                                    </h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <span class="badge bg-success">{{ $doc->status }}</span>
-                                            </div>
-                                            <div class="mt-2">
-                                                @if($fileUrl)
-                                                    <a href="{{ $fileUrl }}" target="_blank" class="btn btn-outline-primary btn-sm">View</a>
-                                                @else
-                                                    <span class="text-muted">File not available</span>
-                                                @endif
+
+                                                <div class="modal-body p-4">
+                                                    <div class="row g-4">
+                                                        {{-- Left: Submitted Documents --}}
+                                                        <div class="col-md-6 col-12">
+                                                            <h6 class="text-secondary mb-3">Submitted Documents</h6>
+                                                            @php
+                                                                $submittedDocuments = $enrollment->studentDocuments->where('status', 'Submitted');
+                                                            @endphp
+                                                            @if($submittedDocuments->count() > 0)
+                                                                <ul class="list-group list-group-flush">
+                                                                    @foreach($submittedDocuments as $doc)
+                                                                        @php
+                                                                            $fileUrl = $doc->file_path ? asset('storage/student_documents/' . basename($doc->file_path)) : null;
+                                                                        @endphp
+                                                                        <li class="list-group-item d-flex justify-content-between align-items-center hover-shadow rounded-3 mb-2 p-3 flex-wrap">
+                                                                            <div class="d-flex flex-column w-100">
+                                                                                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                                                                    <div>
+                                                                                        <i class="fa-solid fa-file-lines me-2 text-primary"></i>
+                                                                                        {{ $doc->document->name ?? 'Unknown Document' }}
+                                                                                    </div>
+                                                                                    <span class="badge bg-success">{{ $doc->status }}</span>
+                                                                                </div>
+                                                                                <div class="mt-2">
+                                                                                    @if($fileUrl)
+                                                                                        <a href="{{ $fileUrl }}" target="_blank" class="btn btn-outline-primary btn-sm w-100">View</a>
+                                                                                    @else
+                                                                                        <span class="text-muted small">File not available</span>
+                                                                                    @endif
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            @else
+                                                                <div class="text-center text-muted py-5 border rounded-3">
+                                                                    <i class="fa-solid fa-folder-open fa-2x mb-2"></i>
+                                                                    <div>No submitted documents yet for this student.</div>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+
+                                                        {{-- Right: Upload New Document(s) --}}
+                                                        <div class="col-md-6 col-12">
+                                                            <h6 class="text-secondary mb-3">Upload New Document(s)</h6>
+                                                            <form action="{{ route('admin.enrollment.uploadDocument', $enrollment->id) }}" method="POST" enctype="multipart/form-data" id="uploadDocumentForm{{ $enrollment->id }}">
+                                                                @csrf
+                                                                <div id="document-container-{{ $enrollment->id }}">
+                                                                    <div class="document-row mb-3 d-flex gap-2 align-items-start flex-wrap">
+                                                                        <input class="form-control form-control-sm rounded-3 flex-grow-1"
+                                                                               type="file"
+                                                                               name="document_file[]"
+                                                                               accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                                                               required>
+                                                                        <select class="form-select form-select-sm rounded-3 document-select flex-grow-1" name="document_id[]" required>
+                                                                            <option value="" selected disabled>Select Document</option>
+                                                                            @foreach($allDocuments as $doc)
+                                                                                <option value="{{ $doc->id }}">{{ $doc->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                        <button type="button" class="btn btn-danger btn-sm remove-row flex-shrink-0" title="Remove">&times;</button>
+                                                                    </div>
+                                                                </div>
+
+                                                                <button type="button" id="add-document-{{ $enrollment->id }}" class="btn btn-secondary btn-sm mb-3 w-100">
+                                                                    <i class="fa-solid fa-plus me-1"></i> Add Another Document
+                                                                </button>
+
+                                                                <button type="submit" class="btn btn-gradient-primary btn-sm w-100">
+                                                                    <i class="fa-solid fa-upload me-1"></i> Upload Document(s)
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-footer border-0 pt-0">
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-3 w-100" data-bs-dismiss="modal">Close</button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @else
-                            <div class="text-center text-muted py-5 border rounded-3">
-                                <i class="fa-solid fa-folder-open fa-2x mb-2"></i>
-                                <div>No submitted documents yet for this student.</div>
-                            </div>
-                        @endif
-                    </div>
-
-                    {{-- Right: Upload New Document(s) --}}
-                    <div class="col-md-6">
-                        <h6 class="text-secondary mb-3">Upload New Document(s)</h6>
-                        <form action="{{ route('admin.enrollment.uploadDocument', $enrollment->id) }}" method="POST" enctype="multipart/form-data" id="uploadDocumentForm{{ $enrollment->id }}">
-                            @csrf
-                            <div id="document-container-{{ $enrollment->id }}">
-                                <div class="document-row mb-3 d-flex gap-2 align-items-start">
-                                    <input class="form-control form-control-sm rounded-3"
-                                           type="file"
-                                           name="document_file[]"
-                                           accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                                           required>
-                                    <select class="form-select form-select-sm rounded-3 document-select" name="document_id[]" required>
-                                        <option value="" selected disabled>Select Document</option>
-                                        @foreach($allDocuments as $doc)
-                                            <option value="{{ $doc->id }}">{{ $doc->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <button type="button" class="btn btn-danger btn-sm remove-row" title="Remove">&times;</button>
-                                </div>
-                            </div>
-
-                            <button type="button" id="add-document-{{ $enrollment->id }}" class="btn btn-secondary btn-sm mb-3 w-100">
-                                <i class="fa-solid fa-plus me-1"></i> Add Another Document
-                            </button>
-
-                            <button type="submit" class="btn btn-gradient-primary btn-sm w-100">
-                                <i class="fa-solid fa-upload me-1"></i> Upload Document(s)
-                            </button>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-outline-secondary btn-sm rounded-3" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-{{-- ✅ End Documents Modal --}}
-
-
-
-
+                                    </div>
+                                    {{-- ✅ End Documents Modal --}}
                                 </td>
                             </tr>
                         @endforeach
@@ -268,44 +262,19 @@
 
 </div>
 
-{{-- ✅ DataTables + Bootstrap CSS/JS --}}
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+{{-- ✅ Extra mobile responsive styling --}}
 <style>
-.table th { font-weight: 600; letter-spacing: .03em; }
-.table td, .table th { vertical-align: middle !important; }
-.table-striped tbody tr:nth-of-type(odd) { background-color: #f9fafb; }
-.table-hover tbody tr:hover { background-color: #eef2ff !important; transition: 0.2s ease; }
-.btn-sm.rounded-circle { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; }
-.dataTables_filter input { border-radius: 8px; border: 1px solid #ced4da; padding: .375rem .75rem; }
-.dataTables_info, .dataTables_paginate { font-size: .875rem; }
-.hover-shadow:hover { box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important; transition: 0.3s ease; }
-.btn-gradient-primary {
-    background: linear-gradient(135deg, #4e73df, #224abe);
-    color: #fff;
-    border: none;
-    transition: 0.3s;
+@media (max-width: 768px) {
+    .table th, .table td {
+        white-space: nowrap;
+    }
+    .table-responsive {
+        overflow-x: auto;
+    }
+    .modal-body .col-md-6 {
+        width: 100%;
+    }
 }
-.btn-gradient-primary:hover {
-    background: linear-gradient(135deg, #224abe, #4e73df);
-    color: #fff;
-}
-.file-preview {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #f8f9fa;
-    padding: 6px 10px;
-    border-radius: 6px;
-    margin-bottom: 6px;
-    font-size: 0.875rem;
-}
-.file-preview i { margin-right: 6px; }
-.file-preview button { border: none; background: none; color: #dc3545; cursor: pointer; }
 </style>
 
 <script>
