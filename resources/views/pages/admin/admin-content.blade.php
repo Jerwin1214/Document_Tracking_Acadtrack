@@ -1,71 +1,55 @@
 <x-private-layout>
 
-    <!-- Navbar -->
-    <x-navbar role="{{ auth()->user()->role }}">
+    <!-- Sidebar -->
+    <div class="d-flex">
+        <nav id="sidebar" class="bg-dark text-white vh-100 p-3" style="width: 240px; position: fixed;">
+            <div class="mb-4 d-flex align-items-center">
+                <img src="{{ asset('path/to/logo.png') }}" alt="Logo" class="me-2" width="40">
+                <h4 class="m-0">Acadtrack</h4>
+            </div>
 
-        <div class="nav">
-            <!-- Dashboard now points to Documents Dashboard -->
-<a class="nav-link" href="{{ route('admin.documents.dashboard') }}">
-    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-    Dashboard
-</a>
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" href="{{ route('admin.documents.dashboard') }}">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                    </a>
+                </li>
 
-              <a class="nav-link" href="{{ route('admin.enrollment.index') }}">
-                <div class="sb-nav-link-icon"><i class="fa-solid fa-user-graduate"></i></div>
-                Students
-            </a>
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" href="{{ route('admin.enrollment.index') }}">
+                        <i class="fa-solid fa-user-graduate me-2"></i> Students
+                    </a>
+                </li>
 
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" href="{{ route('admin.promotion-history.index') }}">
+                        <i class="fa-solid fa-clock-rotate-left me-2"></i> History Logs
+                    </a>
+                </li>
 
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" href="/admin/profile">
+                        <i class="fa fa-user me-2"></i> Profile
+                    </a>
+                </li>
 
-                {{-- <x-sub-nav-link href="/admin/students/create">Add</x-sub-nav-link> --}}
-                {{-- <x-sub-nav-link href="/admin/students/show">View</x-sub-nav-link> --}}
-                {{-- <x-sub-nav-link href="{{ route('admin.students.assign.form') }}">Assign</x-sub-nav-link> --}}
-            {{-- </x-nav-link> --}}
+                <li class="nav-item mt-3">
+                    <a class="btn btn-danger w-100" href="/logout">
+                        <i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout
+                    </a>
+                </li>
+            </ul>
 
-            {{-- <x-nav-link idNumber="2" link_name="Teachers" icon_class="fa-solid fa-chalkboard-user">
-                <x-sub-nav-link href="/admin/teachers/create">Add</x-sub-nav-link>
-                <x-sub-nav-link href="/admin/teachers/show">View</x-sub-nav-link>
-            </x-nav-link> --}}
+            <hr class="text-secondary">
+            <p class="text-center small mb-0">Logged in as: <strong>{{ auth()->user()->role }}</strong></p>
+        </nav>
 
-          {{-- <x-nav-link idNumber="3" link_name="Subjects" icon_class="fa-solid fa-book"> --}}
-    {{-- <x-sub-nav-link href="/admin/subjects/create">Add</x-sub-nav-link> --}}
-    {{-- <x-sub-nav-link href="/admin/subjects/show">View</x-sub-nav-link>
-    <x-sub-nav-link href="/admin/subjects/assign">Assign Teachers</x-sub-nav-link>
-</x-nav-link> --}}
-
-{{--
-            <x-nav-link idNumber="5" link_name="Classes" icon_class="fa-solid fa-chalkboard">
-                <x-sub-nav-link href="/admin/class/create">Add</x-sub-nav-link>
-                <x-sub-nav-link href="/admin/class/show">View</x-sub-nav-link>
-            </x-nav-link> --}}
-            {{-- ✅ New: Promotion History Logs --}}
-            <a class="nav-link" href="{{ route('admin.promotion-history.index') }}">
-                <div class="sb-nav-link-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
-            History logs
-            </a>
-
-            <a class="nav-link" href="/admin/profile">
-                <div class="sb-nav-link-icon"><i class="fa fa-user" aria-hidden="true"></i></div>
-                Profile
-            </a>
-            {{-- <a class="nav-link" href="{{ route('admin.password.manage') }}">
-           <div class="sb-nav-link-icon"><i class="fa-solid fa-gear"></i></div>
-            Password Management
-           </a> --}}
-            <a class="nav-link getPopup" href="/logout">
-                <div class="sb-nav-link-icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></div>
-                Logout
-            </a>
-        </div>
-    </x-navbar>
-
-    <x-nav-top></x-nav-top>
-
-    <div id="layoutSidenav_content">
-        <div class="container-fluid">
-            <!-- Slotted content -->
-            @yield('content')
-            <!--  -->
+        <!-- Main Content -->
+        <div id="layoutSidenav_content" class="flex-grow-1" style="margin-left: 240px;">
+            <x-nav-top></x-nav-top>
+            <div class="container-fluid p-4">
+                @yield('content')
+            </div>
         </div>
     </div>
 
