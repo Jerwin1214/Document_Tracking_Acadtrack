@@ -106,15 +106,9 @@ Route::get('/documents/checklist/pdf', [StudentDocumentController::class, 'print
         Route::put('/{studentDocument}', [StudentDocumentController::class, 'update'])->name('update');
     Route::delete('{studentDocument}', [StudentDocumentController::class, 'destroy'])
         ->name('admin.documents.destroy');
-    // Upload multiple documents (new + existing)
-// Route::post('/enrollments/{enrollment}/documents/update-multiple', [StudentDocumentController::class, 'updateMultiple'])
-//      ->name('admin.enrollment.updateMultipleDocuments');
-//     Route::post('/students/{enrollment}/documents/update-multiple', [StudentDocumentController::class, 'updateMultiple'])
-//         ->name('admin.students.documents.updateMultiple');
-
-Route::get('/admin/students/documents-dashboard', [EnrollmentController::class, 'documentsDashboard'])
-    ->name('admin.documents.dashboard')
-    ->middleware(['auth', App\Http\Middleware\AdminMiddleware::class]);
+// Route::get('/admin/students/documents-dashboard', [EnrollmentController::class, 'documentsDashboard'])
+//     ->name('admin.documents.dashboard')
+//     ->middleware(['auth', App\Http\Middleware\AdminMiddleware::class]);
 
 
 
