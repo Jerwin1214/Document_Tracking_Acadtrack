@@ -1,10 +1,106 @@
 <x-private-layout>
 
+    <style>
+        /* Sidebar Styling */
+        #sidebar {
+            width: 240px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            background-color: #212529;
+            color: white;
+            transition: all 0.3s ease;
+            z-index: 1050;
+        }
+
+        #sidebar.collapsed {
+            margin-left: -240px;
+        }
+
+        #sidebar .nav-link {
+            color: #adb5bd;
+            transition: all 0.2s ease;
+        }
+
+        #sidebar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        #sidebar h4 {
+            font-size: 1.25rem;
+        }
+
+        /* Main content shift */
+        #layoutSidenav_content {
+            transition: all 0.3s ease;
+            margin-left: 240px;
+        }
+
+        #layoutSidenav_content.expanded {
+            margin-left: 0;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 992px) {
+            #sidebar {
+                margin-left: -240px;
+            }
+
+            #sidebar.show {
+                margin-left: 0;
+            }
+
+            #layoutSidenav_content {
+                margin-left: 0 !important;
+            }
+        }
+
+        /* Overlay for mobile */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1040;
+        }
+
+        #overlay.show {
+            display: block;
+        }
+    </style>
+
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-dark bg-dark fixed-top d-flex justify-content-between align-items-center px-3">
+        <div class="d-flex align-items-center">
+            <!-- Sidebar Toggle -->
+            <button class="btn btn-outline-light me-2" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Brand -->
+            <a class="navbar-brand d-flex align-items-center" href="{{ route('admin.documents.dashboard') }}">
+                <img src="{{ asset('images/acadtracklogo.jpg') }}" alt="Logo"
+                     class="rounded-circle me-2"
+                     style="height: 30px; width: 30px; object-fit: cover;">
+                <span>Acadtrack</span>
+            </a>
+        </div>
+
+        <div class="text-white small">
+            Logged in as: <strong>{{ auth()->user()->role }}</strong>
+        </div>
+    </nav>
+
     <!-- Sidebar -->
     <div class="d-flex">
-        <nav id="sidebar" class="bg-dark text-white vh-100 p-3" style="width: 240px; position: fixed;">
+        <nav id="sidebar" class="p-3">
             <div class="mb-4 d-flex align-items-center">
-                <img src="{{ asset('path/to/logo.png') }}" alt="Logo" class="me-2" width="40">
+                <img src="{{ asset('images/acadtracklogo.jpg') }}" alt="Logo" class="me-2 rounded-circle" width="40">
                 <h4 class="m-0">Acadtrack</h4>
             </div>
 
@@ -39,18 +135,52 @@
                     </a>
                 </li>
             </ul>
-
-            <hr class="text-secondary">
-            <p class="text-center small mb-0">Logged in as: <strong>{{ auth()->user()->role }}</strong></p>
         </nav>
 
         <!-- Main Content -->
-        <div id="layoutSidenav_content" class="flex-grow-1" style="margin-left: 240px;">
-            <x-nav-top></x-nav-top>
-            <div class="container-fluid p-4">
+        <div id="layoutSidenav_content" class="flex-grow-1">
+            <div class="container-fluid mt-5 pt-3 p-4">
                 @yield('content')
             </div>
         </div>
     </div>
+
+    <!-- Overlay for mobile -->
+    <div id="overlay"></div>
+
+    <!-- Sidebar Toggle Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.getElementById("sidebar");
+            const toggleButton = document.getElementById("sidebarToggle");
+            const mainContent = document.getElementById("layoutSidenav_content");
+            const overlay = document.getElementById("overlay");
+
+            // Toggle sidebar
+            toggleButton.addEventListener("click", function () {
+                if (window.innerWidth < 992) {
+                    sidebar.classList.toggle("show");
+                    overlay.classList.toggle("show");
+                } else {
+                    sidebar.classList.toggle("collapsed");
+                    mainContent.classList.toggle("expanded");
+                }
+            });
+
+            // Hide sidebar when clicking outside (mobile only)
+            overlay.addEventListener("click", function () {
+                sidebar.classList.remove("show");
+                overlay.classList.remove("show");
+            });
+
+            // Automatically close on resize
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 992) {
+                    overlay.classList.remove("show");
+                    sidebar.classList.remove("show");
+                }
+            });
+        });
+    </script>
 
 </x-private-layout>
