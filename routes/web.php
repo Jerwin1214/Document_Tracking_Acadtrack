@@ -46,7 +46,7 @@ Route::get('/logout', [SessionController::class, 'destroy'])->name('logout');
 
 // Optional Registration
 Route::get('/register', [StudentRegisterController::class, 'create'])->name('register');
-// Route::post('/register', [StudentRegisterController::class, 'store'])->name('register');
+Route::post('/register', [StudentRegisterController::class, 'store'])->name('register');
 
 // ===============================
 // 🔑 FORGOT PASSWORD (Public Access)
@@ -72,7 +72,7 @@ Route::get('/documents/checklist/pdf', [StudentDocumentController::class, 'print
 
 
     // ✅ DASHBOARD
-    // Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
     // ✅ STUDENT ASSIGNMENT
     Route::get('/students/assign', [StudentController::class, 'showAssignForm'])->name('admin.students.assign.form');
