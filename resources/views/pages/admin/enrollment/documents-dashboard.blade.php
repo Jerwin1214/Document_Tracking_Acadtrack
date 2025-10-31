@@ -2,6 +2,31 @@
 
 @section('content')
 
+<div class="card shadow-lg border-0 mb-4 p-4 text-center" style="background: linear-gradient(135deg, #1e272e, #2f3542); color: #f1f2f6;">
+    <h2 class="fw-bold mb-2">Welcome to Acadtrack Digital Document Tracking System</h2>
+    <p class="mb-3 fs-5">Manage your school's document efficiently</p>
+    <div id="dateTime" class="fw-bold fs-6"></div>
+</div>
+
+<script>
+    function updateDateTime() {
+        const now = new Date();
+        const options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric'
+        };
+        document.getElementById('dateTime').textContent = now.toLocaleString('en-US', options);
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+</script>
+
+
 <div class=".dashboard-wrapper" style="background-color:#2f3542; color:#f1f2f6;padding:20px 15px;min-height:100vh;">
 <div class="d-flex justify-content-end mb-3">
     <a href="{{ route('admin.dashboard.printReport') }}" target="_blank" class="btn btn-danger">
