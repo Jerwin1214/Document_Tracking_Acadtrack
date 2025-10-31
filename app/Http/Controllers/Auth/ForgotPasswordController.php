@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 
 class ForgotPasswordController extends Controller
 {
@@ -20,64 +20,45 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * ✅ Handle sending the verification code to email via Brevo API
+     * ✅ Handle sending the verification code to email
      */
-    public function sendCode(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required',
-            'email' => 'required|email',
-        ]);
+   public function sendCode(Request $request)
+{
+    $request->validate([
+        'user_id' => 'required',
+        'email' => 'required|email',
+    ]);
 
-        // ✅ Check if both User ID and Email match in the users table
-        $user = User::where('user_id', $request->user_id)
-                    ->where('email', $request->email)
-                    ->first();
+    // ✅ Check if both User ID and Email match in the users table
+    $user = User::where('user_id', $request->user_id)
+                ->where('email', $request->email)
+                ->first();
 
-        if (!$user) {
-            return back()->with('error', 'User ID and Email do not match our records.');
-        }
-
-        // ✅ Generate a 6-digit code
-        $code = rand(100000, 999999);
-
-        // ✅ Save or update in password_resets table
-        DB::table('password_resets')->updateOrInsert(
-            ['email' => $user->email],
-            ['token' => $code, 'created_at' => now()]
-        );
-
-        // ✅ Send verification email via Brevo API
-        try {
-            $response = Http::withHeaders([
-                'api-key' => env('BREVO_API_KEY'),
-                'Content-Type' => 'application/json',
-            ])->post('https://api.brevo.com/v3/smtp/email', [
-                'sender' => [
-                    'name' => 'Acadtrack System',
-                    'email' => env('MAIL_FROM_ADDRESS'),
-                ],
-                'to' => [
-                    ['email' => $user->email]
-                ],
-                'subject' => 'Acadtrack Password Reset Code',
-                'textContent' => "Your Acadtrack password reset code is: {$code}"
-            ]);
-
-            if ($response->failed()) {
-                return back()->with('error', 'Failed to send email. Please try again later.');
-            }
-
-        } catch (\Exception $e) {
-            return back()->with('error', 'Error sending email: ' . $e->getMessage());
-        }
-
-        // ✅ Redirect to verification form
-        return redirect()->route('forgotPassword.verifyForm')->with([
-            'success' => 'Verification code sent to your email.',
-            'email' => $user->email
-        ]);
+    if (!$user) {
+        return back()->with('error', 'User ID and Email do not match our records.');
     }
+
+    // ✅ Generate a 6-digit code
+    $code = rand(100000, 999999);
+
+    // ✅ Save or update in password_resets table
+    DB::table('password_resets')->updateOrInsert(
+        ['email' => $user->email],
+        ['token' => $code, 'created_at' => now()]
+    );
+
+    // ✅ Send verification email
+    Mail::raw("Your Acadtrack password reset code is: {$code}", function ($message) use ($user) {
+        $message->to($user->email)
+                ->subject('Acadtrack Password Reset Code');
+    });
+
+    // ✅ Redirect to verification form
+    return redirect()->route('forgotPassword.verifyForm')->with([
+        'success' => 'Verification code sent to your email.',
+        'email' => $user->email
+    ]);
+}
 
     /**
      * ✅ Show verification code form
