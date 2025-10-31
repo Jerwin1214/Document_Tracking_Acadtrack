@@ -529,11 +529,11 @@
       array (
         'transport' => 'smtp',
         'url' => NULL,
-        'host' => 'smtp.gmail.com',
+        'host' => 'smtp-relay.brevo.com',
         'port' => '587',
         'encryption' => 'tls',
-        'username' => 'erwinarellano53@gmail.com',
-        'password' => 'mjjqxsscycvxpshg',
+        'username' => 'Y9a760c001@smtp-brevo.com',
+        'password' => '96Ss3fdRr1XDIPTp',
         'timeout' => NULL,
         'local_domain' => 'acadtracklallo.sevalla.app',
       ),
@@ -584,7 +584,7 @@
     ),
     'from' => 
     array (
-      'address' => 'erwinarellano53@gmail.com',
+      'address' => 'acadtracklallopasswordreset@acadtracklallo.app',
       'name' => 'Acadtrack System',
     ),
     'markdown' => 
