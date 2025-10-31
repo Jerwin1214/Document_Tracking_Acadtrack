@@ -33,7 +33,7 @@ public function index(Request $request)
     $allDocuments = Document::all();
 
     // Student population by grade (always full list)
-    $grades = ['Kinder','Grade 1','Grade 2','Grade 3','Grade 4','Grade 5','Grade 6','Grade 7','Grade 8','Grade 9','Grade 10','Grade 11','Grade 12'];
+    $grades = ['Kindergarten','Grade 1','Grade 2','Grade 3','Grade 4','Grade 5','Grade 6','Grade 7','Grade 8','Grade 9','Grade 10','Grade 11','Grade 12'];
     $studentsByGrade = [];
     foreach ($grades as $grade) {
         $studentsByGrade[$grade] = Enrollment::where('grade_level', $grade)
