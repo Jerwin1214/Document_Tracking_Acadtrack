@@ -4,16 +4,19 @@
 <div class="container py-4">
 
     {{-- Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+    <div class="d-flex align-items-center justify-content-between mb-4">
         <h2 class="fw-bold text-primary mb-0">
             <i class="fa-solid fa-file-lines me-2"></i> Student Document Checklist
         </h2>
-        <a href="{{ route('admin.documents.checklist.pdf', ['grade' => request('grade')]) }}"
-           target="_blank"
-           class="btn btn-sm btn-outline-primary d-flex align-items-center gap-2">
-           <i class="fa-solid fa-file-pdf"></i> Print PDF
-        </a>
     </div>
+    <div class="mb-3">
+    <a href="{{ route('admin.documents.checklist.pdf', ['grade' => request('grade')]) }}"
+       target="_blank"
+       class="btn btn-sm btn-outline-primary">
+       <i class="fa-solid fa-file-pdf"></i> Print PDF
+    </a>
+</div>
+
 
     {{-- Grade Filter --}}
     <div class="mb-3">
@@ -26,11 +29,11 @@
         </select>
     </div>
 
-    {{-- Table --}}
+    {{-- Documents Table --}}
     <div class="card border-0 shadow-sm rounded-3">
-        <div class="card-body p-2 p-md-3">
+        <div class="card-body">
             <div class="table-responsive">
-                <table id="documentChecklistTable" class="table table-striped align-middle table-hover w-100">
+                <table id="documentChecklistTable" class="table table-striped align-middle table-hover">
                     <thead class="table-light text-secondary small text-uppercase">
                         <tr>
                             <th>#</th>
@@ -76,27 +79,24 @@
 
                             {{-- Actions --}}
                             <td class="text-center">
-                                <button class="btn btn-sm btn-primary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#viewDocumentModal{{ $enrollment->id }}">
+                                <button class="btn btn-sm btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#viewDocumentModal{{ $enrollment->id }}">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>
                             </td>
                         </tr>
 
-                        {{-- ✅ Responsive Modal --}}
-                        <div class="modal fade" id="viewDocumentModal{{ $enrollment->id }}" tabindex="-1"
-                             aria-labelledby="viewDocumentModalLabel{{ $enrollment->id }}" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                        {{-- View Modal --}}
+                        <div class="modal fade" id="viewDocumentModal{{ $enrollment->id }}" tabindex="-1" aria-labelledby="viewDocumentModalLabel{{ $enrollment->id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
                                 <div class="modal-content rounded-4 shadow border-0">
-                                    <div class="modal-header border-0 bg-white flex-wrap">
+                                    <div class="modal-header border-0 bg-white">
                                         <h5 class="modal-title">
                                             <i class="fa-solid fa-file-lines text-primary me-2"></i>
                                             Submitted Documents - {{ $enrollment->first_name }} {{ $enrollment->last_name }}
                                         </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body p-3 p-md-4">
+                                    <div class="modal-body">
                                         @foreach($allDocuments as $doc)
                                             @php
                                                 $studentDoc = $enrollment->studentDocuments
@@ -104,20 +104,16 @@
                                                     ->where('status', 'Submitted')
                                                     ->sortByDesc('id')
                                                     ->first();
-                                                $fileUrl = $studentDoc && $studentDoc->file_path
-                                                    ? asset('storage/student_documents/'.$studentDoc->file_path)
-                                                    : null;
+                                                $fileUrl = $studentDoc && $studentDoc->file_path ? asset('storage/student_documents/'.$studentDoc->file_path) : null;
                                             @endphp
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold small">{{ $doc->name }}</label>
-                                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                                <label class="form-label fw-bold">{{ $doc->name }}</label>
+                                                <div class="d-flex align-items-center gap-2">
                                                     @if($fileUrl)
-                                                        <a href="{{ $fileUrl }}" target="_blank" class="btn btn-outline-primary btn-sm">
-                                                            View
-                                                        </a>
+                                                        <a href="{{ $fileUrl }}" target="_blank" class="btn btn-outline-primary btn-sm">View</a>
                                                         <span class="text-muted small">{{ basename($studentDoc->file_path) }}</span>
                                                     @else
-                                                        <span class="text-muted small">Not submitted yet</span>
+                                                        <span class="text-muted">Not submitted yet</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -129,6 +125,7 @@
                                 </div>
                             </div>
                         </div>
+
                         @endforeach
                     </tbody>
                 </table>
@@ -136,14 +133,14 @@
         </div>
     </div>
 
-    <div class="mt-4">
-        <a href="{{ route('admin.enrollment.index') }}" class="btn btn-outline-secondary btn-sm shadow-sm">
-            <i class="fa-solid fa-arrow-left"></i> Back
+    <div class="d-flex justify-content-start mt-4">
+        <a href="{{ route('admin.enrollment.index') }}" class="btn btn-outline-secondary btn-sm shadow-sm d-flex align-items-center gap-1">
+            <i class="fa-solid fa-arrow-left"></i>
         </a>
     </div>
 </div>
 
-{{-- Scripts --}}
+{{-- DataTables + SweetAlert Scripts --}}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
@@ -153,9 +150,20 @@
 
 <script>
 $(document).ready(function() {
+    // SweetAlert success popup
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: "{{ session('success') }}",
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+    @endif
+
     const table = $('#documentChecklistTable').DataTable({
         responsive: true,
-        pageLength: 10,
+        pageLength: 25,
         lengthChange: false,
         language: {
             search: "",
@@ -166,50 +174,37 @@ $(document).ready(function() {
         dom: '<"d-flex justify-content-between align-items-center mb-3"f>tip'
     });
 
-    $('#gradeFilter').on('change', function() {
-        const grade = $(this).val();
-        table.column(5).search(grade ? '^' + grade + '$' : '', true, false).draw();
-    });
-
-    // Badge colors
     function updateBadgeColors() {
         $('.status-badge').each(function() {
-            const s = $(this).data('status');
-            $(this).removeClass('bg-success bg-warning bg-danger');
-            if (s === 'Submitted') $(this).addClass('bg-success');
-            else if (s === 'Pending') $(this).addClass('bg-warning');
-            else if (s === 'Missing') $(this).addClass('bg-danger');
+            const status = $(this).data('status');
+            $(this).removeClass('bg-success bg-warning bg-danger text-white text-dark');
+            if (status === 'Submitted') $(this).addClass('bg-success text-white');
+            else if (status === 'Pending') $(this).addClass('bg-warning text-dark');
+            else if (status === 'Missing') $(this).addClass('bg-danger text-white');
         });
     }
     updateBadgeColors();
     table.on('draw', updateBadgeColors);
+
+    $('#gradeFilter').on('change', function() {
+        const selectedGrade = $(this).val();
+        table.column(5).search(selectedGrade ? '^' + selectedGrade + '$' : '', true, false).draw();
+    });
 });
 </script>
 
 <style>
-.table th, .table td { text-align: center; vertical-align: middle !important; }
+.table th { font-weight: 600; letter-spacing: .03em; }
+.table td, .table th { vertical-align: middle !important; text-align: center; }
 .table-striped tbody tr:nth-of-type(odd) { background-color: #f9fafb; }
-.table-hover tbody tr:hover { background-color: #eef2ff; transition: 0.2s; }
+.table-hover tbody tr:hover { background-color: #eef2ff !important; transition: 0.2s ease; }
 
-.modal-dialog {
-    max-width: 90%;
-    margin: 1rem auto;
-}
-@media (max-width: 576px) {
-    .modal-dialog {
-        width: 100% !important;
-        margin: 0;
-        padding: 0 10px;
-    }
-    .modal-content {
-        border-radius: 0.75rem;
-        max-height: 90vh;
-    }
-    .modal-body {
-        overflow-y: auto;
-    }
-    .btn-sm { font-size: 0.8rem; padding: 4px 8px; }
-    .table th, .table td { font-size: 0.8rem; }
-}
+.badge.bg-danger { background-color: #dc3545 !important; }
+.badge.bg-success { background-color: #198754 !important; }
+.badge.bg-warning { background-color: #ffc107 !important; color: #000 !important; }
+
+.modal-content { transition: all 0.2s ease-in-out; }
+.modal-header h5 { font-weight: 600; font-size: 1rem; }
+.modal-footer button { min-width: 90px; }
 </style>
 @endsection
