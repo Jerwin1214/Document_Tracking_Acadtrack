@@ -522,18 +522,18 @@
   ),
   'mail' => 
   array (
-    'default' => 'smtp',
+    'default' => 'brevo',
     'mailers' => 
     array (
       'smtp' => 
       array (
         'transport' => 'smtp',
         'url' => NULL,
-        'host' => 'smtp-relay.brevo.com',
-        'port' => '587',
+        'host' => '127.0.0.1',
+        'port' => 2525,
         'encryption' => 'tls',
-        'username' => 'Y9a760c001@smtp-brevo.com',
-        'password' => '96Ss3fdRr1XDIPTp',
+        'username' => NULL,
+        'password' => NULL,
         'timeout' => NULL,
         'local_domain' => 'acadtracklallo.sevalla.app',
       ),
