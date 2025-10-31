@@ -26,7 +26,6 @@ use App\Http\Controllers\Teacher\GradeController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\StudentMiddleware;
 use App\Http\Middleware\TeacherMiddleware;
-use App\Http\Controllers\Admin\Controller;
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 
@@ -72,7 +71,7 @@ Route::get('/documents/checklist/pdf', [StudentDocumentController::class, 'print
 
 
     // ✅ DASHBOARD
-    // Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
 
     // ✅ STUDENT ASSIGNMENT
     Route::get('/students/assign', [StudentController::class, 'showAssignForm'])->name('admin.students.assign.form');
@@ -101,8 +100,8 @@ Route::get('/documents/checklist/pdf', [StudentDocumentController::class, 'print
    // Dashboard to track documents
     Route::get('/documents-dashboard', [EnrollmentController::class, 'documentsDashboard'])
         ->name('admin.documents.dashboard');
-        Route::get('/admin/dashboard', [StudentDocumentController::class, 'documentUploadsChart'])
-    ->name('admin.dashboard');
+    //     Route::get('/admin/dashboard', [StudentDocumentController::class, 'documentUploadsChart'])
+    // ->name('admin.dashboard');
         Route::put('/{studentDocument}', [StudentDocumentController::class, 'update'])->name('update');
     Route::delete('{studentDocument}', [StudentDocumentController::class, 'destroy'])
         ->name('admin.documents.destroy');
