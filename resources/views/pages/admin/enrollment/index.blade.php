@@ -159,20 +159,20 @@
 
 {{-- ✅ Documents Modal --}}
 <div class="modal fade" id="documentsModal{{ $enrollment->id }}" tabindex="-1" aria-labelledby="documentsModalLabel{{ $enrollment->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down modal-xl">
         <div class="modal-content rounded-4 shadow-lg border-0">
             <div class="modal-header bg-primary text-white rounded-top-4">
-                <h5 class="modal-title" id="documentsModalLabel{{ $enrollment->id }}">
+                <h5 class="modal-title d-flex align-items-center" id="documentsModalLabel{{ $enrollment->id }}">
                     <i class="fa-solid fa-file-lines me-2"></i> Documents - {{ $enrollment->first_name }} {{ $enrollment->last_name }}
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div class="modal-body p-4">
+            <div class="modal-body p-3 p-md-4">
                 <div class="row g-4">
 
-                    {{-- Left: Submitted Documents --}}
-                    <div class="col-md-6">
+                    {{-- ✅ Left: Submitted Documents --}}
+                    <div class="col-12 col-md-6">
                         <h6 class="text-secondary mb-3">Submitted Documents</h6>
                         @php
                             $submittedDocuments = $enrollment->studentDocuments->where('status', 'Submitted');
@@ -183,20 +183,21 @@
                                     @php
                                         $fileUrl = $doc->file_path ? asset('storage/student_documents/' . basename($doc->file_path)) : null;
                                     @endphp
-                                    <li class="list-group-item d-flex justify-content-between align-items-center hover-shadow rounded-3 mb-2 p-3">
+                                    <li class="list-group-item d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center rounded-3 mb-2 p-3 shadow-sm">
                                         <div class="d-flex flex-column w-100">
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <div>
+                                            <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                                <div class="fw-semibold">
                                                     <i class="fa-solid fa-file-lines me-2 text-primary"></i>
                                                     {{ $doc->document->name ?? 'Unknown Document' }}
                                                 </div>
-                                                <span class="badge bg-success">{{ $doc->status }}</span>
+                                                <span class="badge bg-success mt-2 mt-sm-0">{{ $doc->status }}</span>
                                             </div>
                                             <div class="mt-2">
                                                 @if($fileUrl)
-                                                    <a href="{{ $fileUrl }}" target="_blank" class="btn btn-outline-primary btn-sm">View</a>
+                                                    <a href="{{ $fileUrl }}" target="_blank"
+                                                       class="btn btn-outline-primary btn-sm w-100 w-sm-auto">View</a>
                                                 @else
-                                                    <span class="text-muted">File not available</span>
+                                                    <span class="text-muted small">File not available</span>
                                                 @endif
                                             </div>
                                         </div>
@@ -211,25 +212,24 @@
                         @endif
                     </div>
 
-                    {{-- Right: Upload New Document(s) --}}
-                    <div class="col-md-6">
+                    {{-- ✅ Right: Upload New Document(s) --}}
+                    <div class="col-12 col-md-6">
                         <h6 class="text-secondary mb-3">Upload New Document(s)</h6>
                         <form action="{{ route('admin.enrollment.uploadDocument', $enrollment->id) }}" method="POST" enctype="multipart/form-data" id="uploadDocumentForm{{ $enrollment->id }}">
                             @csrf
                             <div id="document-container-{{ $enrollment->id }}">
-                                <div class="document-row mb-3 d-flex gap-2 align-items-start">
-                                    <input class="form-control form-control-sm rounded-3"
-                                           type="file"
-                                           name="document_file[]"
-                                           accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                                           required>
-                                    <select class="form-select form-select-sm rounded-3 document-select" name="document_id[]" required>
+                                <div class="document-row mb-3 d-flex flex-column flex-sm-row gap-2 align-items-start">
+                                    <input class="form-control form-control-sm rounded-3 w-100" type="file"
+                                           name="document_file[]" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+                                    <select class="form-select form-select-sm rounded-3 w-100" name="document_id[]" required>
                                         <option value="" selected disabled>Select Document</option>
                                         @foreach($allDocuments as $doc)
                                             <option value="{{ $doc->id }}">{{ $doc->name }}</option>
                                         @endforeach
                                     </select>
-                                    <button type="button" class="btn btn-danger btn-sm remove-row" title="Remove">&times;</button>
+                                    <button type="button" class="btn btn-danger btn-sm remove-row w-100 w-sm-auto mt-2 mt-sm-0" title="Remove">
+                                        &times;
+                                    </button>
                                 </div>
                             </div>
 
@@ -247,15 +247,14 @@
             </div>
 
             <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-outline-secondary btn-sm rounded-3" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm rounded-3 w-100 w-sm-auto" data-bs-dismiss="modal">
+                    Close
+                </button>
             </div>
         </div>
     </div>
 </div>
 {{-- ✅ End Documents Modal --}}
-
-
-
 
                                 </td>
                             </tr>
@@ -306,6 +305,39 @@
 }
 .file-preview i { margin-right: 6px; }
 .file-preview button { border: none; background: none; color: #dc3545; cursor: pointer; }
+
+
+/* ✅ Responsive Modal Adjustments */
+@media (max-width: 768px) {
+    .modal-dialog {
+        margin: 1rem;
+        width: auto;
+    }
+    .modal-content {
+        border-radius: 12px !important;
+    }
+    .modal-body {
+        overflow-y: auto;
+        max-height: 75vh;
+    }
+    .document-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    .document-row .btn {
+        width: 100%;
+    }
+}
+
+/* ✅ Fix tap/click issues for iOS */
+.modal-backdrop {
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+.modal {
+    -webkit-overflow-scrolling: touch;
+}
+
 </style>
 
 <script>
