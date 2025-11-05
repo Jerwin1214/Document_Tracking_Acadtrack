@@ -4,19 +4,16 @@
 <div class="container py-4">
 
     {{-- Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <h2 class="fw-bold text-primary mb-0">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap text-center text-md-start">
+        <h2 class="fw-bold text-primary mb-2 mb-md-0">
             <i class="fa-solid fa-file-lines me-2"></i> Student Document Checklist
         </h2>
+        <a href="{{ route('admin.documents.checklist.pdf', ['grade' => request('grade')]) }}"
+           target="_blank"
+           class="btn btn-sm btn-outline-primary mt-2 mt-md-0">
+           <i class="fa-solid fa-file-pdf"></i> Print PDF
+        </a>
     </div>
-    <div class="mb-3">
-    <a href="{{ route('admin.documents.checklist.pdf', ['grade' => request('grade')]) }}"
-       target="_blank"
-       class="btn btn-sm btn-outline-primary">
-       <i class="fa-solid fa-file-pdf"></i> Print PDF
-    </a>
-</div>
-
 
     {{-- Grade Filter --}}
     <div class="mb-3">
@@ -108,10 +105,12 @@
                                             @endphp
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">{{ $doc->name }}</label>
-                                                <div class="d-flex align-items-center gap-2">
+                                                <div class="d-flex align-items-center gap-2 flex-wrap">
                                                     @if($fileUrl)
-                                                        <a href="{{ $fileUrl }}" target="_blank" class="btn btn-outline-primary btn-sm">View</a>
-                                                        <span class="text-muted small">{{ basename($studentDoc->file_path) }}</span>
+                                                        <a href="{{ $fileUrl }}" target="_blank" class="btn btn-outline-primary btn-sm w-100 w-md-auto text-center">
+                                                            <i class="fa-solid fa-eye"></i> View
+                                                        </a>
+                                                        <span class="text-muted small text-truncate">{{ basename($studentDoc->file_path) }}</span>
                                                     @else
                                                         <span class="text-muted">Not submitted yet</span>
                                                     @endif
@@ -120,7 +119,7 @@
                                         @endforeach
                                     </div>
                                     <div class="modal-footer border-0 pt-2">
-                                        <button type="button" class="btn btn-light btn-sm rounded-3" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-light btn-sm rounded-3 w-100 w-md-auto" data-bs-dismiss="modal">Close</button>
                                     </div>
                                 </div>
                             </div>
@@ -150,7 +149,6 @@
 
 <script>
 $(document).ready(function() {
-    // SweetAlert success popup
     @if(session('success'))
         Swal.fire({
             icon: 'success',
@@ -203,8 +201,23 @@ $(document).ready(function() {
 .badge.bg-success { background-color: #198754 !important; }
 .badge.bg-warning { background-color: #ffc107 !important; color: #000 !important; }
 
-.modal-content { transition: all 0.2s ease-in-out; }
+.modal-content { transition: all 0.2s ease-in-out; border-radius: 1rem; }
 .modal-header h5 { font-weight: 600; font-size: 1rem; }
-.modal-footer button { min-width: 90px; }
+
+@media (max-width: 768px) {
+    .modal-dialog {
+        max-width: 95vw !important;
+        margin: auto;
+    }
+    .modal-body {
+        max-height: 70vh;
+        overflow-y: auto;
+        padding: 1rem;
+    }
+    .modal-title {
+        font-size: .95rem;
+        line-height: 1.2;
+    }
+}
 </style>
 @endsection
