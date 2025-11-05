@@ -81,49 +81,60 @@
                                 </button>
                             </td>
                         </tr>
+{{-- View Modal --}}
+<div class="modal fade" id="viewDocumentModal{{ $enrollment->id }}" tabindex="-1"
+     aria-labelledby="viewDocumentModalLabel{{ $enrollment->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down modal-lg">
+        <div class="modal-content rounded-4 shadow-lg border-0">
+            <div class="modal-header bg-primary text-white rounded-top-4">
+                <h5 class="modal-title d-flex align-items-center" id="viewDocumentModalLabel{{ $enrollment->id }}">
+                    <i class="fa-solid fa-file-lines me-2"></i>
+                    Submitted Documents - {{ $enrollment->first_name }} {{ $enrollment->last_name }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-                        {{-- View Modal --}}
-                        <div class="modal fade" id="viewDocumentModal{{ $enrollment->id }}" tabindex="-1" aria-labelledby="viewDocumentModalLabel{{ $enrollment->id }}" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg">
-                                <div class="modal-content rounded-4 shadow border-0">
-                                    <div class="modal-header border-0 bg-white">
-                                        <h5 class="modal-title">
-                                            <i class="fa-solid fa-file-lines text-primary me-2"></i>
-                                            Submitted Documents - {{ $enrollment->first_name }} {{ $enrollment->last_name }}
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        @foreach($allDocuments as $doc)
-                                            @php
-                                                $studentDoc = $enrollment->studentDocuments
-                                                    ->where('document_id', $doc->id)
-                                                    ->where('status', 'Submitted')
-                                                    ->sortByDesc('id')
-                                                    ->first();
-                                                $fileUrl = $studentDoc && $studentDoc->file_path ? asset('storage/student_documents/'.$studentDoc->file_path) : null;
-                                            @endphp
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">{{ $doc->name }}</label>
-                                                <div class="d-flex align-items-center gap-2 flex-wrap">
-                                                    @if($fileUrl)
-                                                        <a href="{{ $fileUrl }}" target="_blank" class="btn btn-outline-primary btn-sm w-100 w-md-auto text-center">
-                                                            <i class="fa-solid fa-eye"></i> View
-                                                        </a>
-                                                        <span class="text-muted small text-truncate">{{ basename($studentDoc->file_path) }}</span>
-                                                    @else
-                                                        <span class="text-muted">Not submitted yet</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <div class="modal-footer border-0 pt-2">
-                                        <button type="button" class="btn btn-light btn-sm rounded-3 w-100 w-md-auto" data-bs-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
+            <div class="modal-body p-3 p-md-4">
+                @foreach($allDocuments as $doc)
+                    @php
+                        $studentDoc = $enrollment->studentDocuments
+                            ->where('document_id', $doc->id)
+                            ->where('status', 'Submitted')
+                            ->sortByDesc('id')
+                            ->first();
+                        $fileUrl = $studentDoc && $studentDoc->file_path
+                            ? asset('storage/student_documents/' . basename($studentDoc->file_path))
+                            : null;
+                    @endphp
+                    <div class="mb-3 border-bottom pb-2">
+                        <label class="form-label fw-semibold text-secondary d-block">
+                            {{ $doc->name }}
+                        </label>
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            @if($fileUrl)
+                                <a href="{{ $fileUrl }}" target="_blank"
+                                   class="btn btn-outline-primary btn-sm w-100 w-md-auto">
+                                    <i class="fa-solid fa-eye"></i> View
+                                </a>
+                                <span class="text-muted small text-break">{{ basename($studentDoc->file_path) }}</span>
+                            @else
+                                <span class="text-muted fst-italic small">Not submitted yet</span>
+                            @endif
                         </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-light text-dark btn-sm rounded-3 w-100 w-md-auto"
+                        data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
                         @endforeach
                     </tbody>
@@ -218,6 +229,52 @@ $(document).ready(function() {
         font-size: .95rem;
         line-height: 1.2;
     }
+
+    /* ✅ Modern modal responsiveness + iOS/Android support */
+.modal-dialog {
+    transition: all 0.3s ease-in-out;
+}
+.modal-content {
+    border-radius: 1.25rem !important;
+    overflow: hidden;
+}
+
+/* ✅ Fullscreen on small devices, centered otherwise */
+@media (max-width: 768px) {
+    .modal-dialog {
+        width: 95vw !important;
+        margin: auto;
+    }
+    .modal-body {
+        max-height: 70vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 1rem;
+    }
+    .modal-title {
+        font-size: 1rem;
+        line-height: 1.2;
+    }
+    .modal-footer button {
+        width: 100%;
+    }
+}
+
+/* ✅ Subtle blur background for mobile */
+.modal-backdrop {
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+/* ✅ Button + text spacing improvements */
+.modal-body label {
+    font-size: 0.95rem;
+    color: #495057;
+}
+.modal-body a.btn {
+    min-width: 100px;
+}
+
 }
 </style>
 @endsection
