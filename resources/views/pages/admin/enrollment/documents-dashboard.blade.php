@@ -2,10 +2,23 @@
 
 @section('content')
 
-<div class="card shadow-lg border-0 mb-4 p-4 text-center" style="background: linear-gradient(135deg, #1e272e, #2f3542); color: #f1f2f6;">
-    <h2 class="fw-bold mb-2">Welcome to Acadtrack Digital Document Tracking System</h2>
-    <p class="mb-3 fs-5">Manage your school's document efficiently</p>
-    <div id="dateTime" class="fw-bold fs-6"></div>
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<div class="card shadow-lg border-0 mb-4 p-5 text-center"
+     style="background: linear-gradient(135deg, #1a1a2e, #16213e); color: #e0e0e0; border-radius: 18px; font-family: 'Poppins', sans-serif; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+    <h2 class="fw-bold mb-2"
+        style="font-size: 1.9rem; letter-spacing: 1px; color: #ffffff; text-shadow: 0 2px 6px rgba(0,0,0,0.4);">
+        Welcome to <span style="color: #00adb5;">Acadtrack</span> Digital Document Tracking System
+    </h2>
+    <p class="mb-3 fs-5"
+       style="color: #dcdde1; font-weight: 400; font-size: 1.1rem;">
+        Manage your school's documents efficiently and securely.
+    </p>
+    <div id="dateTime"
+         class="fw-semibold fs-6"
+         style="color: #00adb5; letter-spacing: 0.5px; margin-top: 10px;">
+    </div>
 </div>
 
 <script>
@@ -16,15 +29,22 @@
             year: 'numeric',
             month: 'long',
             day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric'
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
         };
         document.getElementById('dateTime').textContent = now.toLocaleString('en-US', options);
     }
     setInterval(updateDateTime, 1000);
     updateDateTime();
 </script>
+
+<style>
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 173, 181, 0.3);
+    }
+</style>
 
 
 <div class=".dashboard-wrapper" style="background-color:#2f3542; color:#f1f2f6;padding:20px 15px;min-height:100vh;">
