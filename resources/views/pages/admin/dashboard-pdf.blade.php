@@ -69,6 +69,33 @@
             border-top: 1px solid #ced6e0;
             padding-top: 10px;
         }
+        /* Signatory Bar */
+        .signatory-bar {
+            width: 100%;
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+        .signatory-line {
+            width: 200px;
+            border-bottom: 1px solid #2f3542;
+            margin-bottom: 5px;
+        }
+        .signatory-date {
+            font-size: 11px;
+            color: #57606f;
+        }
+        @media (max-width: 600px) {
+            body {
+                margin: 20px;
+                font-size: 11px;
+            }
+            .signatory-line {
+                width: 150px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -237,6 +264,12 @@
     {{-- Footer --}}
     <div class="footer">
         <p><strong>Acadtrack Digital Document Tracking System of Lyceum of Lal-lo</p>
+    </div>
+
+    {{-- Signatory Bar --}}
+    <div class="signatory-bar">
+        <div class="signatory-line"></div>
+        <div class="signatory-date">{{ now()->setTimezone('Asia/Manila')->format('F d, Y') }}</div>
     </div>
 
 </body>
