@@ -91,13 +91,42 @@
             display: inline-block;
         }
 
-footer {
-    text-align: center;
-    font-size: 10px;
-    color: #555;
-    margin-top: 15px;
-}
+        footer {
+            text-align: center;
+            font-size: 10px;
+            color: #555;
+            margin-top: 15px;
+        }
 
+        /* Signatory Bar */
+        .signatory-bar {
+            width: 100%;
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .signatory-line {
+            width: 200px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 5px;
+        }
+
+        .signatory-date {
+            font-size: 11px;
+            color: #555;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                font-size: 11px;
+            }
+            .signatory-line {
+                width: 150px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -190,7 +219,7 @@ footer {
             @endforeach
         </tr>
 
-{{-- Grand Totals --}}
+        {{-- Grand Totals --}}
         <tr>
             <td colspan="6">Grand Total Submitted</td>
             @php
@@ -221,13 +250,44 @@ footer {
             @endphp
             <td colspan="{{ $allDocuments->count() }}">{{ $grandPending }}</td>
         </tr>
-
     </tfoot>
 </table>
 
 <footer>
     Acadtrack Digital Document Tracking System of Lyceum of Lal-lo
 </footer>
+
+{{-- Signatory Bar --}}
+<div class="signatory-bar">
+    <div class="signatory-line"></div>
+    <div class="signatory-date">{{ now()->format('F d, Y') }}</div>
+</div>
+
+<style>
+/* Signatory Bar Styling */
+.signatory-bar {
+    width: 100%;
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.signatory-line {
+    width: 200px;
+    border-bottom: 1px solid #333;
+    margin-bottom: 5px;
+}
+.signatory-date {
+    font-size: 11px;
+    color: #555;
+}
+@media (max-width: 600px) {
+    .signatory-line {
+        width: 150px;
+    }
+}
+</style>
 
 </body>
 </html>
