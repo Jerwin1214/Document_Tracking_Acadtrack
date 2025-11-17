@@ -311,9 +311,13 @@ $pdf = Pdf::loadView('pages.admin.dashboard-pdf', compact(
 
     $totalStudents = $enrollments->count();
 
-    $pdf = Pdf::loadView('pages.admin.documents.document-checklist-pdf', compact(
-        'enrollments', 'allDocuments', 'totalStudents'
-    ))->setPaper('a4', 'landscape');
+$pdf = Pdf::loadView('pages.admin.documents.document-checklist-pdf', [
+    'enrollments' => $enrollments,
+    'allDocuments' => $allDocuments,
+    'totalStudents' => $totalStudents,
+    'grade' => $gradeFilter  // ✅ Pass selected grade
+])->setPaper('a4', 'landscape');
+
 
     return $pdf->stream('student-document-checklist.pdf');
 }
@@ -321,17 +325,17 @@ $pdf = Pdf::loadView('pages.admin.dashboard-pdf', compact(
 
     /**
      * Delete a student document
-     */
-    public function destroy(StudentDocument $studentDocument)
-    {
-        if ($studentDocument->file_path && Storage::disk('public')->exists($studentDocument->file_path)) {
-            Storage::disk('public')->delete($studentDocument->file_path);
-        }
+   */
+    // public function destroy(StudentDocument $studentDocument)
+    // {
+    //     if ($studentDocument->file_path && Storage::disk('public')->exists($studentDocument->file_path)) {
+    //         Storage::disk('public')->delete($studentDocument->file_path);
+    //     }
 
-        $studentDocument->delete();
+    //     $studentDocument->delete();
 
-        return back()->with('success', 'Document deleted successfully!');
-    }
+    //     return back()->with('success', 'Document deleted successfully!');
+    // }
 
     /**
      * Update multiple documents at once
