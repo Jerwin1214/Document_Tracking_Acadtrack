@@ -8,9 +8,9 @@
         <h2 class="fw-bold text-primary mb-2 mb-md-0">
             <i class="fa-solid fa-file-lines me-2"></i> Student Document Checklist
         </h2>
-        <a href="{{ route('admin.documents.checklist.pdf', ['grade' => request('grade')]) }}"
-           target="_blank"
-           class="btn btn-sm btn-outline-primary mt-2 mt-md-0">
+       <a href="{{ route('admin.documents.checklist.pdf', ['grade' => request('grade')]) }}"
+   target="_blank"
+   class="btn btn-sm btn-outline-primary mt-2 mt-md-0 print-pdf-btn">
            <i class="fa-solid fa-file-pdf"></i> Print PDF
         </a>
     </div>
@@ -199,6 +199,24 @@ $(document).ready(function() {
         const selectedGrade = $(this).val();
         table.column(5).search(selectedGrade ? '^' + selectedGrade + '$' : '', true, false).draw();
     });
+    // UPDATE PRINT PDF BUTTON BASED ON SELECTED GRADE
+$('#gradeFilter').on('change', function() {
+    const selectedGrade = $(this).val();
+
+    // Datatable filter
+    table.column(5).search(selectedGrade ? '^' + selectedGrade + '$' : '', true, false).draw();
+
+    // Update Print PDF link
+    let baseUrl = "{{ route('admin.documents.checklist.pdf') }}";
+
+    // Add ?grade=Grade 1 to URL
+    if (selectedGrade) {
+        $('.print-pdf-btn').attr('href', baseUrl + '?grade=' + encodeURIComponent(selectedGrade));
+    } else {
+        $('.print-pdf-btn').attr('href', baseUrl); // Reset to all
+    }
+});
+
 });
 </script>
 
