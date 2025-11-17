@@ -136,6 +136,18 @@
     <p>{{ now()->format('F d, Y h:i A') }}</p>
 </header>
 
+@if(isset($grade) && $grade != '')
+<div class="info">
+    <span>Grade Level:</span> {{ $grade }}
+</div>
+@else
+<div class="info">
+    <span>Grade Level:</span> All Grades
+</div>
+@endif
+
+
+
 <div class="info">
     <span>Total Students:</span> {{ $totalStudents }}
 </div>
