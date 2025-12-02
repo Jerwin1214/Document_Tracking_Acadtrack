@@ -8,44 +8,51 @@
             font-family: 'Segoe UI', Arial, sans-serif;
             color: #2f3542;
             font-size: 12px;
-            margin: 40px;
+            margin: 30px;
             background-color: #fff;
         }
-        h1, h2, h3 {
-            color: #1e272e;
-            margin-bottom: 5px;
-        }
-        h1 {
-            font-size: 22px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        h3 {
-            border-left: 4px solid #2f3542;
-            padding-left: 8px;
-            margin-top: 25px;
-            font-size: 14px;
-        }
+
+        /* Header & Circular Logo */
         .header {
             text-align: center;
-            border-bottom: 2px solid #2f3542;
-            padding-bottom: 10px;
             margin-bottom: 20px;
+        }
+        .header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%; /* Circular logo */
+            object-fit: cover;
+            margin-bottom: 5px;
+        }
+        .header h1 {
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
         }
         .header p {
             font-size: 11px;
             color: #57606f;
+            margin: 2px 0 0 0;
         }
+
+        h3 {
+            border-left: 4px solid #2f3542;
+            padding-left: 8px;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
-            border-radius: 6px;
-            overflow: hidden;
+            margin-top: 5px;
+            font-size: 12px;
         }
         th, td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #dfe4ea;
+            padding: 6px 8px;
+            border: 1px solid #dfe4ea;
             text-align: left;
         }
         th {
@@ -55,56 +62,89 @@
             font-size: 11px;
             letter-spacing: 0.5px;
         }
-        tr:nth-child(even) {
+        tr:nth-child(even) td {
             background-color: #f1f2f6;
         }
+
         .text-success { color: #2ed573; font-weight: bold; }
         .text-warning { color: #ffa502; font-weight: bold; }
         .text-danger { color: #ff4757; font-weight: bold; }
+
         .footer {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 30px;
             font-size: 11px;
             color: #57606f;
             border-top: 1px solid #ced6e0;
-            padding-top: 10px;
+            padding-top: 8px;
         }
-        /* Signatory Bar */
-        .signatory-bar {
+
+        /* Professional Signatory */
+        .signatory-container {
             width: 100%;
-            margin-top: 50px;
+            margin-top: 30px;
             display: flex;
             justify-content: center;
-            flex-direction: column;
-            align-items: center;
+        }
+        .signatory-name-block {
+            text-align: center;
+            width: 240px;
         }
         .signatory-line {
-            width: 200px;
-            border-bottom: 1px solid #2f3542;
-            margin-bottom: 5px;
+            width: 100%;
+            border-bottom: 1.5px solid #2f3542;
+            margin: 8px 0 4px 0;
         }
-        .signatory-date {
+        .signatory-fullname {
+            font-size: 12px;
+            letter-spacing: 0.3px;
+        }
+        .signatory-position {
             font-size: 11px;
             color: #57606f;
+            margin-top: 2px;
+            font-style: italic;
         }
-        @media (max-width: 600px) {
-            body {
-                margin: 20px;
-                font-size: 11px;
-            }
-            .signatory-line {
-                width: 150px;
-            }
+        .signatory-date {
+            font-size: 10px;
+            margin-top: 6px;
+            color: #747d8c;
         }
+
+        @media print {
+            table { page-break-inside: auto; }
+            tr { page-break-inside: avoid; page-break-after: auto; }
+        }
+
+        .header h2 {
+    font-size: 14px;
+    margin: 2px 0 0 0;
+    font-weight: normal;
+    color: #2f3542;
+}
+.generated-date {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    font-size: 11px;
+    color: #57606f;
+}
+
+
     </style>
 </head>
 <body>
 
-    {{-- Header --}}
-    <div class="header">
-        <h1>Acadtrack Dashboard Report</h1>
-      <p>Generated on {{ now()->setTimezone('Asia/Manila')->format('F d, Y h:i A') }}</p>
-    </div>
+ {{-- Header --}}
+<div class="header">
+    <img src="{{ public_path('images/acadtracklogo.jpg') }}" alt="Acadtrack Logo">
+    <h1>Acadtrack Dashboard Report</h1>
+    <h2>Lyceum of Lal-lo</h2>
+    <p style="font-size: 10px; margin: 2px 0 0 0; color: #57606f;">
+        Centro Lal-lo, Cagayan, Philippines
+    </p>
+</div>
+
 
     {{-- Summary Overview --}}
     <h3>Summary Overview</h3>
@@ -173,70 +213,9 @@
         </tbody>
     </table>
 
-    {{-- Submission Trend --}}
-    <h3>Submission Trend (Monthly by Document)</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Document</th>
-                @foreach($submissionTrendLabels ?? [] as $month)
-                    <th>{{ $month }}</th>
-                @endforeach
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($allDocuments ?? [] as $doc)
-                <tr>
-                    <td>{{ $doc->name }}</td>
-                    @foreach($submissionTrendData[$doc->id] ?? [] as $count)
-                        <td>{{ $count }}</td>
-                    @endforeach
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    {{-- Monthly Uploads --}}
-    <h3>Monthly Document Uploads</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Month</th>
-                <th>Uploads</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($monthlyUploads ?? [] as $month => $count)
-            <tr>
-                <td>{{ $month }}</td>
-                <td>{{ $count }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    {{-- Yearly Uploads --}}
-    <h3>Yearly Document Uploads</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Year</th>
-                <th>Total Uploads</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($yearlyUploads ?? [] as $year => $count)
-            <tr>
-                <td>{{ $year }}</td>
-                <td>{{ $count }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-{{-- Students by Grade --}}
-<h3>Student Population </h3>
-<table border="1" cellpadding="5" cellspacing="0">
+{{-- Student Population --}}
+<h3>Student Population</h3>
+<table>
     <thead>
         <tr>
             <th>Grade Level</th>
@@ -245,13 +224,23 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($studentsByGrade ?? [] as $grade => $count)
+        @php
+            // Define ascending grade order exactly as in your code
+            $grades = [
+                'Kindergarten', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4',
+                'Grade 5', 'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9',
+                'Grade 10', 'Grade 11', 'Grade 12'
+            ];
+        @endphp
+
+        @foreach($grades as $grade)
         <tr>
             <td>{{ $grade }}</td>
-            <td>{{ $count }}</td>
-            <td>{{ number_format(($count / max($totalStudents, 1)) * 100, 2) }}%</td>
+            <td>{{ $studentsByGrade[$grade] ?? 0 }}</td>
+            <td>{{ number_format((($studentsByGrade[$grade] ?? 0) / max($totalStudents,1)) * 100, 2) }}%</td>
         </tr>
         @endforeach
+
         <tr style="font-weight:bold; background-color:#f0f0f0;">
             <td>Total</td>
             <td>{{ $totalStudents }}</td>
@@ -260,17 +249,32 @@
     </tbody>
 </table>
 
+    {{-- Professional Signatory --}}
+    @if(isset($signatory))
+    <div class="signatory-container">
+        <div class="signatory-name-block">
+            <div class="signatory-line"></div>
+            <div class="signatory-fullname">
+                <strong>
+                    {{ $signatory->first_name }}
+                    @if($signatory->middle_initial) {{ $signatory->middle_initial }}. @endif
+                    {{ $signatory->last_name }}{{ $signatory->educational_attainment ? ', '.$signatory->educational_attainment : '' }}
+                </strong>
+            </div>
+            <div class="signatory-position">{{ $signatory->position }}</div>
+            <div class="signatory-date">
+                Signed on {{ now()->setTimezone('Asia/Manila')->format('F d, Y') }}
+            </div>
+        </div>
+    </div>
+    @endif
 
     {{-- Footer --}}
     <div class="footer">
-        <p><strong>Acadtrack Digital Document Tracking System of Lyceum of Lal-lo</p>
+        <p><strong>Acadtrack Digital Document Tracking System of Lyceum of Lal-lo</strong></p>
     </div>
-
-    {{-- Signatory Bar --}}
-    <div class="signatory-bar">
-        <div class="signatory-line"></div>
-        <div class="signatory-date">{{ now()->setTimezone('Asia/Manila')->format('F d, Y') }}</div>
-    </div>
-
+<div class="generated-date">
+    Generated on {{ now()->setTimezone('Asia/Manila')->format('F d, Y h:i A') }}
+</div>
 </body>
 </html>
