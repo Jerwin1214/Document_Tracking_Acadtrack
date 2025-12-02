@@ -9,6 +9,8 @@ use App\Models\Document;
 use App\Models\StudentDocument;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Signatory;
+
 
 
 class StudentDocumentController extends Controller
@@ -151,8 +153,16 @@ public function index(Enrollment $enrollment)
     }
 
 
-public function printReport()
+public function printReport(Request $request)
 {
+    // ====== VALIDATE SIGNATORY SELECTION ======
+    $request->validate([
+        'signatory_id' => 'required|exists:signatories,id'
+    ]);
+
+    // Fetch selected signatory
+    $signatory = \App\Models\Signatory::findOrFail($request->signatory_id);
+
     // === Base Data ===
     $enrollments = Enrollment::with('studentDocuments')->get();
     $allDocuments = Document::all();
@@ -167,10 +177,10 @@ public function printReport()
         ->where('created_at', '<=', now()->subYear())
         ->count();
 
-// Near deadline: pending between 335 and 364 days
-$nearDeadline = StudentDocument::where('status', 'Pending')
-    ->whereBetween('created_at', [now()->subDays(365), now()->subDays(335)])
-    ->count();
+    // Near deadline: pending between 335 and 364 days
+    $nearDeadline = StudentDocument::where('status', 'Pending')
+        ->whereBetween('created_at', [now()->subDays(365), now()->subDays(335)])
+        ->count();
 
     $completionRate = ($submittedDocs + $pendingDocs) > 0
         ? round(($submittedDocs / ($submittedDocs + $pendingDocs)) * 100, 2)
@@ -182,9 +192,14 @@ $nearDeadline = StudentDocument::where('status', 'Pending')
     // === Documents per Type ===
     $documentsPerType = [];
     foreach ($allDocuments as $doc) {
-        $submitted = StudentDocument::where('document_id', $doc->id)->where('status', 'Submitted')->count();
-        $pending = StudentDocument::where('document_id', $doc->id)->where('status', 'Pending')->count();
+        $submitted = StudentDocument::where('document_id', $doc->id)
+            ->where('status', 'Submitted')->count();
+
+        $pending = StudentDocument::where('document_id', $doc->id)
+            ->where('status', 'Pending')->count();
+
         $total = $submitted + $pending;
+
         $documentsPerType[$doc->name] = [
             'submitted' => $submitted,
             'pending' => $pending,
@@ -196,17 +211,24 @@ $nearDeadline = StudentDocument::where('status', 'Pending')
     $pendingDuration = [
         '0–30 days' => StudentDocument::where('status', 'Pending')
                         ->where('created_at', '>=', now()->subDays(30))->count(),
+
         '31–90 days' => StudentDocument::where('status', 'Pending')
                         ->whereBetween('created_at', [now()->subDays(90), now()->subDays(31)])->count(),
+
         '91–180 days' => StudentDocument::where('status', 'Pending')
                         ->whereBetween('created_at', [now()->subDays(180), now()->subDays(91)])->count(),
+
         '181–365 days' => StudentDocument::where('status', 'Pending')
                         ->whereBetween('created_at', [now()->subDays(365), now()->subDays(181)])->count(),
+
         '1 year above' => $pendingOverYear,
     ];
 
     // === Monthly Uploads ===
-    $studentDocuments = StudentDocument::where('status', 'Submitted')->whereNotNull('submitted_at')->get();
+    $studentDocuments = StudentDocument::where('status', 'Submitted')
+        ->whereNotNull('submitted_at')
+        ->get();
+
     $monthlyUploads = [];
     foreach (range(1, 12) as $month) {
         $monthlyUploads[date('M', mktime(0, 0, 0, $month, 1))] =
@@ -222,36 +244,55 @@ $nearDeadline = StudentDocument::where('status', 'Pending')
     // === Submission Trend per Document per Month ===
     $submissionTrendLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     $submissionTrendData = [];
+
     foreach ($allDocuments as $doc) {
         $monthlyCounts = array_fill(1, 12, 0);
+
         foreach ($studentDocuments->where('document_id', $doc->id) as $sd) {
             $month = (int) date('n', strtotime($sd->submitted_at));
             $monthlyCounts[$month]++;
         }
+
         $submissionTrendData[$doc->id] = array_values($monthlyCounts);
     }
 
     // === Generate PDF ===
-$pdf = Pdf::loadView('pages.admin.dashboard-pdf', compact(
-    'totalStudents',
-    'submittedDocs',
-    'pendingDocs',
-    'pendingOverYear',
-    'nearDeadline',
-    'completionRate',
-    'studentsByGrade',
-    'documentsPerType',
-    'pendingDuration',
-    'monthlyUploads',
-    'yearlyUploads',
-    'submissionTrendLabels',
-    'submissionTrendData',
-    'allDocuments'
-))->setPaper('a4', 'portrait');
+    $pdf = Pdf::loadView(
+        'pages.admin.dashboard-pdf',
+        [
+            'totalStudents' => $totalStudents,
+            'submittedDocs' => $submittedDocs,
+            'pendingDocs' => $pendingDocs,
+            'pendingOverYear' => $pendingOverYear,
+            'nearDeadline' => $nearDeadline,
+            'completionRate' => $completionRate,
+            'studentsByGrade' => $studentsByGrade,
+            'documentsPerType' => $documentsPerType,
+            'pendingDuration' => $pendingDuration,
+            'monthlyUploads' => $monthlyUploads,
+            'yearlyUploads' => $yearlyUploads,
+            'submissionTrendLabels' => $submissionTrendLabels,
+            'submissionTrendData' => $submissionTrendData,
+            'allDocuments' => $allDocuments,
 
+            // 🔥 Added for Signatory Bar
+            'signatory' => $signatory,
+        ]
+    )->setPaper('a4', 'portrait');
 
     return $pdf->stream('dashboard-report.pdf');
+}
 
+public function selectSignatory()
+{
+    $signatories = Signatory::all(); // Fetch all signatories
+    return view('pages.admin.select-signatory', compact('signatories'));
+}
+public function selectSignatoryForChecklist(Request $request)
+{
+    $signatories = Signatory::all();
+    $grade = $request->query('grade'); // optional grade filter
+    return view('pages.admin.select-signatory-checklist', compact('signatories', 'grade'));
 }
 
     /**
@@ -299,28 +340,42 @@ $pdf = Pdf::loadView('pages.admin.dashboard-pdf', compact(
         ));
     }
 
-    public function printChecklist(Request $request)
+public function printChecklist(Request $request)
 {
-    $gradeFilter = $request->query('grade');
+    $gradeFilter = $request->query('grade'); // optional grade filter
+    $signatoryId  = $request->query('signatory_id'); // get selected signatory from request
 
+    // Fetch the selected signatory, fallback to first
+    $signatory = null;
+    if ($signatoryId) {
+        $signatory = Signatory::find($signatoryId);
+    }
+    if (!$signatory) {
+        $signatory = Signatory::first();
+    }
+
+    // Fetch enrollments with student documents
     $enrollments = Enrollment::with(['studentDocuments.document'])
         ->when($gradeFilter, fn($q) => $q->where('grade_level', $gradeFilter))
         ->get();
 
-    $allDocuments = Document::all();
-
+    $allDocuments  = Document::all();
     $totalStudents = $enrollments->count();
 
-$pdf = Pdf::loadView('pages.admin.documents.document-checklist-pdf', [
-    'enrollments' => $enrollments,
-    'allDocuments' => $allDocuments,
-    'totalStudents' => $totalStudents,
-    'grade' => $gradeFilter  // ✅ Pass selected grade
-])->setPaper('a4', 'landscape');
-
+    $pdf = Pdf::loadView('pages.admin.documents.document-checklist-pdf', [
+        'enrollments'    => $enrollments,
+        'allDocuments'   => $allDocuments,
+        'totalStudents'  => $totalStudents,
+        'grade'          => $gradeFilter,
+        'signatory'      => $signatory, // pass selected signatory to Blade
+    ])->setPaper('a4', 'landscape');
 
     return $pdf->stream('student-document-checklist.pdf');
 }
+
+
+
+
 
 
     /**
