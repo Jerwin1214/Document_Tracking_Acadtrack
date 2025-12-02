@@ -155,7 +155,7 @@
                 <div class="col-md-3"><input type="text" name="current_city" class="form-control" value="{{ old('current_city', $enrollment->current_city ?? '') }}" placeholder="Municipality/City"></div>
                 <div class="col-md-3"><input type="text" name="current_province" class="form-control" value="{{ old('current_province', $enrollment->current_province ?? '') }}" placeholder="Province"></div>
                 <div class="col-md-3"><input type="text" name="current_country" class="form-control" value="{{ old('current_country', $enrollment->current_country ?? '') }}" placeholder="Country"></div>
-                <div class="col-md-3"><input type="text" name="current_zip" class="form-control" value="{{ old('current_zip', $enrollment->current_zip ?? '') }}" placeholder="Zip Code"></div>
+               <div class="col-md-3"><input type="text" name="current_zip" class="form-control" maxlength="4" id="current_zip"value="{{ old('current_zip', $enrollment->current_zip ?? '') }}"placeholder="Zip Code"pattern="\d{4}" title="ZIP Code must be exactly 4 digits"></div>
 
                 <div class="col-md-12 mt-3">
                     <h6 class="fw-bold text-dark">Permanent Address</h6>
@@ -171,43 +171,74 @@
                 <div class="col-md-3"><input type="text" name="permanent_city" class="form-control" value="{{ old('permanent_city', $enrollment->permanent_city ?? '') }}" placeholder="Municipality/City"></div>
                 <div class="col-md-3"><input type="text" name="permanent_province" class="form-control" value="{{ old('permanent_province', $enrollment->permanent_province ?? '') }}" placeholder="Province"></div>
                 <div class="col-md-3"><input type="text" name="permanent_country" class="form-control" value="{{ old('permanent_country', $enrollment->permanent_country ?? '') }}" placeholder="Country"></div>
-                <div class="col-md-3"><input type="text" name="permanent_zip" class="form-control" value="{{ old('permanent_zip', $enrollment->permanent_zip ?? '') }}" placeholder="Zip Code"></div>
+                <div class="col-md-3"><input type="text" name="permanent_zip" class="form-control" maxlength="4" id="permanent_zip"value="{{ old('permanent_zip', $enrollment->permanent_zip ?? '') }}"placeholder="Zip Code" pattern="\d{4}" title="ZIP Code must be exactly 4 digits"></div>
+
             </div>
         </div>
 
-        {{-- PARENT/GUARDIAN --}}
-        <div class="card border-0 shadow-sm rounded-3 mb-3">
-            <div class="card-header bg-light fw-bold">Parent / Guardian Information</div>
-            <div class="card-body row g-3">
-                <div class="col-md-6">
-                    <label class="form-label">Father’s Name</label>
-                    <div class="input-group">
-                        <input type="text" name="father_first_name" class="form-control" value="{{ old('father_first_name', $enrollment->father_first_name ?? '') }}" placeholder="First Name">
-                        <input type="text" name="father_middle_name" class="form-control" value="{{ old('father_middle_name', $enrollment->father_middle_name ?? '') }}" placeholder="Middle Name">
-                        <input type="text" name="father_last_name" class="form-control" value="{{ old('father_last_name', $enrollment->father_last_name ?? '') }}" placeholder="Last Name">
-                    </div>
-                    <input type="text" name="father_contact" class="form-control mt-2" value="{{ old('father_contact', $enrollment->father_contact ?? '') }}" placeholder="Contact Number" maxlength="11">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Mother’s Maiden Name</label>
-                    <div class="input-group">
-                        <input type="text" name="mother_first_name" class="form-control" value="{{ old('mother_first_name', $enrollment->mother_first_name ?? '') }}" placeholder="First Name">
-                        <input type="text" name="mother_middle_name" class="form-control" value="{{ old('mother_middle_name', $enrollment->mother_middle_name ?? '') }}" placeholder="Middle Name">
-                        <input type="text" name="mother_last_name" class="form-control" value="{{ old('mother_last_name', $enrollment->mother_last_name ?? '') }}" placeholder="Last Name">
-                    </div>
-                    <input type="text" name="mother_contact" class="form-control mt-2" value="{{ old('mother_contact', $enrollment->mother_contact ?? '') }}" placeholder="Contact Number" maxlength="11">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Legal Guardian</label>
-                    <div class="input-group">
-                        <input type="text" name="guardian_first_name" class="form-control" value="{{ old('guardian_first_name', $enrollment->guardian_first_name ?? '') }}" placeholder="First Name">
-                        <input type="text" name="guardian_middle_name" class="form-control" value="{{ old('guardian_middle_name', $enrollment->guardian_middle_name ?? '') }}" placeholder="Middle Name">
-                        <input type="text" name="guardian_last_name" class="form-control" value="{{ old('guardian_last_name', $enrollment->guardian_last_name ?? '') }}" placeholder="Last Name">
-                    </div>
-                    <input type="text" name="guardian_contact" class="form-control mt-2" value="{{ old('guardian_contact', $enrollment->guardian_contact ?? '') }}" placeholder="Contact Number" maxlength="11">
-                </div>
+      {{-- PARENT/GUARDIAN --}}
+<div class="card border-0 shadow-sm rounded-3 mb-3">
+    <div class="card-header bg-light fw-bold">Parent / Guardian Information</div>
+    <div class="card-body row g-3">
+        {{-- Father --}}
+        <div class="col-md-6">
+            <label class="form-label">Father’s Name</label>
+            <div class="input-group">
+                <input type="text" name="father_first_name" class="form-control"
+                       value="{{ old('father_first_name', $enrollment->father_first_name ?? '') }}"
+                       placeholder="First Name" pattern="[A-Za-z\s]+" title="Only letters are allowed">
+                <input type="text" name="father_middle_name" class="form-control"
+                       value="{{ old('father_middle_name', $enrollment->father_middle_name ?? '') }}"
+                       placeholder="Middle Name" pattern="[A-Za-z\s]+" title="Only letters are allowed">
+                <input type="text" name="father_last_name" class="form-control"
+                       value="{{ old('father_last_name', $enrollment->father_last_name ?? '') }}"
+                       placeholder="Last Name" pattern="[A-Za-z\s]+" title="Only letters are allowed">
             </div>
+            <input type="text" name="father_contact" class="form-control mt-2"
+                   value="{{ old('father_contact', $enrollment->father_contact ?? '') }}"
+                   placeholder="Contact Number" maxlength="11">
         </div>
+
+        {{-- Mother --}}
+        <div class="col-md-6">
+            <label class="form-label">Mother’s Maiden Name</label>
+            <div class="input-group">
+                <input type="text" name="mother_first_name" class="form-control"
+                       value="{{ old('mother_first_name', $enrollment->mother_first_name ?? '') }}"
+                       placeholder="First Name" pattern="[A-Za-z\s]+" title="Only letters are allowed">
+                <input type="text" name="mother_middle_name" class="form-control"
+                       value="{{ old('mother_middle_name', $enrollment->mother_middle_name ?? '') }}"
+                       placeholder="Middle Name" pattern="[A-Za-z\s]+" title="Only letters are allowed">
+                <input type="text" name="mother_last_name" class="form-control"
+                       value="{{ old('mother_last_name', $enrollment->mother_last_name ?? '') }}"
+                       placeholder="Last Name" pattern="[A-Za-z\s]+" title="Only letters are allowed">
+            </div>
+            <input type="text" name="mother_contact" class="form-control mt-2"
+                   value="{{ old('mother_contact', $enrollment->mother_contact ?? '') }}"
+                   placeholder="Contact Number" maxlength="11">
+        </div>
+
+        {{-- Legal Guardian --}}
+        <div class="col-md-6">
+            <label class="form-label">Legal Guardian</label>
+            <div class="input-group">
+                <input type="text" name="guardian_first_name" class="form-control"
+                       value="{{ old('guardian_first_name', $enrollment->guardian_first_name ?? '') }}"
+                       placeholder="First Name" pattern="[A-Za-z\s]+" title="Only letters are allowed">
+                <input type="text" name="guardian_middle_name" class="form-control"
+                       value="{{ old('guardian_middle_name', $enrollment->guardian_middle_name ?? '') }}"
+                       placeholder="Middle Name" pattern="[A-Za-z\s]+" title="Only letters are allowed">
+                <input type="text" name="guardian_last_name" class="form-control"
+                       value="{{ old('guardian_last_name', $enrollment->guardian_last_name ?? '') }}"
+                       placeholder="Last Name" pattern="[A-Za-z\s]+" title="Only letters are allowed">
+            </div>
+            <input type="text" name="guardian_contact" class="form-control mt-2"
+                   value="{{ old('guardian_contact', $enrollment->guardian_contact ?? '') }}"
+                   placeholder="Contact Number" maxlength="11">
+        </div>
+    </div>
+</div>
+
 
         {{-- SUBMIT --}}
         <div class="d-flex justify-content-end gap-2 mt-3">
@@ -244,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Address Copy
+    // ✅ Address copy logic
     const sameAddressCheckbox = document.getElementById('sameAddress');
     const currentFields = {
         house_no: document.querySelector('[name="current_house_no"]'),
@@ -283,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Auto-calculate age
+    // ✅ Auto-calculate age
     const birthdateInput = document.getElementById('birthdate');
     const ageInput = document.getElementById('age');
     function calculateAge() {
@@ -298,17 +329,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     birthdateInput.addEventListener('change', calculateAge);
     calculateAge();
-});
-</script>
 
-@if(session('success'))
-<script>
-Swal.fire({
-    icon: 'success',
-    title: 'Success!',
-    text: '{{ session('success') }}',
-    confirmButtonColor: '#3085d6'
+    // ✅ Name fields validation: allow only letters & spaces
+    const nameFields = document.querySelectorAll(
+        'input[name$="_first_name"], input[name$="_middle_name"], input[name$="_last_name"], input[name="first_name"], input[name="middle_name"], input[name="last_name"]'
+    );
+
+    nameFields.forEach(field => {
+        field.addEventListener('input', function() {
+            this.value = this.value.replace(/[^A-Za-z\s]/g, '');
+        });
+    });
+
+    // ✅ ZIPCODE: allow only numbers and max 4 digits
+    const zipFields = document.querySelectorAll('input[name="current_zip"], input[name="permanent_zip"]');
+    zipFields.forEach(zip => {
+        zip.addEventListener('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 4) this.value = this.value.slice(0, 4);
+        });
+    });
 });
 </script>
-@endif
 @endsection
