@@ -2,139 +2,193 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Student Document Checklist</title>
-    <style>
-        body {
-            font-family: 'Helvetica', Arial, sans-serif;
-            font-size: 12px;
-            color: #333;
-            margin: 20px;
-        }
+    <title>Student Document Report</title>
+<style>
+body {
+    font-family: 'Helvetica', Arial, sans-serif;
+    font-size: 12px;
+    color: #333;
+    margin: 20px;
+}
 
-        header {
-            text-align: center;
-            margin-bottom: 15px;
-        }
+/* Header & Circular Logo */
+header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 15px;
+}
 
-        header h1 {
-            font-size: 22px;
-            margin: 0;
-            color: #1d4ed8; /* Primary color */
-        }
+header img,
+header h1,
+header h2,
+header p {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-        header p {
-            margin: 2px 0;
-            font-size: 12px;
-            color: #555;
-        }
+header img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 5px;
+}
 
-        .info {
-            margin-bottom: 10px;
-            font-size: 12px;
-        }
+header h1 {
+    font-size: 18px;
+    text-transform: uppercase;
+    margin: 5px 0 0 0;
+    color: #1d4ed8;
+}
 
-        .info span {
-            font-weight: bold;
-        }
+header h2 {
+    font-size: 14px;
+    font-weight: normal;
+    margin: 2px 0 0 0;
+    color: #1d4ed8;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
+header p {
+    font-size: 10px;
+    color: #555;
+    margin: 2px 0 0 0;
+}
 
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 6px;
-            text-align: center;
-        }
+/* Info Section */
+.info {
+    margin-bottom: 10px;
+    font-size: 12px;
+    text-align: left;
+}
 
-        table th {
-            background-color: #f3f4f6;
-            font-weight: 600;
-            font-size: 12px;
-        }
+.grade-level {
+    text-align: center;
+}
 
-        table tbody tr:nth-child(even) {
-            background-color: #f9fafb;
-        }
+.info span {
+    font-weight: bold;
+}
 
-        table tfoot td {
-            font-weight: 600;
-            background-color: #e5e7eb;
-        }
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 12px;
+}
 
-        .status-submitted {
-            background-color: #198754;
-            color: #fff;
-            font-weight: bold;
-            border-radius: 4px;
-            padding: 2px 6px;
-            display: inline-block;
-        }
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
 
-        .status-pending {
-            background-color: #ffc107;
-            color: #000;
-            font-weight: bold;
-            border-radius: 4px;
-            padding: 2px 6px;
-            display: inline-block;
-        }
+table th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+    font-size: 12px;
+}
 
-        .status-no-record {
-            background-color: #6c757d;
-            color: #fff;
-            font-weight: bold;
-            border-radius: 4px;
-            padding: 2px 6px;
-            display: inline-block;
-        }
+table tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+}
 
-        footer {
-            text-align: center;
-            font-size: 10px;
-            color: #555;
-            margin-top: 15px;
-        }
+table tfoot td {
+    font-weight: 600;
+    background-color: #e5e7eb;
+}
 
-        /* Signatory Bar */
-        .signatory-bar {
-            width: 100%;
-            margin-top: 40px;
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
-        }
+/* Status Text Only */
+.status-submitted {
+    color: #198754; /* green text */
+    font-weight: bold;
+}
 
-        .signatory-line {
-            width: 200px;
-            border-bottom: 1px solid #333;
-            margin-bottom: 5px;
-        }
+.status-pending {
+    color: #d97706; /* orange text */
+    font-weight: bold;
+}
 
-        .signatory-date {
-            font-size: 11px;
-            color: #555;
-        }
+.status-no-record {
+    color: #6c757d; /* gray text */
+    font-weight: bold;
+}
 
-        @media (max-width: 600px) {
-            body {
-                font-size: 11px;
-            }
-            .signatory-line {
-                width: 150px;
-            }
-        }
-    </style>
+/* Footer */
+footer {
+    text-align: center;
+    font-size: 10px;
+    color: #555;
+    margin-top: 15px;
+}
+
+/* Professional Signatory */
+.signatory-container {
+    width: 100%;
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.signatory-name-block {
+    text-align: center;
+    width: 240px;
+}
+
+.signatory-line {
+    width: 100%;
+    border-bottom: 1.5px solid #2f3542;
+    margin-bottom: 8px;
+}
+
+.signatory-fullname {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.signatory-position {
+    font-size: 11px;
+    margin-bottom: 2px;
+}
+
+.signatory-date {
+    font-size: 11px;
+    color: #555;
+}
+
+@media (max-width: 600px) {
+    body {
+        font-size: 11px;
+    }
+    .signatory-name-block {
+        width: 180px;
+    }
+}
+
+/* Timestamp at bottom right */
+.generated-timestamp {
+    position: fixed;
+    bottom: 10px;
+    right: 20px;
+    font-size: 10px;
+    color: #555;
+}
+</style>
+
 </head>
 <body>
 
 <header>
+    <img src="{{ public_path('images/acadtracklogo.jpg') }}" alt="Acadtrack Logo">
     <h1>Student Document Report</h1>
-    <p>{{ now()->format('F d, Y h:i A') }}</p>
+    <h2>Lyceum of Lal-lo</h2>
+    <p style="font-size: 10px; color: #555; margin: 2px 0 0 0;">
+        Centro Lal-lo, Cagayan, Philippines
+    </p>
 </header>
+
 
 @if(isset($grade) && $grade != '')
 <div class="info">
@@ -145,8 +199,6 @@
     <span>Grade Level:</span> All Grades
 </div>
 @endif
-
-
 
 <div class="info">
     <span>Total Students:</span> {{ $totalStudents }}
@@ -265,41 +317,30 @@
     </tfoot>
 </table>
 
+{{-- Professional Signatory --}}
+@if(isset($signatory))
+<div class="signatory-container">
+    <div class="signatory-name-block">
+        <div class="signatory-line"></div>
+        <div class="signatory-fullname">
+            {{ $signatory->first_name }}
+            @if($signatory->middle_initial) {{ $signatory->middle_initial }}. @endif
+            {{ $signatory->last_name }}{{ $signatory->educational_attainment ? ', '.$signatory->educational_attainment : '' }}
+        </div>
+        <div class="signatory-position">{{ $signatory->position }}</div>
+        <div class="signatory-date">
+            Signed on {{ now()->setTimezone('Asia/Manila')->format('F d, Y') }}
+        </div>
+    </div>
+</div>
+@endif
+
 <footer>
     Acadtrack Digital Document Tracking System of Lyceum of Lal-lo
 </footer>
-
-{{-- Signatory Bar --}}
-<div class="signatory-bar">
-    <div class="signatory-line"></div>
-    <div class="signatory-date">{{ now()->format('F d, Y') }}</div>
+<div class="generated-timestamp">
+    Generated on {{ now()->setTimezone('Asia/Manila')->format('F d, Y h:i A') }}
 </div>
-
-<style>
-/* Signatory Bar Styling */
-.signatory-bar {
-    width: 100%;
-    margin-top: 40px;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-}
-.signatory-line {
-    width: 200px;
-    border-bottom: 1px solid #333;
-    margin-bottom: 5px;
-}
-.signatory-date {
-    font-size: 11px;
-    color: #555;
-}
-@media (max-width: 600px) {
-    .signatory-line {
-        width: 150px;
-    }
-}
-</style>
 
 </body>
 </html>
