@@ -69,9 +69,22 @@ Route::get('/dashboard/print-report', [StudentDocumentController::class, 'printR
 //print documents
 Route::get('/documents/checklist/pdf', [StudentDocumentController::class, 'printChecklist'])->name('admin.documents.checklist.pdf');
 
+// Show the signatory selection page
+Route::get('/admin/reports/select-signatory', [StudentDocumentController::class, 'selectSignatory'])
+    ->name('admin.reports.selectSignatory');
 
-    // ✅ DASHBOARD
+// Generate PDF report with selected signatory
+Route::get('/admin/reports/print', [StudentDocumentController::class, 'printReport'])
+    ->name('admin.reports.print');
 
+
+// Show select signatory page before generating PDF
+Route::get('/documents/checklist/select-signatory', [StudentDocumentController::class, 'selectSignatoryForChecklist'])
+    ->name('admin.documents.checklist.select-signatory');
+
+// Generate PDF after selecting signatory
+Route::get('/documents/checklist/pdf', [StudentDocumentController::class, 'printChecklist'])
+    ->name('admin.documents.checklist.pdf');
 
     // ✅ STUDENT ASSIGNMENT
     Route::get('/students/assign', [StudentController::class, 'showAssignForm'])->name('admin.students.assign.form');
@@ -109,7 +122,21 @@ Route::get('/documents/checklist/pdf', [StudentDocumentController::class, 'print
 //     ->name('admin.documents.dashboard')
 //     ->middleware(['auth', App\Http\Middleware\AdminMiddleware::class]);
 
+ // Signatories Management
+    Route::get('/signatories', [App\Http\Controllers\Admin\SignatoryController::class, 'index'])
+        ->name('admin.signatories.index');
 
+    Route::post('/signatories', [App\Http\Controllers\Admin\SignatoryController::class, 'store'])
+        ->name('admin.signatories.store');
+
+    Route::get('/signatories/{id}/edit', [App\Http\Controllers\Admin\SignatoryController::class, 'edit'])
+        ->name('admin.signatories.edit');
+
+    Route::post('/signatories/{id}', [App\Http\Controllers\Admin\SignatoryController::class, 'update'])
+        ->name('admin.signatories.update');
+
+    Route::delete('/signatories/{id}', [App\Http\Controllers\Admin\SignatoryController::class, 'destroy'])
+        ->name('admin.signatories.delete');
 
     });
 
