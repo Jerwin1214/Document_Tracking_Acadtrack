@@ -47,11 +47,17 @@
                     </button>
                 </div>
             </div>
+<!-- Change Password Button -->
+<a href="{{ route('admin.password') }}" class="btn btn-outline-secondary w-100 rounded-pill mt-3">
+    <i class="fas fa-lock me-2"></i> Change Password
+</a>
 
-            <!-- Change Password Button -->
-            <a href="{{ route('admin.password') }}" class="btn btn-outline-secondary w-100 rounded-pill mt-3">
-                <i class="fas fa-lock me-2"></i> Change Password
-            </a>
+<!-- Go to Signatory Management -->
+<a href="{{ route('admin.signatories.index') }}"
+   class="btn btn-gradient-primary w-100 rounded-pill mt-3">
+    <i class="fas fa-pen-nib me-2"></i> Manage Signatories
+</a>
+
         </div>
     </div>
 </div>
